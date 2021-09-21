@@ -25,7 +25,7 @@ def parsing_RBC():
 
     result = []
     for i in range(len(d)):
-        result.append(" ".join([d[i], t[i], l[i]]))
+        result.append([" ".join([d[i], t[i]]), l[i]])
 
     return result  # чтобы ф-ция выводила на консоль, необходимо написать инструкцию с print
 
@@ -56,7 +56,7 @@ def parsing_invest_funds():
 
     result = []
     for i in range(len(d)):
-        result.append(" ".join([d[i], t[i], 'https://investfunds.ru' + l[i]]))
+        result.append([" ".join([d[i], t[i]]), 'https://investfunds.ru' + l[i]])
 
     return result
 
@@ -83,7 +83,7 @@ def parsing_moex():
 
     result = []
     for i in range(len(d)):
-        result.append(" ".join([d[i], t[i], 'https://www.moex.com/' + l[i]]))
+        result.append([" ".join([d[i], t[i]]), 'https://www.moex.com/' + l[i]])
 
     return result
 
