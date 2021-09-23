@@ -23,3 +23,30 @@ for i in range(len(portfolio)):
 fig1, ax1 = plt.subplots()
 ax1.pie(weight, labels=sectors)
 plt.show()
+
+
+# buying advice depending on the stage of the economic cycle
+
+# Ранняя фаза:
+# Финансы
+# Недвижимость
+# Товары второй необходимости
+# Информационные технологии
+# Промышленность, логистика
+# Сырье
+# ["NEM", "AMZN", "BAC", "SBER", "NKE"]
+
+# Средняя фаза:
+# IT-сфера
+# услуги телекоммуникации и связи
+# ["AAPL", "MSFT", "MA", "VZ", "CMCSA"]
+
+# Закат:
+# Здравоохранение
+# Коммунальные услуги
+# Товары первой необходимости
+# ["JNJ", "AMGN", "PFE", "PG", "KO"]
+
+# Рецессия:
+# Коммунальные услуги
+# ["EXC", "DRE", "D", "NEE", "NG"]
