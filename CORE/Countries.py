@@ -1,18 +1,20 @@
 import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
+from CORE.Portfolio import *
 
-msft = yf.Ticker('MSFT')
-aapl = yf.Ticker('AAPL')
-tsla = yf.Ticker('TSLA')
-yndx = yf.Ticker('YNDX')
 
-portfolio = [msft, aapl, tsla, yndx]
+flatten_portfolio = list(set(port))
+weight_portfolio = [0]*len(flatten_portfolio)
 countries = []
+t_countries = []
 weight = []
 
 for i in range(len(portfolio)):
     el = portfolio[i].info["country"]
+    t_countries.append(portfolio[i].info["country"])
+    weight_portfolio[flatten_portfolio.index(port[i])] += 1
+    print(weight_portfolio)
     if el not in countries:
         countries.append(el)
         weight.append(1)
@@ -44,3 +46,11 @@ def cape_advice():
         return "It is recommended to invest in stocks of countries such as Russia, UK or China"
     else:
         return "Diversification by country according to CAPE is quite good"
+
+
+# table below the graph
+t_port_capa = pd.DataFrame({
+    'Stocks': flatten_portfolio,
+    'Number': weight_portfolio,
+    'Countries': t_countries
+})
