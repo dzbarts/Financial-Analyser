@@ -1,4 +1,5 @@
 import yfinance as yf
+import matplotlib.pyplot as plt
 
 port = ['msft', 'msft', 'aapl', 'TSLA',
         'YNDX', 'RY', 'RY', 'RY', 'RY',
@@ -8,13 +9,32 @@ portfolio = []
 port = list(map(str.upper, port))
 portfolio = list(map(yf.Ticker, port))
 
-ticker = ['AFLT.ME', 'IMOEX.ME']
-stock = yf.download(ticker)
+
+
+stock = list(map(yf.download, port))
+stock1 = list(map(yf.Ticker, port))
+
+# print(stock)
+sum = 0
+for i in range(len(port)):
+    sum += stock[i].Close[-1]
+sum = round(float(sum), 2)
+print(sum)
+
+
+def plot_common(period):
+    for i in range(len(stock)):
+        plt.plot(stock[i].Close[-period:])
+
+    plt.show()
+
+
+plot_common(200)
 
 # Выделение скорректированой цены закрытия
-all_adj_close = stock[['Adj Close']]
-#print(all_adj_close)
-#print(stock[['Sector']])
+# all_adj_close = stock[['Adj Close']]
+# print(all_adj_close)
+# print(stock[['Sector']])
 
 
 # dividends = []
@@ -24,22 +44,3 @@ all_adj_close = stock[['Adj Close']]
 #     dividends.append(el)
 #
 # print(dividends)
-
-# msft1 = yf.download('MSFT', period='1d')
-# aapl1 = yf.download('AAPL', period='1d')
-# tsla1 = yf.download('TSLA', period='1d')
-# yndx1 = yf.download('YNDX', period='1d')
-#
-#
-# value = 0
-# port = [msft1, aapl1, tsla1, yndx1]
-#
-# for i in range(4):
-#     value += port[i].Close
-# print(round(float(value),2))
-#
-
-wallet = 10000
-
-spent = 0
-
