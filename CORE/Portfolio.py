@@ -1,6 +1,8 @@
 import yfinance as yf
 
-port = ['msft', 'msft', 'aapl', 'TSLA', 'YNDX', 'RY', 'RY', 'RY', 'RY', 'RY', 'SBER.ME', 'SBER.ME', 'SBER.ME']
+port = ['msft', 'msft', 'aapl', 'TSLA',
+        'YNDX', 'RY', 'RY', 'RY', 'RY',
+        'RY', 'SBER.ME', 'SBER.ME', 'SBER.ME']
 portfolio = []
 
 port = list(map(str.upper, port))
