@@ -1,12 +1,12 @@
 import yfinance as yf
 
-port = ['msft', 'aapl', 'TSLA', 'YNDX']
+port = ['msft', 'msft', 'aapl', 'TSLA', 'YNDX', 'RY', 'RY', 'RY', 'RY', 'RY', 'SBER.ME', 'SBER.ME', 'SBER.ME']
 portfolio = []
 
 port = list(map(str.upper, port))
-portfolio = list(map(yf.Ticker,port))
+portfolio = list(map(yf.Ticker, port))
 
-ticker = ['AFLT.ME','IMOEX.ME']
+ticker = ['AFLT.ME', 'IMOEX.ME']
 stock = yf.download(ticker)
 
 # Выделение скорректированой цены закрытия
@@ -40,6 +40,4 @@ all_adj_close = stock[['Adj Close']]
 wallet = 10000
 
 spent = 0
-
-
 
