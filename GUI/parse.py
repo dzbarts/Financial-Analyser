@@ -7,8 +7,8 @@ def parsing_RBC():
     page = requests.get(url)
 
     soup = BeautifulSoup(page.text, 'html.parser')
-    links = soup.findAll(class_=['q-item__link', 'news-feed__item js-news-feed-item js-yandex-counter'])
     titles = soup.findAll(class_=['q-item__title', 'news-feed__item__title'])
+    links = soup.findAll(class_=['q-item__link', 'news-feed__item js-news-feed-item js-yandex-counter'])
     datas_n_time = soup.findAll(class_=['q-item__date__text', 'news-feed__item__date-text'])
 
     d = []
@@ -25,15 +25,22 @@ def parsing_RBC():
 
     result = []
     for i in range(len(d)):
-        result.append([" ".join([d[i], t[i]]), l[i]])
+        result.append('<a href=' + l[i] + '>' + t[i] + '</a>')
 
-    v = []
-    for j in result:
-        v.append(j[0])
+    res = ' \n'.join(str(li).replace('\n', '') for li in result)
 
-    data = ' \n'.join(str(i) for i in v)
+    res = res.split('\n')
 
-    return data
+    r = (d[i] + ' ' + res[i] for i in range(0, len(d)))
+
+    list_r = list(r)
+
+    string_r = '<br />'.join(str(i) for i in list_r)
+
+    while "  " in string_r:
+        string_r = string_r.replace("  ", " ")
+
+    return string_r
 
 
 def parsing_invest_funds():
@@ -52,25 +59,26 @@ def parsing_invest_funds():
     for time in times:
         d.append(time.text)
 
-    t = []
-    for title in titles:
-        t.append(title.text.strip())
+    for t in titles:
+        t['href'] = 'https://investfunds.ru' + t['href']
 
-    l = []
-    for title in titles:
-        l.append(title.get('href'))
+    res = ' \n'.join(str(t).replace('\n', '') for t in titles)
 
-    result = []
-    for i in range(len(d)):
-        result.append([" ".join([d[i], t[i]]), 'https://investfunds.ru' + l[i]])
+    while "  " in res:
+        res = res.replace("  ", " ")
 
-    v = []
-    for j in result:
-        v.append(j[0])
+    res = res.split('\n')
 
-    data = ' \n'.join(str(i) for i in v)
+    r = (d[i] + ' ' + res[i] for i in range(0, len(d)))
 
-    return data
+    list_r = list(r)
+
+    string_r = '<br />'.join(str(i) for i in list_r)
+
+    while "  " in string_r:
+        string_r = string_r.replace("  ", " ")
+
+    return string_r
 
 
 def parsing_moex():
@@ -85,28 +93,29 @@ def parsing_moex():
     for data in datas:
         d.append(data.text.strip())
 
-    t = []
-    for title in links:
-        t.append(title.text.strip())
+    for l in links:
+        l['href'] = 'https://www.moex.com' + l['href']
 
-    l = []
-    for link in links:
-        l.append(link.get('href'))
+    res = ' \n'.join(str(li).replace('\n', '') for li in links)
 
-    result = []
-    for i in range(len(d)):
-        result.append([" ".join([d[i], t[i]]), 'https://www.moex.com/' + l[i]])
+    while "  " in res:
+        res = res.replace("  ", " ")
 
-    v = []
-    for j in result:
-        v.append(j[0])
+    res = res.split('\n')
 
-    data = ' \n'.join(str(i) for i in v)
+    r = (d[i] + ' ' + res[i] for i in range(0, len(d)))
 
-    return data
+    list_r = list(r)
+
+    string_r = '<br />'.join(str(i) for i in list_r)
+
+    while "  " in string_r:
+        string_r = string_r.replace("  ", " ")
+
+    return string_r
 
 
 if __name__ == "__main__":
-    parsing_RBC()
-    parsing_invest_funds()
-    parsing_moex()
+    print(parsing_RBC())
+    print(parsing_invest_funds())
+    print(parsing_moex())
