@@ -25,7 +25,7 @@ def parsing_RBC():
 
     result = []
     for i in range(len(d)):
-        result.append('<a href=' + l[i] + '>' + t[i] + '</a>')
+        result.append('<a href=' + '"' + l[i] + '"'  + '>' + t[i] + '</a>')
 
     res = ' \n'.join(str(li).replace('\n', '') for li in result)
 
