@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from CORE.Portfolio import *
+from Portfolio import *
 
 flatten_port = list(set(port))
 flatten_portfolio = list(set(portfolio))
@@ -30,9 +30,9 @@ for i in range(len(portfolio)):
         # print(countries, weight)
 
 # pli plot
-fig1, ax1 = plt.subplots()
-ax1.pie(weight, labels=countries)
-plt.show()
+# fig1, ax1 = plt.subplots()
+# ax1.pie(weight, labels=countries)
+# plt.show()
 
 # CAPA index Pandas DataFrame
 # index was taken on 6/30/21
@@ -61,18 +61,3 @@ t_port_capa = pd.DataFrame({
     'Number': weight_portfolio,
     'Countries': t_countries
 })
-
-
-# recommendation function for Lera
-if max(weight) / sum(weight) >= 0.4 and \
-        countries[weight.index(max(weight))] in \
-        ['Canada', 'United States', 'Italy', 'India', 'Japan']:
-    print("It is recommended to invest in stocks of countries such as Russia, UK or China")
-else:
-    print("Diversification by country according to CAPE is quite good")
-
-
-# for show
-print(tcapa)
-print(t_port_capa)
-cape_advice()

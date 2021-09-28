@@ -1,5 +1,7 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 port = ['msft', 'msft', 'aapl', 'TSLA',
         'YNDX', 'RY', 'RY', 'RY', 'RY',
@@ -9,17 +11,20 @@ portfolio = []
 port = list(map(str.upper, port))
 portfolio = list(map(yf.Ticker, port))
 
+flatten_port = list(set(port))
+flatten_portfolio = list(set(portfolio))
+
 
 
 stock = list(map(yf.download, port))
 stock1 = list(map(yf.Ticker, port))
 
 # print(stock)
-sum = 0
+summa = 0
 for i in range(len(port)):
-    sum += stock[i].Close[-1]
-sum = round(float(sum), 2)
-print(sum)
+    summa += stock[i].Close[-1]
+summa = round(float(summa), 2)
+print(summa)
 
 
 def plot_common(period):
@@ -39,8 +44,15 @@ plot_common(200)
 
 # dividends = []
 #
-# for i in range(len(portfolio)):
-#     el = portfolio[i].dividends
+# for i in range(len(flatten_portfolio)):
+#     el = flatten_portfolio[i].info['dividendRate']
 #     dividends.append(el)
 #
+# print(flatten_portfolio)
 # print(dividends)
+# print(flatten_port)
+#
+# t_dividends = pd.DataFrame({'Stocks': flatten_port,
+#                       'Dividents (per year)': dividends
+#                       })
+# print(t_dividends)
