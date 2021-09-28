@@ -9,6 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
+from Table import *
 
 
 class Ui_MainWindow(object):
@@ -57,13 +58,9 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
-        self.comboBox_3 = QtWidgets.QComboBox(self.tab_3)
-        self.comboBox_3.setGeometry(QtCore.QRect(20, 20, 181, 41))
-        self.comboBox_3.setEditable(True)
-        self.comboBox_3.setObjectName("comboBox_3")
-        self.comboBox_3.addItem("")
-        self.comboBox_3.addItem("")
-        self.comboBox_3.addItem("")
+        self.table = QtWidgets.QTableView(self.tab_3)
+        self.table.setGeometry(QtCore.QRect(20, 110, 881, 461))
+        self.table.setObjectName("table_data")
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -133,9 +130,6 @@ class Ui_MainWindow(object):
         self.renew_btn_NEWS.setText(_translate("MainWindow", "RENEW"))
         self.NEWS_label.setText(_translate("MainWindow", "RBC"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Page 2"))
-        self.comboBox_3.setItemText(0, _translate("MainWindow", "New Item 1"))
-        self.comboBox_3.setItemText(1, _translate("MainWindow", "New Item 2"))
-        self.comboBox_3.setItemText(2, _translate("MainWindow", "New Item 3"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Page 3"))
         self.comboBox_4.setItemText(0, _translate("MainWindow", "New Item 1"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "New Item 2"))
