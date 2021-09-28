@@ -2,8 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from Portfolio import *
 
-flatten_port = list(set(port))
-flatten_portfolio = list(set(portfolio))
+
 weight_portfolio = [0] * len(flatten_port)
 countries = []
 t_countries = []
