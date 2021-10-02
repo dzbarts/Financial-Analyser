@@ -3,36 +3,25 @@ import matplotlib.pyplot as plt
 from Portfolio import *
 
 
-sectors = []
-t_sectors = []
-weight_portfolio = [0] * len(flatten_port)
+def get_sector(el):
+    return el.info['sector']
 
 
-# function for column 'sectors'
-for i in range(len(flatten_port)):
-    el = flatten_portfolio[i].info['sector']
-    t_sectors.append(el)
-    # print(el)
-    if el not in sectors:
-        sectors.append(el)
-        # print(flatten_portfolio[i], flatten_portfolio[i].info['sector'])
+list_of_all_sectors = list(map(get_sector, flatten_portfolio))
+list_of_sectors = list(set(list_of_all_sectors))
+
+weight_for_plot_s = [0] * len(list_of_sectors)
 
 
-weight = [0] * len(sectors)
+t_port_sect = pd.DataFrame({
+    'Stocks': flatten_port,
+    'Number': weight_of_stocks,
+    'Sectors': list_of_all_sectors
+})
 
-
-# function for weights
-for i in range(len(portfolio)):
-    el = portfolio[i].info['sector']
-    weight[sectors.index(el)] += 1
-    weight_portfolio[flatten_port.index(port[i])] += 1
-    # print(weight_portfolio)
-
-
-# pie plot
-# fig1, ax1 = plt.subplots()
-# ax1.pie(weight, labels=sectors)
-# plt.show()
+# cycle of getting weight_for_plot_s
+for i in range(len(weight_of_stocks)):
+    weight_for_plot_s[list_of_sectors.index(list_of_all_sectors[i])] += weight_of_stocks[i]
 
 
 # buying advice depending on the stage of the economic cycle
@@ -52,9 +41,7 @@ tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недви
                       })
 
 
-# table below the graph
-t_port_sect = pd.DataFrame({
-    'Stocks': flatten_port,
-    'Number': weight_portfolio,
-    'Sectors': t_sectors
-})
+def plot_s():
+    fig1, ax1 = plt.subplots()
+    ax1.pie(weight_for_plot_s, labels=list_of_sectors)
+    plt.show()
