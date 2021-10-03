@@ -1,30 +1,14 @@
-import yfinance as yf
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
+from Portfolio import *
 
+stock = list(map(yf.download, flatten_port))
 
-port = ['msft', 'msft', 'aapl', 'TSLA',
-        'YNDX', 'RY', 'RY', 'RY', 'RY',
-        'RY', 'SBER.ME', 'SBER.ME', 'SBER.ME']
-portfolio = []
-
-port = list(map(str.upper, port))
-portfolio = list(map(yf.Ticker, port))
-
-flatten_port = list(set(port))
-flatten_portfolio = list(set(portfolio))
-
-
-
-stock = list(map(yf.download, port))
-stock1 = list(map(yf.Ticker, port))
-
-# print(stock)
 summa = 0
-for i in range(len(port)):
-    summa += stock[i].Close[-1]
+
+for i in range(len(flatten_port)):
+    summa += stock[i].Close[-1] * weight_of_stocks[i]
 summa = round(float(summa), 2)
-print(summa)
 
 
 def plot_common(period):
@@ -34,7 +18,7 @@ def plot_common(period):
     plt.show()
 
 
-plot_common(200)
+#plot_common(200)
 
 # Выделение скорректированой цены закрытия
 # all_adj_close = stock[['Adj Close']]
@@ -42,17 +26,44 @@ plot_common(200)
 # print(stock[['Sector']])
 
 
-# dividends = []
-#
-# for i in range(len(flatten_portfolio)):
-#     el = flatten_portfolio[i].info['dividendRate']
-#     dividends.append(el)
-#
-# print(flatten_portfolio)
-# print(dividends)
-# print(flatten_port)
+dividends = []
+
+for i in range(len(flatten_portfolio)):
+    dividends.append(flatten_portfolio[i].info['dividendRate'])
 #
 # t_dividends = pd.DataFrame({'Stocks': flatten_port,
 #                       'Dividents (per year)': dividends
 #                       })
-# print(t_dividends)
+
+
+assets = []
+
+for i in range(len(stock)):
+    assets.append(stock[i].tail(1))
+
+assets = pd.concat(assets)
+
+assets.index = flatten_port
+
+assets['Dividents (per year)'] = dividends
+
+assets.insert(0, 'Number', weight_of_stocks)
+
+# holders = []
+#
+# for i in range(len(flatten_portfolio)):
+#     holders.append(flatten_portfolio[i].major_holders)
+
+# holders = pd.concat(holders)
+
+# assets['Major holders'] = holders
+
+
+# print(holders)
+print(assets)
+
+
+def plot_p():
+    fig1, ax1 = plt.subplots()
+    ax1.pie(weight_of_stocks, labels=flatten_port)
+    plt.show()
