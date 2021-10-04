@@ -38,8 +38,8 @@ tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недви
                                 '"JNJ", "AMGN", "PFE", "PG", "KO"'],
                       'Рецессия': ['Коммунальные услуги', '', '', '', '', '', '',
                                    '"EXC", "DRE", "D", "NEE", "NG"']
-                      })
-
+                      }, index=['1', '2', '3', '4', '5','6', '', 'Рекомендации'])
+print(tsectors)
 
 def plot_s():
     fig1, ax1 = plt.subplots()
