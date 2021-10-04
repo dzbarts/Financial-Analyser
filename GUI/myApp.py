@@ -9,18 +9,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QAbstractTableModel, QVariant
-from PyQt5.QtWidgets import QFileDialog, QDesktopWidget, QAbstractScrollArea, QHeaderView
+from PyQt5.QtWidgets import QDesktopWidget, QHeaderView
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Table import *
 
 
 def main():
-    """
-    allow you to get size of your courant screen
-    -1 is to precise that it is the courant screen
-    """
-    sizeObject = QDesktopWidget().screenGeometry(-1)
+    sizeObject = QDesktopWidget().screenGeometry(-1)  # -1 означает, что мы берем на измерение текущий экран
     heignt = sizeObject.height()
     width = sizeObject.width()
     return [int(heignt), int(width)]
@@ -75,6 +71,10 @@ class Ui_MainWindow(object):
         self.view = QtWidgets.QTableView(self.tab_3)
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data")
+        self.model = PandasModel(tsectors, headers_column=['Ранняя фаза', 'Средняя фаза', 'Закат', 'Рецессия'],
+                                 headers_row=['1', '2', '3', '4', '5', '6', '', 'Рекомендации'])
+        self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view.setModel(self.model)
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -174,6 +174,33 @@ class Ui_MainWindow(object):
         elif self.comboBox_NEWS.currentText() == 'MOEX':
             self.NEWS_label.setText('MOEX')
             self.news_NEWS.setText(parsing_moex())
+
+
+class PandasModel(QAbstractTableModel):
+    def __init__(self, data, headers_row, headers_column, parent=None):
+        QAbstractTableModel.__init__(self, parent)
+        self.data = data
+        self.headers_row = headers_row
+        self.headers_column = headers_column
+
+    def headerData(self, section, orientation, role):
+        if role == QtCore.Qt.DisplayRole:  # Проверяем есть ли ячейка для отображения данных
+            if orientation == QtCore.Qt.Horizontal:  # Если это загловки  столбцов
+                return self.headers_column[section]  # То задаем соответствующее значение заголовков по индексу
+            else:  # Иначе  это заголовки строк
+                return self.headers_row[section]  # То задаем соответствующее значение заголовков по индексу
+
+    def rowCount(self, parent=None):
+        return len(self.data.values)
+
+    def columnCount(self, parent=None):
+        return self.data.columns.size
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if index.isValid():
+            if role == QtCore.Qt.DisplayRole:
+                return QVariant(str(self.data.iloc[index.row()][index.column()]))
+        return QVariant()
 
 
 if __name__ == "__main__":
