@@ -1,4 +1,7 @@
 import pandas as pd
+from Sectors import *
+from Countries import *
+
 tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недвижимость',
                                       'Товары второй необходимости',
                                       'Информационные технологии',
@@ -13,4 +16,9 @@ tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недви
                       'Рецессия': ['Коммунальные услуги', '', '', '', '', '', '',
                                    '"EXC", "DRE", "D", "NEE", "NG"']
                       })
+
+t_port_sect
+tcapa
+t_port_capa
+
 
