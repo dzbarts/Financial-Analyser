@@ -56,3 +56,15 @@ def plot_p():
     fig1, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
     plt.show()
+
+
+# stock growth Pandas DataFrame
+list_of_stock_growth_percentages = []
+list_of_stock_growth = []
+for i in range(len(flatten_port)):
+    list_of_stock_growth_percentages.append(round((stock[i].Close[-1]/stock[i].Close[-2] - 1) * 100, 2))
+    list_of_stock_growth.append(round((stock[i].Close[-1] - stock[i].Close[-2]), 2))
+
+stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages,
+                             'Stock growth, RUB': list_of_stock_growth},
+                            index=flatten_port)
