@@ -17,14 +17,6 @@ for i in range(length_of_flatten_port):
 cost = round(float(cost), 2)
 
 
-# plot of time series
-def plot_common(period):
-    for i in range(length_of_stock):
-        plt.plot(stock[i].Close[-period:])
-
-    plt.show()
-
-
 # column of dividends
 dividends = []
 
@@ -71,3 +63,11 @@ for i in range(length_of_flatten_port):
 stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages,
                              'Stock growth, RUB': list_of_stock_growth},
                             index=flatten_port)
+
+
+# plot of time series
+def plot_common(period):
+    for i in range(length_of_stock):
+        plt.plot(stock[i].Close[-period:])
+
+    plt.show()
