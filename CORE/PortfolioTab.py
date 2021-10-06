@@ -6,18 +6,20 @@ from Portfolio import *
 
 # some base variants
 stock = list(map(yf.download, flatten_port))
+length_of_flatten_port = len(flatten_port)
+length_of_stock = len(stock)
 
 # total cost
 cost = 0
 
-for i in range(len(flatten_port)):
+for i in range(length_of_flatten_port):
     cost += stock[i].Close[-1] * weight_of_stocks[i]
 cost = round(float(cost), 2)
 
 
 # plot of time series
 def plot_common(period):
-    for i in range(len(stock)):
+    for i in range(length_of_stock):
         plt.plot(stock[i].Close[-period:])
 
     plt.show()
@@ -26,14 +28,14 @@ def plot_common(period):
 # column of dividends
 dividends = []
 
-for i in range(len(flatten_portfolio)):
+for i in range(length_of_flatten_port):
     dividends.append(flatten_portfolio[i].info['dividendRate'])
 
 
 # assets Pandas DataFrame
 assets = []
 
-for i in range(len(stock)):
+for i in range(length_of_stock):
     assets.append(stock[i].tail(1))
 
 assets = pd.concat(assets)
@@ -43,7 +45,7 @@ assets.insert(0, 'Number', weight_of_stocks)
 
 
 major_holders = []
-for i in range(len(flatten_port)):
+for i in range(length_of_flatten_port):
     major_holders.append(pd.DataFrame(np.array(flatten_portfolio[i].major_holders),
                                       columns=[flatten_port[i], 'stock']).set_index('stock').T)
 
@@ -61,8 +63,9 @@ def plot_p():
 # stock growth Pandas DataFrame
 list_of_stock_growth_percentages = []
 list_of_stock_growth = []
-for i in range(len(flatten_port)):
-    list_of_stock_growth_percentages.append(round((stock[i].Close[-1]/stock[i].Close[-2] - 1) * 100, 2))
+for i in range(length_of_flatten_port):
+    list_of_stock_growth_percentages.append(round((stock[i].Close[-1] /
+                                                   stock[i].Close[-2] - 1) * 100, 2))
     list_of_stock_growth.append(round((stock[i].Close[-1] - stock[i].Close[-2]), 2))
 
 stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages,
