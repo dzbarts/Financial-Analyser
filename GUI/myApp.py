@@ -9,7 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QAbstractTableModel, QVariant
-from PyQt5.QtWidgets import QDesktopWidget, QHeaderView
+from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Sectors import tsectors, t_port_sect
@@ -101,13 +101,21 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
-        self.comboBox_4 = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_4.setGeometry(QtCore.QRect(20, 20, 181, 41))
-        self.comboBox_4.setEditable(True)
-        self.comboBox_4.setObjectName("comboBox_4")
-        self.comboBox_4.addItem("")
-        self.comboBox_4.addItem("")
-        self.comboBox_4.addItem("")
+        self.edit = QtWidgets.QTextEdit(self.tab_4)
+        self.edit.setGeometry(QtCore.QRect(20, 20, 150, 31))
+        self.edit.setObjectName("editable")
+        self.add_btn = QtWidgets.QPushButton(self.tab_4)
+        self.add_btn.setGeometry(QtCore.QRect(720, 20, 180, 31))
+        self.add_btn.setObjectName("add_btn")
+        self.add_btn.setText("Add stock into the portfolio")
+        self.remove_btn = QtWidgets.QPushButton(self.tab_4)
+        self.remove_btn.setGeometry(QtCore.QRect(920, 20, 250, 31))
+        self.remove_btn.setObjectName("remove_btn")
+        self.remove_btn.setText("Remove the stock from the portfolio")
+        self.clear_all_btn = QtWidgets.QPushButton(self.tab_4)
+        self.clear_all_btn.setGeometry(QtCore.QRect(1500, 20, 150, 31))
+        self.clear_all_btn.setObjectName("clear_btn")
+        self.clear_all_btn.setText("Clear the portfolio")
         self.tabWidget.addTab(self.tab_4, "")
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
@@ -140,10 +148,6 @@ class Ui_MainWindow(object):
         self.comboBox_7.addItem("")
         self.tabWidget.addTab(self.tab_7, "")
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 902, 26))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
@@ -153,6 +157,21 @@ class Ui_MainWindow(object):
         self.news_NEWS.setText(parsing_RBC())
         self.renew_btn_NEWS.clicked.connect(self.path_to_the_page)
         self.news_NEWS.setOpenExternalLinks(True)
+        self.add_btn.clicked.connect(self.add_to_the_portfolio)
+        self.remove_btn.clicked.connect(self.remove_the_stock)
+        self.clear_all_btn.clicked.connect(self.clear_all)
+
+    def rewrite_port(self, str):
+        with open('proj.txt', 'a') as txt:
+            txt.write(str + '\n')
+
+    def remove_from_port(self, str):
+        with open("proj.txt", "r") as f:
+            lines = f.readlines()
+        with open("proj.txt", "w") as f:
+            for line in lines:
+                if line.strip("\n") != str:
+                    f.write(line)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -168,9 +187,6 @@ class Ui_MainWindow(object):
         self.NEWS_label.setText(_translate("MainWindow", "RBC"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Page 2"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Page 3"))
-        self.comboBox_4.setItemText(0, _translate("MainWindow", "New Item 1"))
-        self.comboBox_4.setItemText(1, _translate("MainWindow", "New Item 2"))
-        self.comboBox_4.setItemText(2, _translate("MainWindow", "New Item 3"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Page 4"))
         self.comboBox_5.setItemText(0, _translate("MainWindow", "New Item 1"))
         self.comboBox_5.setItemText(1, _translate("MainWindow", "New Item 2"))
@@ -197,6 +213,32 @@ class Ui_MainWindow(object):
         elif self.comboBox_NEWS.currentText() == 'MOEX':
             self.NEWS_label.setText('MOEX')
             self.news_NEWS.setText(parsing_moex())
+
+    def add_to_the_portfolio(self):
+        if self.edit.toPlainText() == '':
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка набора")
+            error.setText("Пустой текст")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+        else:
+            self.rewrite_port(self.edit.toPlainText())
+            self.edit.clear()
+
+    def remove_the_stock(self):
+        if self.edit.toPlainText() == '':
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка набора")
+            error.setText("Пустой текст")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+        else:
+            self.remove_from_port(self.edit.toPlainText())
+            self.edit.clear()
+
+    def clear_all(self):
+        with open('proj.txt', 'w'):
+            pass
 
 
 class PandasModel(QAbstractTableModel):
