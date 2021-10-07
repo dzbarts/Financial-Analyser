@@ -161,6 +161,16 @@ class Ui_MainWindow(object):
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(self.clear_all)
 
+    def read_port(self):
+        l = []
+        with open('proj.txt', 'r') as txt:
+            while 1:
+                s = txt.readline().replace('\n', '')
+                if not s:
+                    break
+                l.append(s)
+        return l
+
     def rewrite_port(self, str):
         with open('proj.txt', 'a') as txt:
             txt.write(str + '\n')
