@@ -12,7 +12,8 @@ from PyQt5.QtCore import QAbstractTableModel, QVariant
 from PyQt5.QtWidgets import QDesktopWidget, QHeaderView
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
-from Table import *
+from Sectors import tsectors, t_port_sect
+from Countries import tcapa, t_port_capa
 
 
 def main():
@@ -77,21 +78,21 @@ class Ui_MainWindow(object):
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)
         self.view_2 = QtWidgets.QTableView(self.tab_3)
-        self.view_2.setGeometry(QtCore.QRect(50, 400, 1200, 440))
+        self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 400))
         self.view_2.setObjectName("table_data")
         self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
                                    headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
         self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_2.setModel(self.model_2)
         self.view_3 = QtWidgets.QTableView(self.tab_3)
-        self.view_3.setGeometry(QtCore.QRect(1300, 50, 550, 255))
+        self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data")
         self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Sectors'],
                                    headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
         self.view_4 = QtWidgets.QTableView(self.tab_3)
-        self.view_4.setGeometry(QtCore.QRect(1300, 350, 550, 255))
+        self.view_4.setGeometry(QtCore.QRect(770, 690, 480, 254))
         self.view_4.setObjectName("table_data")
         self.model_4 = PandasModel(t_port_capa, headers_column=['Stocks', 'Number', 'Countries'],
                                    headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
