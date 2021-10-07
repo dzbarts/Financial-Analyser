@@ -6,12 +6,13 @@ from Portfolio import *
 def get_country(el):
     return el.info['country']
 
-
+# some base variants
 list_of_all_countries = list(map(get_country, flatten_portfolio))
 list_of_countries = list(set(list_of_all_countries))
 
 weight_for_plot_c = [0] * len(list_of_countries)
 
+# countries Pandas DataFrame
 t_port_capa = pd.DataFrame({
     'Stocks': flatten_port,
     'Number': weight_of_stocks,

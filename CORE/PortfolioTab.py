@@ -1,69 +1,73 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from Portfolio import *
 
+
+# some base variants
 stock = list(map(yf.download, flatten_port))
+length_of_flatten_port = len(flatten_port)
+length_of_stock = len(stock)
 
-summa = 0
+# total cost
+cost = 0
 
-for i in range(len(flatten_port)):
-    summa += stock[i].Close[-1] * weight_of_stocks[i]
-summa = round(float(summa), 2)
-
-
-def plot_common(period):
-    for i in range(len(stock)):
-        plt.plot(stock[i].Close[-period:])
-
-    plt.show()
+for i in range(length_of_flatten_port):
+    cost += stock[i].Close[-1] * weight_of_stocks[i]
+cost = round(float(cost), 2)
 
 
-#plot_common(200)
-
-# Выделение скорректированой цены закрытия
-# all_adj_close = stock[['Adj Close']]
-# print(all_adj_close)
-# print(stock[['Sector']])
-
-
+# column of dividends
 dividends = []
 
-for i in range(len(flatten_portfolio)):
+for i in range(length_of_flatten_port):
     dividends.append(flatten_portfolio[i].info['dividendRate'])
-#
-# t_dividends = pd.DataFrame({'Stocks': flatten_port,
-#                       'Dividents (per year)': dividends
-#                       })
 
 
+# assets Pandas DataFrame
 assets = []
 
-for i in range(len(stock)):
+for i in range(length_of_stock):
     assets.append(stock[i].tail(1))
 
 assets = pd.concat(assets)
-
 assets.index = flatten_port
-
-assets['Dividents (per year)'] = dividends
-
+assets['Dividends (per year)'] = dividends
 assets.insert(0, 'Number', weight_of_stocks)
 
-# holders = []
-#
-# for i in range(len(flatten_portfolio)):
-#     holders.append(flatten_portfolio[i].major_holders)
 
-# holders = pd.concat(holders)
-
-# assets['Major holders'] = holders
+major_holders = []
+for i in range(length_of_flatten_port):
+    major_holders.append(pd.DataFrame(np.array(flatten_portfolio[i].major_holders),
+                                      columns=[flatten_port[i], 'stock']).set_index('stock').T)
 
 
-# print(holders)
-print(assets)
+assets = assets.join(pd.concat(major_holders))
 
 
+# pie plot of assets
 def plot_p():
     fig1, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
+    plt.show()
+
+
+# stock growth Pandas DataFrame
+list_of_stock_growth_percentages = []
+list_of_stock_growth = []
+for i in range(length_of_flatten_port):
+    list_of_stock_growth_percentages.append(round((stock[i].Close[-1] /
+                                                   stock[i].Close[-2] - 1) * 100, 2))
+    list_of_stock_growth.append(round((stock[i].Close[-1] - stock[i].Close[-2]), 2))
+
+stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages,
+                             'Stock growth, RUB': list_of_stock_growth},
+                            index=flatten_port)
+
+
+# plot of time series
+def plot_common(period):
+    for i in range(length_of_stock):
+        plt.plot(stock[i].Close[-period:])
+
     plt.show()

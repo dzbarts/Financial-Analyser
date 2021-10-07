@@ -7,12 +7,14 @@ def get_sector(el):
     return el.info['sector']
 
 
+# some base variants
 list_of_all_sectors = list(map(get_sector, flatten_portfolio))
 list_of_sectors = list(set(list_of_all_sectors))
 
 weight_for_plot_s = [0] * len(list_of_sectors)
 
 
+# sectors Pandas DataFrame
 t_port_sect = pd.DataFrame({
     'Stocks': flatten_port,
     'Number': weight_of_stocks,
@@ -39,7 +41,7 @@ tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недви
                       'Рецессия': ['Коммунальные услуги', '', '', '', '', '', '',
                                    '"EXC", "DRE", "D", "NEE", "NG"']
                       }, index=['1', '2', '3', '4', '5','6', '', 'Рекомендации'])
-print(tsectors)
+
 
 def plot_s():
     fig1, ax1 = plt.subplots()
