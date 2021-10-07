@@ -21,6 +21,7 @@ def main():
     width = sizeObject.width()
     return [int(heignt), int(width)]
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -75,6 +76,27 @@ class Ui_MainWindow(object):
                                  headers_row=['1', '2', '3', '4', '5', '6', '', 'Рекомендации'])
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)
+        self.view_2 = QtWidgets.QTableView(self.tab_3)
+        self.view_2.setGeometry(QtCore.QRect(50, 400, 1200, 440))
+        self.view_2.setObjectName("table_data")
+        self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
+                                   headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
+        self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_2.setModel(self.model_2)
+        self.view_3 = QtWidgets.QTableView(self.tab_3)
+        self.view_3.setGeometry(QtCore.QRect(1300, 50, 550, 255))
+        self.view_3.setObjectName("table_data")
+        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
+        self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_3.setModel(self.model_3)
+        self.view_4 = QtWidgets.QTableView(self.tab_3)
+        self.view_4.setGeometry(QtCore.QRect(1300, 350, 550, 255))
+        self.view_4.setObjectName("table_data")
+        self.model_4 = PandasModel(t_port_capa, headers_column=['Stocks', 'Number', 'Countries'],
+                                   headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
+        self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_4.setModel(self.model_4)
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -188,6 +210,8 @@ class PandasModel(QAbstractTableModel):
             if orientation == QtCore.Qt.Horizontal:  # Если это загловки  столбцов
                 return self.headers_column[section]  # То задаем соответствующее значение заголовков по индексу
             else:  # Иначе  это заголовки строк
+                if not self.headers_row:
+                    return section + 1
                 return self.headers_row[section]  # То задаем соответствующее значение заголовков по индексу
 
     def rowCount(self, parent=None):
@@ -205,6 +229,7 @@ class PandasModel(QAbstractTableModel):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
