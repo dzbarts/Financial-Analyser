@@ -23,6 +23,37 @@ def main():
     return [int(heignt), int(width)]
 
 
+def read_port():
+    l = []
+    with open('proj.txt', 'r') as txt:
+        while 1:
+            s = txt.readline().replace('\n', '')
+            if not s:
+                break
+            l.append(s)
+    return l
+
+
+def rewrite_port(str):
+    with open('proj.txt', 'a') as txt:
+        txt.write(str + '\n')
+
+
+def remove_from_port(str):
+    with open("proj.txt", "r") as f:
+        lines = f.readlines()
+    with open("proj.txt", "w") as f:
+        if str + '\n' in lines:
+            lines.remove(str + '\n')
+        for line in lines:
+            f.write(line)
+
+
+def clear_all():
+    with open('proj.txt', 'w'):
+        pass
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -103,7 +134,10 @@ class Ui_MainWindow(object):
         self.tab_4.setObjectName("tab_4")
         self.edit = QtWidgets.QTextEdit(self.tab_4)
         self.edit.setGeometry(QtCore.QRect(20, 20, 150, 31))
-        self.edit.setObjectName("editable")
+        self.edit.setObjectName("editable_stock")
+        self.edit_n = QtWidgets.QTextEdit(self.tab_4)
+        self.edit_n.setGeometry(QtCore.QRect(20, 40, 150, 31))
+        self.edit_n.setObjectName("editable_number")
         self.add_btn = QtWidgets.QPushButton(self.tab_4)
         self.add_btn.setGeometry(QtCore.QRect(720, 20, 180, 31))
         self.add_btn.setObjectName("add_btn")
@@ -159,29 +193,7 @@ class Ui_MainWindow(object):
         self.news_NEWS.setOpenExternalLinks(True)
         self.add_btn.clicked.connect(self.add_to_the_portfolio)
         self.remove_btn.clicked.connect(self.remove_the_stock)
-        self.clear_all_btn.clicked.connect(self.clear_all)
-
-    def read_port(self):
-        l = []
-        with open('proj.txt', 'r') as txt:
-            while 1:
-                s = txt.readline().replace('\n', '')
-                if not s:
-                    break
-                l.append(s)
-        return l
-
-    def rewrite_port(self, str):
-        with open('proj.txt', 'a') as txt:
-            txt.write(str + '\n')
-
-    def remove_from_port(self, str):
-        with open("proj.txt", "r") as f:
-            lines = f.readlines()
-        with open("proj.txt", "w") as f:
-            for line in lines:
-                if line.strip("\n") != str:
-                    f.write(line)
+        self.clear_all_btn.clicked.connect(clear_all)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -225,30 +237,56 @@ class Ui_MainWindow(object):
             self.news_NEWS.setText(parsing_moex())
 
     def add_to_the_portfolio(self):
-        if self.edit.toPlainText() == '':
+        if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):
             error = QMessageBox()
             error.setWindowTitle("Ошибка набора")
             error.setText("Пустой текст")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
         else:
-            self.rewrite_port(self.edit.toPlainText())
-            self.edit.clear()
+            try:
+                n = int(self.edit_n.toPlainText())
+                while n > 0:
+                    rewrite_port(self.edit.toPlainText())
+                    n = n - 1
+            except ValueError:
+                error = QMessageBox()
+                error.setWindowTitle("Ошибка набора")
+                error.setText("Неверный формат текста")
+                error.setIcon(QMessageBox.Warning)
+                error.exec_()
+        self.edit.clear()
+        self.edit_n.clear()
 
     def remove_the_stock(self):
-        if self.edit.toPlainText() == '':
+        if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):
             error = QMessageBox()
             error.setWindowTitle("Ошибка набора")
             error.setText("Пустой текст")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
         else:
-            self.remove_from_port(self.edit.toPlainText())
+            try:
+                n = int(self.edit_n.toPlainText())
+                stock = self.edit.toPlainText()
+                if read_port().count(stock) >= n:
+                    while n > 0:
+                        remove_from_port(self.edit.toPlainText())
+                        n = n - 1
+                else:
+                    error = QMessageBox()
+                    error.setWindowTitle("Ошибка набора")
+                    error.setText("У Вас осталось " + str(read_port().count(stock)) + " акций")
+                    error.setIcon(QMessageBox.Warning)
+                    error.exec_()
+            except ValueError:
+                error = QMessageBox()
+                error.setWindowTitle("Ошибка набора")
+                error.setText("Неверный формат текста")
+                error.setIcon(QMessageBox.Warning)
+                error.exec_()
             self.edit.clear()
-
-    def clear_all(self):
-        with open('proj.txt', 'w'):
-            pass
+            self.edit_n.clear()
 
 
 class PandasModel(QAbstractTableModel):
