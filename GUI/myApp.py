@@ -64,6 +64,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, main()[1], main()[0]))
         self.tabWidget.setIconSize(QtCore.QSize(50, 20))
         self.tabWidget.setObjectName("tabWidget")
+
         self.tab_1 = QtWidgets.QWidget()
         self.tab_1.setObjectName("tab_1")
         self.comboBox = QtWidgets.QComboBox(self.tab_1)
@@ -74,33 +75,28 @@ class Ui_MainWindow(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.tabWidget.addTab(self.tab_1, "")
+
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
-        self.stackedWidget = QtWidgets.QStackedWidget(self.tab_2)
-        self.stackedWidget.setGeometry(QtCore.QRect(-10, 0, main()[1], main()[0]))
-        self.stackedWidget.setObjectName("stackedWidget")
-        self.page_1 = QtWidgets.QWidget()
-        self.page_1.setObjectName("page_1")
-        self.comboBox_NEWS = QtWidgets.QComboBox(self.page_1)
+        self.comboBox_NEWS = QtWidgets.QComboBox(self.tab_2)
         self.comboBox_NEWS.setGeometry(QtCore.QRect(20, 20, 171, 41))
         self.comboBox_NEWS.setObjectName("comboBox_NEWS")
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.addItem("")
-        self.renew_btn_NEWS = QtWidgets.QPushButton(self.page_1)
+        self.renew_btn_NEWS = QtWidgets.QPushButton(self.tab_2)
         self.renew_btn_NEWS.setGeometry(QtCore.QRect(720, 20, 141, 31))
         self.renew_btn_NEWS.setObjectName("renew_btn_NEWS")
-        self.NEWS_label = QtWidgets.QLabel(self.page_1)
+        self.NEWS_label = QtWidgets.QLabel(self.tab_2)
         self.NEWS_label.setGeometry(QtCore.QRect(20, 70, 271, 41))
         self.NEWS_label.setObjectName("NEWS_label")
-        self.news_NEWS = QtWidgets.QTextBrowser(self.page_1)
+        self.news_NEWS = QtWidgets.QTextBrowser(self.tab_2)
         self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 30, main()[0] - 350))
         self.news_NEWS.setObjectName("news_NEWS")
-        self.stackedWidget.addWidget(self.page_1)
         self.tabWidget.addTab(self.tab_2, "")
+
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
-        self.column_names = ['Ранняя фаза', 'Средняя фаза', 'Закат', 'Рецессия']
         self.view = QtWidgets.QTableView(self.tab_3)
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data")
@@ -130,6 +126,7 @@ class Ui_MainWindow(object):
         self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_4.setModel(self.model_4)
         self.tabWidget.addTab(self.tab_3, "")
+
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
         self.edit = QtWidgets.QTextEdit(self.tab_4)
@@ -151,6 +148,7 @@ class Ui_MainWindow(object):
         self.clear_all_btn.setObjectName("clear_btn")
         self.clear_all_btn.setText("Clear the portfolio")
         self.tabWidget.addTab(self.tab_4, "")
+
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
         self.comboBox_5 = QtWidgets.QComboBox(self.tab_5)
@@ -161,6 +159,7 @@ class Ui_MainWindow(object):
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.tabWidget.addTab(self.tab_5, "")
+
         self.tab_6 = QtWidgets.QWidget()
         self.tab_6.setObjectName("tab_6")
         self.comboBox_6 = QtWidgets.QComboBox(self.tab_6)
@@ -171,6 +170,7 @@ class Ui_MainWindow(object):
         self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
         self.tabWidget.addTab(self.tab_6, "")
+
         self.tab_7 = QtWidgets.QWidget()
         self.tab_7.setObjectName("tab_7")
         self.comboBox_7 = QtWidgets.QComboBox(self.tab_7)
@@ -185,7 +185,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
-        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.news_NEWS.setText(parsing_RBC())
