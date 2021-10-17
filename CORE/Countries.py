@@ -36,6 +36,7 @@ for i in range(len(weight_of_stocks)):
 
 # pie plot for countries
 def plot_c():
-    fig1, ax1 = plt.subplots()
+    fig_c, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_c, labels=list_of_countries)
-    plt.show()
+    return fig_c
+    #plt.show()

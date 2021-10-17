@@ -10,10 +10,13 @@ import yfinance as yf
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QAbstractTableModel, QVariant
 from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
-from Sectors import tsectors, t_port_sect
-from Countries import tcapa, t_port_capa
+from Sectors import tsectors, t_port_sect, plot_s
+from Countries import tcapa, t_port_capa, plot_c
+from canvas import GraphicsCanvas
+from pandasmodel import PandasModel
 
 
 def main():
@@ -93,7 +96,7 @@ class Ui_MainWindow(object):
         self.NEWS_label.setGeometry(QtCore.QRect(20, 70, 271, 41))
         self.NEWS_label.setObjectName("NEWS_label")
         self.news_NEWS = QtWidgets.QTextBrowser(self.tab_2)
-        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 30, main()[0] - 350))
+        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 50, main()[0] - 350))
         self.news_NEWS.setObjectName("news_NEWS")
         self.tabWidget.addTab(self.tab_2, "")
 
@@ -127,26 +130,44 @@ class Ui_MainWindow(object):
                                    headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
         self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_4.setModel(self.model_4)
+        self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)
+        self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
+
+        self.widget_for_g_2 = QtWidgets.QWidget(self.tab_3)
+        self.widget_for_g_2.setGeometry(1250, 480, 600, 480)
+
+        self.fig_1 = plot_c()
+        self.fig_2 = plot_s()
+        self.layout_for_mpl_1 = QtWidgets.QVBoxLayout(self.widget_for_g_1)
+        self.layout_for_mpl_2 = QtWidgets.QVBoxLayout(self.widget_for_g_2)
+        self.canvas_1 = GraphicsCanvas(self.fig_1)
+        self.canvas_2 = GraphicsCanvas(self.fig_2)
+        self.layout_for_mpl_1.addWidget(self.canvas_1)
+        self.layout_for_mpl_2.addWidget(self.canvas_2)
+        self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
+        self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
+        self.layout_for_mpl_1.addWidget(self.toolbar_1)
+        self.layout_for_mpl_2.addWidget(self.toolbar_2)
         self.tabWidget.addTab(self.tab_3, "")
 
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
         self.edit = QtWidgets.QTextEdit(self.tab_4)
-        self.edit.setGeometry(QtCore.QRect(20, 20, 150, 31))
+        self.edit.setGeometry(QtCore.QRect(20, 20, 200, 50))
         self.edit.setObjectName("editable_stock")
         self.edit_n = QtWidgets.QTextEdit(self.tab_4)
-        self.edit_n.setGeometry(QtCore.QRect(20, 40, 150, 31))
+        self.edit_n.setGeometry(QtCore.QRect(20, 80, 200, 50))
         self.edit_n.setObjectName("editable_number")
         self.add_btn = QtWidgets.QPushButton(self.tab_4)
-        self.add_btn.setGeometry(QtCore.QRect(720, 20, 180, 31))
+        self.add_btn.setGeometry(QtCore.QRect(720, 20, 230, 50))
         self.add_btn.setObjectName("add_btn")
         self.add_btn.setText("Add stock into the portfolio")
         self.remove_btn = QtWidgets.QPushButton(self.tab_4)
-        self.remove_btn.setGeometry(QtCore.QRect(920, 20, 250, 31))
+        self.remove_btn.setGeometry(QtCore.QRect(1000, 20, 300, 50))
         self.remove_btn.setObjectName("remove_btn")
         self.remove_btn.setText("Remove the stock from the portfolio")
         self.clear_all_btn = QtWidgets.QPushButton(self.tab_4)
-        self.clear_all_btn.setGeometry(QtCore.QRect(1500, 20, 150, 31))
+        self.clear_all_btn.setGeometry(QtCore.QRect(1500, 20, 200, 50))
         self.clear_all_btn.setObjectName("clear_btn")
         self.clear_all_btn.setText("Clear the portfolio")
         self.tabWidget.addTab(self.tab_4, "")
@@ -296,35 +317,6 @@ class Ui_MainWindow(object):
                 error.exec_()
             self.edit.clear()
             self.edit_n.clear()
-
-
-class PandasModel(QAbstractTableModel):
-    def __init__(self, data, headers_row, headers_column, parent=None):
-        QAbstractTableModel.__init__(self, parent)
-        self.data = data
-        self.headers_row = headers_row
-        self.headers_column = headers_column
-
-    def headerData(self, section, orientation, role):
-        if role == QtCore.Qt.DisplayRole:  # Проверяем есть ли ячейка для отображения данных
-            if orientation == QtCore.Qt.Horizontal:  # Если это загловки  столбцов
-                return self.headers_column[section]  # То задаем соответствующее значение заголовков по индексу
-            else:  # Иначе  это заголовки строк
-                if not self.headers_row:
-                    return section + 1
-                return self.headers_row[section]  # То задаем соответствующее значение заголовков по индексу
-
-    def rowCount(self, parent=None):
-        return len(self.data.values)
-
-    def columnCount(self, parent=None):
-        return self.data.columns.size
-
-    def data(self, index, role=QtCore.Qt.DisplayRole):
-        if index.isValid():
-            if role == QtCore.Qt.DisplayRole:
-                return QVariant(str(self.data.iloc[index.row()][index.column()]))
-        return QVariant()
 
 
 if __name__ == "__main__":
