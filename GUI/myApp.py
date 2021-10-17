@@ -57,9 +57,11 @@ def clear_all():
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(main()[1], main()[0])
+        MainWindow.setFixedSize(main()[1], main()[0])
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, main()[1], main()[0]))
         self.tabWidget.setIconSize(QtCore.QSize(50, 20))
@@ -181,6 +183,7 @@ class Ui_MainWindow(object):
         self.comboBox_7.addItem("")
         self.comboBox_7.addItem("")
         self.tabWidget.addTab(self.tab_7, "")
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
