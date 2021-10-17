@@ -19,14 +19,14 @@ from canvas import GraphicsCanvas
 from pandasmodel import PandasModel
 
 
-def main():
+def main():  # ф-ция рассчета размера окна
     sizeObject = QDesktopWidget().screenGeometry(-1)  # -1 означает, что мы берем на измерение текущий экран
     heignt = sizeObject.height()
     width = sizeObject.width()
     return [int(heignt), int(width)]
 
 
-def read_port():
+def read_port():  # ф-ция читки портфеля
     l = []
     with open('proj.txt', 'r') as txt:
         while 1:
@@ -37,12 +37,12 @@ def read_port():
     return l
 
 
-def rewrite_port(str):
+def rewrite_port(str):  # ф-ция переписывания (добавления эл-та в портфель)
     with open('proj.txt', 'a') as txt:
         txt.write(str + '\n')
 
 
-def remove_from_port(str):
+def remove_from_port(str):  # ф-ция удаления эл-та из портфеля
     with open("proj.txt", "r") as f:
         lines = f.readlines()
     with open("proj.txt", "w") as f:
@@ -52,7 +52,7 @@ def remove_from_port(str):
             f.write(line)
 
 
-def clear_all():
+def clear_all():  # ф-ция очистки портфеля
     with open('proj.txt', 'w'):
         pass
 
@@ -106,9 +106,10 @@ class Ui_MainWindow(object):
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data")
         self.model = PandasModel(tsectors, headers_column=['Ранняя фаза', 'Средняя фаза', 'Закат', 'Рецессия'],
-                                 headers_row=['1', '2', '3', '4', '5', '6', '', 'Рекомендации'])
+                                 headers_row=['1', '2', '3', '4', '5', '6', '',
+                                              'Рекомендации'])  # создаепм модель готового класса
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view.setModel(self.model)
+        self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
         self.view_2 = QtWidgets.QTableView(self.tab_3)
         self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 400))
         self.view_2.setObjectName("table_data")
@@ -130,23 +131,24 @@ class Ui_MainWindow(object):
                                    headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
         self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_4.setModel(self.model_4)
-        self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)
+        self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
 
         self.widget_for_g_2 = QtWidgets.QWidget(self.tab_3)
         self.widget_for_g_2.setGeometry(1250, 480, 600, 480)
 
-        self.fig_1 = plot_c()
+        self.fig_1 = plot_c()  # график
         self.fig_2 = plot_s()
-        self.layout_for_mpl_1 = QtWidgets.QVBoxLayout(self.widget_for_g_1)
+        self.layout_for_mpl_1 = QtWidgets.QVBoxLayout(self.widget_for_g_1)  # виджет для компоновки объектов
         self.layout_for_mpl_2 = QtWidgets.QVBoxLayout(self.widget_for_g_2)
-        self.canvas_1 = GraphicsCanvas(self.fig_1)
+        self.canvas_1 = GraphicsCanvas(self.fig_1)  # создаем холст для прорисовки графика
         self.canvas_2 = GraphicsCanvas(self.fig_2)
-        self.layout_for_mpl_1.addWidget(self.canvas_1)
+        self.layout_for_mpl_1.addWidget(self.canvas_1)  # добавляем холст в лэйаут
         self.layout_for_mpl_2.addWidget(self.canvas_2)
-        self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
+        self.toolbar_1 = NavigationToolbar(self.canvas_1,
+                                           MainWindow)  # создаем панель управления, берем ее с графика mpl
         self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
-        self.layout_for_mpl_1.addWidget(self.toolbar_1)
+        self.layout_for_mpl_1.addWidget(self.toolbar_1)  # добавляем панель управления в лэйаут
         self.layout_for_mpl_2.addWidget(self.toolbar_2)
         self.tabWidget.addTab(self.tab_3, "")
 
@@ -212,8 +214,9 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.news_NEWS.setText(parsing_RBC())
-        self.renew_btn_NEWS.clicked.connect(self.path_to_the_page)
-        self.news_NEWS.setOpenExternalLinks(True)
+        self.renew_btn_NEWS.clicked.connect(self.path_to_the_page)  # добавляем обработчик событий:
+        # при нажатии на кнопку происходит действие переданной ф-ции
+        self.news_NEWS.setOpenExternalLinks(True)  # опция для перенаправления при нажатии на ссылку
         self.add_btn.clicked.connect(self.add_to_the_portfolio)
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(clear_all)
