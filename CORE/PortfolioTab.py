@@ -43,6 +43,7 @@ for i in range(length_of_flatten_port):
 
 
 assets = assets.join(pd.concat(major_holders))
+assets.insert(0, "Stocks", assets.index)
 
 
 # pie plot of assets
@@ -67,7 +68,7 @@ stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages
 
 # plot of time series
 def plot_common(period):
+    fig1, ax1 = plt.subplots()
     for i in range(length_of_stock):
-        plt.plot(stock[i].Close[-period:])
-
+        ax1.plot(stock[i].Close[-period:])
     plt.show()
