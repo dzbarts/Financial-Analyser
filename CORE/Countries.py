@@ -6,6 +6,7 @@ from Portfolio import *
 def get_country(el):
     return el.info['country']
 
+
 # some base variants
 list_of_all_countries = list(map(get_country, flatten_portfolio))
 list_of_countries = list(set(list_of_all_countries))
@@ -39,4 +40,4 @@ def plot_c():
     fig_c, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_c, labels=list_of_countries)
     return fig_c
-    #plt.show()
+    # plt.show()
