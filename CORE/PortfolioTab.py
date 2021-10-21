@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Portfolio import *
 
-
 # some base variants
 stock = list(map(yf.download, flatten_port))
 length_of_flatten_port = len(flatten_port)
@@ -16,13 +15,11 @@ for i in range(length_of_flatten_port):
     cost += stock[i].Close[-1] * weight_of_stocks[i]
 cost = round(float(cost), 2)
 
-
 # column of dividends
 dividends = []
 
 for i in range(length_of_flatten_port):
     dividends.append(flatten_portfolio[i].info['dividendRate'])
-
 
 # assets Pandas DataFrame
 assets = []
@@ -35,22 +32,20 @@ assets.index = flatten_port
 assets['Dividends (per year)'] = dividends
 assets.insert(0, 'Number', weight_of_stocks)
 
-
 major_holders = []
 for i in range(length_of_flatten_port):
     major_holders.append(pd.DataFrame(np.array(flatten_portfolio[i].major_holders),
                                       columns=[flatten_port[i], 'stock']).set_index('stock').T)
 
-
 assets = assets.join(pd.concat(major_holders))
-assets.insert(0, "Stocks", assets.index)
 
 
 # pie plot of assets
 def plot_p():
-    fig1, ax1 = plt.subplots()
+    fig_p, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
-    plt.show()
+    return fig_p
+    # plt.show()
 
 
 # stock growth Pandas DataFrame
@@ -68,7 +63,8 @@ stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages
 
 # plot of time series
 def plot_common(period):
-    fig1, ax1 = plt.subplots()
+    fig_c, ax1 = plt.subplots()
     for i in range(length_of_stock):
         ax1.plot(stock[i].Close[-period:])
-    plt.show()
+    return fig_c
+    # plt.show()
