@@ -176,13 +176,19 @@ class Ui_MainWindow(object):
         self.view_5 = QtWidgets.QTableView(self.tab_4)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1280, 250))
         self.view_5.setObjectName("table_data_5")
-        self.model_5 = PandasModel(assets, headers_column=['Number', 'Open', 'High', 'Low', 'Close', 'Adj Close',
-                                                           'Volume', 'Dividends (per year)',
+        self.model_5 = PandasModel(assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
+                                                           'Volume', 'Div. (per year)',
                                                            '% of Shares Held by All Insider',
-                                                           '% of Shares Held by Institutions',
-                                                           '% of Float Held by Institutions',
-                                                           'Number of Institutions Holding Shares'],
+                                                           '% of Shares Held by Inst.',
+                                                           '% of Float Held by Inst.',
+                                                           'Number of Inst. Hold. Shares'],
                                    headers_row=[str(i) for i in range(1, assets.shape[0] + 1)])
+        # ['Number', 'Open', 'High', 'Low', 'Close',
+        #         #  'Volume', 'Dividends (per year)',
+        #         #  '% of Shares Held by All Insider',
+        #         #  '% of Shares Held by Institutions',
+        #         #  '% of Float Held by Institutions',
+        #         #  'Number of Institutions Holding Shares'],
         self.view_5.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_5.setModel(self.model_5)
 

@@ -29,6 +29,7 @@ for i in range(length_of_stock):
 
 assets = pd.concat(assets)
 assets.index = flatten_port
+assets = assets.round(2)
 assets['Dividends (per year)'] = dividends
 assets.insert(0, 'Number', weight_of_stocks)
 
@@ -38,7 +39,8 @@ for i in range(length_of_flatten_port):
                                       columns=[flatten_port[i], 'stock']).set_index('stock').T)
 
 assets = assets.join(pd.concat(major_holders))
-
+assets.insert(0, 'Stocks', flatten_port)
+assets.pop('Adj Close')
 
 # pie plot of assets
 def plot_p():
