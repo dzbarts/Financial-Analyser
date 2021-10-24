@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from Portfolio import *
 
+plt.style.use('seaborn')
+
 
 def get_sector(el):
     return el.info['sector']

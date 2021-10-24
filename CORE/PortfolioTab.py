@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from Portfolio import *
+import matplotlib
 
 # some base variants
 stock = list(map(yf.download, flatten_port))
@@ -44,6 +45,8 @@ assets.pop('Adj Close')
 
 # pie plot of assets
 def plot_p():
+    plt.style.use('dark_background')
+
     fig_p, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
     return fig_p
@@ -70,5 +73,7 @@ def plot_common(period):
     fig_c, ax1 = plt.subplots()
     for i in range(length_of_stock):
         ax1.plot(stock[i].Close[-period:])
+
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     return fig_c
     # plt.show()
