@@ -111,7 +111,7 @@ class Ui_MainWindow(object):
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
         self.view_2 = QtWidgets.QTableView(self.tab_3)
-        self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 400))
+        self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 439))
         self.view_2.setObjectName("table_data_2")
         self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
                                    headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         self.clear_all_btn.setText("Clear the portfolio")
 
         self.view_5 = QtWidgets.QTableView(self.tab_4)
-        self.view_5.setGeometry(QtCore.QRect(30, 200, 1280, 250))
+        self.view_5.setGeometry(QtCore.QRect(30, 200, 1850, 254))
         self.view_5.setObjectName("table_data_5")
         self.model_5 = PandasModel(assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
                                                            'Volume', 'Div. (per year)',
@@ -183,33 +183,33 @@ class Ui_MainWindow(object):
                                                            '% of Float Held by Inst.',
                                                            'Number of Inst. Hold. Shares'],
                                    headers_row=[str(i) for i in range(1, assets.shape[0] + 1)])
-        # ['Number', 'Open', 'High', 'Low', 'Close',
-        #         #  'Volume', 'Dividends (per year)',
-        #         #  '% of Shares Held by All Insider',
-        #         #  '% of Shares Held by Institutions',
-        #         #  '% of Float Held by Institutions',
-        #         #  'Number of Institutions Holding Shares'],
         self.view_5.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_5.setModel(self.model_5)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
-        self.view_6.setGeometry(QtCore.QRect(50, 500, 700, 250))
+        self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
         self.view_6.setObjectName("table_data_6")
-        self.model_6 = PandasModel(stock_growth, headers_column=['Stock growth %', 'Stock growth, RUB'],
+        self.model_6 = PandasModel(stock_growth, headers_column=['Stocks', 'Stock growth %', 'Stock growth, RUB'],
                                    headers_row=[str(i) for i in range(1, stock_growth.shape[0] + 1)])
         self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_6.setModel(self.model_6)
 
         self.widget_for_g_p = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_g_p.setGeometry(1400, 100, 500, 400)
+        self.widget_for_g_p.setGeometry(550, 480, 500, 480)
 
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_g_c.setGeometry(1200, 480, 1000, 480)
+        self.widget_for_g_c.setGeometry(1200, 480, 800, 480)
 
         self.fig_p = plot_p()
-        self.set_period = QtWidgets.QTextEdit(self.tab_4)
-        self.set_period.setGeometry(QtCore.QRect(20, 150, 200, 30))
-        self.set_period.setObjectName("set_period")
+        self.comboBox_4 = QtWidgets.QComboBox(self.tab_4)
+        self.comboBox_4.setGeometry(QtCore.QRect(1292, 500, 100, 31))
+        self.comboBox_4.setObjectName("set_period")
+        self.comboBox_4.addItem("")
+        self.comboBox_4.addItem("")
+        self.comboBox_4.addItem("")
+        self.renew_btn_period = QtWidgets.QPushButton(self.tab_4)
+        self.renew_btn_period.setGeometry(QtCore.QRect(1645, 500, 141, 31))
+        self.renew_btn_period.setObjectName("renew_btn_period")
 
         self.fig_c = plot_common(40)
         self.layout_for_mpl_p = QtWidgets.QVBoxLayout(self.widget_for_g_p)
@@ -270,6 +270,7 @@ class Ui_MainWindow(object):
         self.add_btn.clicked.connect(self.add_to_the_portfolio)
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(clear_all)
+        self.renew_btn_period.clicked.connect(self.set_period)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -286,6 +287,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Page 2"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Page 3"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Page 4"))
+        self.comboBox_4.setItemText(0, _translate("MainWindow", "20"))
+        self.comboBox_4.setItemText(1, _translate("MainWindow", "150"))
+        self.comboBox_4.setItemText(2, _translate("MainWindow", "360"))
+        self.renew_btn_period.setText(_translate("MainWindow", "RENEW PERIOD"))
         self.comboBox_5.setItemText(0, _translate("MainWindow", "New Item 1"))
         self.comboBox_5.setItemText(1, _translate("MainWindow", "New Item 2"))
         self.comboBox_5.setItemText(2, _translate("MainWindow", "New Item 3"))
@@ -311,6 +316,32 @@ class Ui_MainWindow(object):
         elif self.comboBox_NEWS.currentText() == 'MOEX':
             self.NEWS_label.setText('MOEX')
             self.news_NEWS.setText(parsing_moex())
+
+    def set_period(self):
+        self.layout_for_mpl_c.removeWidget(self.canvas_c)  # удаление старых данных с виджета
+        self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+        self.toolbar_c.deleteLater()
+        self.canvas_c.deleteLater()
+        self.canvas_c.hide()
+        self.toolbar_c.hide()
+        if self.comboBox_4.currentText() == '20':  # добавление новых данных в зависимости от текста внутри combobox
+            self.fig_c = plot_common(20)
+            self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+        elif self.comboBox_4.currentText() == '150':
+            self.fig_c = plot_common(150)
+            self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+        elif self.comboBox_4.currentText() == '360':
+            self.fig_c = plot_common(360)
+            self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
     def add_to_the_portfolio(self):
         if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):

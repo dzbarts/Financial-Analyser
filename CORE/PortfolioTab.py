@@ -62,6 +62,8 @@ stock_growth = pd.DataFrame({'Stock growth, %': list_of_stock_growth_percentages
                              'Stock growth, RUB': list_of_stock_growth},
                             index=flatten_port)
 
+stock_growth.insert(0, 'Stocks', flatten_port)
+
 
 # plot of time series
 def plot_common(period):
