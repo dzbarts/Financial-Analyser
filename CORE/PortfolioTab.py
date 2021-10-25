@@ -4,10 +4,6 @@ import numpy as np
 from Portfolio import *
 import matplotlib
 
-# some base variants
-stock = list(map(yf.download, flatten_port))
-length_of_flatten_port = len(flatten_port)
-length_of_stock = len(stock)
 
 # total cost
 cost = 0

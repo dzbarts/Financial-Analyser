@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from CORE.Indicators import *
-from DATA.tradeBot_parser_static import get_quotes_tab
 import datetime as dt
 
 
@@ -9,9 +8,13 @@ import datetime as dt
 # мне ее оставить пустой, чтобы она как глобальная переменная была,или добавить как аргумент?
 
 # параметр n отвечает за покупку - продажу акций
-# если n = 2 - покупать
-#      n = 1 - ничего
-#      n = 0 - продавать
+# если n = 2 - покупать (SELL)
+#      n = 1 - ничего (WAIT)
+#      n = 0 - продавать (SELL)
+#      n = 3 - не продавать (NSELL)
+#      n = 4 - не покупать  (NBUY)
+#      n = 5 - индикатор не против торговли (OK)
+#      n = 6 - не торговать (NT)
 
 
 def plot_SMA(lenData, data, risk=2):
@@ -158,11 +161,11 @@ def plot_RSI(lenData, data, risk=2):
     data = data[(-lenData):]
 
     if rsi[-1] > 70:
-        n = 0
+        n = 4
     elif rsi[-1] < 30:
-        n = 2
+        n = 3
     else:
-        n = 1
+        n = 5
 
     return n, \
            lambda blank: blank.plot(data['Date'], rsi), \
@@ -218,9 +221,9 @@ def plot_bulls(lenData, data, risk=2):
     data = data[(-lenData):]
 
     if (bulls.values[-1] < bulls.values[-2] and bulls.values[-1] > 0 and bulls.values[-2] > 0):
-        n = 0
+        n = 3
     else:
-        n = 1
+        n = 5
 
     return n, \
            (lambda blank: blank.bar(data['Date'], bulls)), \
@@ -241,9 +244,9 @@ def plot_bears(lenData, data, risk=2):
     data = data[(-lenData):]
 
     if (bears.values[-1] > bears.values[-2] and bears.values[-1] < 0 and bears.values[-2] < 0):
-        n = 2
+        n = 4
     else:
-        n = 1
+        n = 5
 
     return n, \
            (lambda blank: blank.bar(data['Date'], bears)), \
@@ -268,11 +271,11 @@ def plot_ER(lenData, data, risk=2):
     data = data[(-lenData):]
 
     if (bears.values[-1] > bears.values[-2] and bears.values[-1] < 0 and bears.values[-2] < 0):
-        n = 2
+        n = 4
     elif (bulls.values[-1] < bulls.values[-2] and bulls.values[-1] > 0 and bulls.values[-2] > 0):
-        n = 0
+        n = 3
     else:
-        n = 1
+        n = 5
 
     return n, \
            (lambda blank: blank.plot(data['Date'], ema)), \
@@ -294,16 +297,16 @@ def plot_MI(lenData, data):
     data = data[(-lenData):]
 
     mislice = mi[-20:-1]
-    flag = 0
+    flag = 6
 
     for i in range(len(mislice)):
         if (mi[i] > 26.5 and mi[i] < 27):
-            flag = 1
+            flag = 5
 
-    if (flag == 1 and mi[-1] < 26.5):
-        n = 2
+    if (flag == 5 and mi[-1] < 26.5):
+        n = 5
     else:
-        n = 1
+        n = 6
 
     return n, \
            lambda blank: blank.plot(data['Date'], mi), \

@@ -14,6 +14,10 @@ flatten_port = list(set(port))
 flatten_portfolio = list(map(yf.Ticker, flatten_port))
 
 
+# some base variants
+stock = list(map(yf.download, flatten_port))
+length_of_flatten_port = len(flatten_port)
+length_of_stock = len(stock)
 weight_of_stocks = []
 
 for i in range(len(flatten_port)):

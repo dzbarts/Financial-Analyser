@@ -1,5 +1,4 @@
 import math
-import pandas_datareader as web
 import datetime as dt
 
 
