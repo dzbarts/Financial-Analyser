@@ -14,12 +14,6 @@ list_of_countries = list(set(list_of_all_countries))
 
 weight_for_plot_c = [0] * len(list_of_countries)
 
-# countries Pandas DataFrame
-t_port_capa = pd.DataFrame({
-    'Stocks': flatten_port,
-    'Number': weight_of_stocks,
-    'Countries': list_of_all_countries
-})
 
 # CAPA index Pandas DataFrame
 # index was taken on 6/30/21

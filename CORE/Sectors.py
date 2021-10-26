@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from Portfolio import *
+from Countries import *
 
 plt.style.use('seaborn')
 
@@ -19,7 +20,8 @@ weight_for_plot_s = [0] * len(list_of_sectors)
 t_port_sect = pd.DataFrame({
     'Stocks': flatten_port,
     'Number': weight_of_stocks,
-    'Sectors': list_of_all_sectors
+    'Sectors': list_of_all_sectors,
+    'Countries': list_of_all_countries
 })
 
 # cycle of getting weight_for_plot_s

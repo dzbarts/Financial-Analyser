@@ -13,7 +13,7 @@ from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationTo
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Sectors import tsectors, t_port_sect, plot_s
-from Countries import tcapa, t_port_capa, plot_c
+from Countries import tcapa, plot_c
 from PortfolioTab import assets, plot_p, stock_growth, plot_common
 from canvas import GraphicsCanvas
 from pandasmodel import PandasModel
@@ -120,17 +120,17 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Sectors'],
+        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Sectors', 'Countries'],
                                    headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
-        self.view_4 = QtWidgets.QTableView(self.tab_3)
-        self.view_4.setGeometry(QtCore.QRect(770, 690, 480, 254))
-        self.view_4.setObjectName("table_data_4")
-        self.model_4 = PandasModel(t_port_capa, headers_column=['Stocks', 'Number', 'Countries'],
-                                   headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
-        self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_4.setModel(self.model_4)
+        # self.view_4 = QtWidgets.QTableView(self.tab_3)
+        # self.view_4.setGeometry(QtCore.QRect(770, 690, 480, 254))
+        # self.view_4.setObjectName("table_data_4")
+        # self.model_4 = PandasModel(t_port_capa, headers_column=['Stocks', 'Number', 'Countries'],
+        #                            headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
+        # self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.view_4.setModel(self.model_4)
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
 
