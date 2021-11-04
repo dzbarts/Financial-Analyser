@@ -167,8 +167,6 @@ class Ui_MainWindow(object):
         self.clear_all_btn.setObjectName("clear_btn")
         self.clear_all_btn.setText("Clear the portfolio")
 
-        vbox = QtWidgets.QVBoxLayout()
-        vbox.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5 = QtWidgets.QTableView(self.tab_4)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5.setObjectName("table_data_5")
@@ -180,11 +178,10 @@ class Ui_MainWindow(object):
                                                            'Number of Inst. Hold. Shares'],
                                    headers_row=[str(i) for i in range(1, assets.shape[0] + 1)])
         self.view_5.setModel(self.model_5)
-        for i in range(int(assets.shape[1]/2) + 1):
+        for i in range(int(assets.shape[1]/2) + 1):  # изменения размера колонок
             self.view_5.setColumnWidth(i, 100)
         for i in range(int(assets.shape[1]/2) + 2, assets.shape[1] + 1):
             self.view_5.setColumnWidth(i, 250)
-        vbox.addWidget(self.view_5)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
