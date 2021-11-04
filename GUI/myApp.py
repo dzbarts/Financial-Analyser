@@ -124,13 +124,7 @@ class Ui_MainWindow(object):
                                    headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
-        # self.view_4 = QtWidgets.QTableView(self.tab_3)
-        # self.view_4.setGeometry(QtCore.QRect(770, 690, 480, 254))
-        # self.view_4.setObjectName("table_data_4")
-        # self.model_4 = PandasModel(t_port_capa, headers_column=['Stocks', 'Number', 'Countries'],
-        #                            headers_row=[str(i) for i in range(1, t_port_capa.shape[0] + 1)])
-        # self.view_4.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_4.setModel(self.model_4)
+
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
 
@@ -155,10 +149,10 @@ class Ui_MainWindow(object):
         self.tab_4 = QtWidgets.QWidget()
         self.tab_4.setObjectName("tab_4")
         self.edit = QtWidgets.QTextEdit(self.tab_4)
-        self.edit.setGeometry(QtCore.QRect(20, 20, 200, 50))
+        self.edit.setGeometry(QtCore.QRect(20, 40, 200, 50))
         self.edit.setObjectName("editable_stock")
         self.edit_n = QtWidgets.QTextEdit(self.tab_4)
-        self.edit_n.setGeometry(QtCore.QRect(20, 80, 200, 50))
+        self.edit_n.setGeometry(QtCore.QRect(20, 120, 200, 50))
         self.edit_n.setObjectName("editable_number")
         self.add_btn = QtWidgets.QPushButton(self.tab_4)
         self.add_btn.setGeometry(QtCore.QRect(720, 20, 230, 50))
@@ -173,8 +167,10 @@ class Ui_MainWindow(object):
         self.clear_all_btn.setObjectName("clear_btn")
         self.clear_all_btn.setText("Clear the portfolio")
 
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5 = QtWidgets.QTableView(self.tab_4)
-        self.view_5.setGeometry(QtCore.QRect(30, 200, 1850, 254))
+        self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5.setObjectName("table_data_5")
         self.model_5 = PandasModel(assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
                                                            'Volume', 'Div. (per year)',
@@ -183,8 +179,12 @@ class Ui_MainWindow(object):
                                                            '% of Float Held by Inst.',
                                                            'Number of Inst. Hold. Shares'],
                                    headers_row=[str(i) for i in range(1, assets.shape[0] + 1)])
-        self.view_5.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_5.setModel(self.model_5)
+        for i in range(int(assets.shape[1]/2) + 1):
+            self.view_5.setColumnWidth(i, 100)
+        for i in range(int(assets.shape[1]/2) + 2, assets.shape[1] + 1):
+            self.view_5.setColumnWidth(i, 250)
+        vbox.addWidget(self.view_5)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
@@ -198,7 +198,7 @@ class Ui_MainWindow(object):
         self.widget_for_g_p.setGeometry(550, 480, 500, 480)
 
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_g_c.setGeometry(1200, 480, 800, 480)
+        self.widget_for_g_c.setGeometry(1100, 480, 800, 480)
 
         self.fig_p = plot_p()
         self.comboBox_4 = QtWidgets.QComboBox(self.tab_4)
