@@ -45,6 +45,7 @@ def plot_p():
 
     fig_p, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
+    fig_p.set_facecolor('#19232D')
     return fig_p
     # plt.show()
 
@@ -71,5 +72,6 @@ def plot_common(period):
         ax1.plot(stock[i].Close[-period:])
 
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    fig_c.set_facecolor('#19232D')
     return fig_c
     # plt.show()

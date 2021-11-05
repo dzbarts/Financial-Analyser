@@ -34,5 +34,6 @@ for i in range(len(weight_of_stocks)):
 def plot_c():
     fig_c, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_c, labels=list_of_countries)
+    fig_c.set_facecolor('#19232D')
     return fig_c
     # plt.show()

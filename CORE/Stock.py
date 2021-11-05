@@ -8,12 +8,14 @@ plt.style.use('seaborn')
 
 stck = yf.Ticker('MSFT')
 
-def plot_stock(period):
-    fig, ax1 = plt.subplots()
-    ax1.plot(yf.download('MSFT').Close[-period:])
-
+def plot_stock(stock, period):  # передаю не только период, но и акцию,
+    # чтобы можно было выводить график по определенной акции
+    fig_st, ax1 = plt.subplots()
+    ax1.plot(yf.download(stock).Close[-period:])
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
-    return fig
+    fig_st.set_facecolor('#19232D')  # меняю background графика
+    return fig_st
+    #plt.show()
 
 
 # show actions (dividends, splits)

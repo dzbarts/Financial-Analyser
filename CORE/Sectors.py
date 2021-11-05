@@ -48,5 +48,5 @@ tsectors = pd.DataFrame({'Ранняя фаза': ['Финансы', 'Недви
 def plot_s():
     fig_s, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_s, labels=list_of_sectors)
+    fig_s.set_facecolor('#19232D')
     return fig_s
-    # plt.show()

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from CORE.Indicators import *
 import datetime as dt
 
 
@@ -15,6 +14,7 @@ import datetime as dt
 #      n = 4 - не покупать  (NBUY)
 #      n = 5 - индикатор не против торговли (OK)
 #      n = 6 - не торговать (NT)
+from Indicators import EMA, SMA, DEMA, TEMA, RSI, MACD, Bulls_power, Bears_power, Elder_Rays, MI, CHV
 
 
 def plot_SMA(lenData, data, risk=2):
