@@ -352,30 +352,45 @@ class Ui_MainWindow(object):
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
     def set_period_current_stock(self, period):
-        self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
-        self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
-        self.toolbar_stock.deleteLater()
-        self.canvas_stock.deleteLater()
-        self.canvas_stock.hide()
-        self.toolbar_stock.hide()
-        if period == '20':
-            self.fig = plot_stock(self.write_stock.toPlainText().upper(), 20)
-            self.canvas_stock = GraphicsCanvas(self.fig)
-            self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-            self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-            self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
-        elif period == '150':
-            self.fig = plot_stock(self.write_stock.toPlainText().upper(), 150)
-            self.canvas_stock = GraphicsCanvas(self.fig)
-            self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-            self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-            self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
-        elif period == '360':
-            self.fig = plot_stock(self.write_stock.toPlainText().upper(), 360)
-            self.canvas_stock = GraphicsCanvas(self.fig)
-            self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-            self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-            self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+        if self.write_stock.toPlainText() != '':
+            if len(yf.Ticker(self.write_stock.toPlainText()).info) != 2:
+                self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
+                self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
+                self.toolbar_stock.deleteLater()
+                self.canvas_stock.deleteLater()
+                self.canvas_stock.hide()
+                self.toolbar_stock.hide()
+                if period == '20':
+                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 20)
+                    self.canvas_stock = GraphicsCanvas(self.fig)
+                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
+                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
+                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+                elif period == '150':
+                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 150)
+                    self.canvas_stock = GraphicsCanvas(self.fig)
+                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
+                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
+                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+                elif period == '360':
+                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 360)
+                    self.canvas_stock = GraphicsCanvas(self.fig)
+                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
+                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
+                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+            else:
+                error = QMessageBox()
+                error.setWindowTitle("Ошибка набора")
+                error.setText("Такой акции не существует")
+                error.setIcon(QMessageBox.Warning)
+                error.exec_()
+        else:
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка набора")
+            error.setText("Пустой текст")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+
 
     def add_to_the_portfolio(self):
         if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):
