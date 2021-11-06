@@ -106,9 +106,9 @@ class Ui_MainWindow(object):
         self.view = QtWidgets.QTableView(self.tab_3)
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data_1")
-        self.model = PandasModel(tsectors, headers_column=['Ранняя фаза', 'Средняя фаза', 'Закат', 'Рецессия'],
+        self.model = PandasModel(tsectors, headers_column=['Trough', 'Expansion', 'Peak', 'Recession'],
                                  headers_row=['1', '2', '3', '4', '5', '6', '',
-                                              'Рекомендации'])  # создаепм модель готового класса
+                                              'Recommendations'])  # создаепм модель готового класса
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
         self.view_2 = QtWidgets.QTableView(self.tab_3)
@@ -121,7 +121,7 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Sectors', 'Countries'],
+        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                    headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)

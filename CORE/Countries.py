@@ -5,7 +5,7 @@ from Portfolio import *
 
 def get_country(el):
     return el.info['country']
-plt.style.use('seaborn-pastel')
+plt.style.use('dark_background')
 
 
 # some base variants

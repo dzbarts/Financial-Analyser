@@ -4,6 +4,7 @@ import numpy as np
 from Portfolio import *
 import matplotlib
 
+plt.style.use('dark_background')
 
 # total cost
 cost = 0
@@ -41,8 +42,6 @@ assets.pop('Adj Close')
 
 # pie plot of assets
 def plot_p():
-    plt.style.use('dark_background')
-
     fig_p, ax1 = plt.subplots()
     ax1.pie(weight_of_stocks, labels=flatten_port)
     fig_p.set_facecolor('#19232D')
