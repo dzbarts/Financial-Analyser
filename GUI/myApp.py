@@ -12,14 +12,14 @@ from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import qdarkstyle
 
-from parse import parsing_RBC, parsing_moex, parsing_invest_funds
-from Sectors import tsectors, t_port_sect, plot_s
-from Countries import tcapa, plot_c
-from Recommendations import recom
+from GUI.parse import parsing_RBC, parsing_moex, parsing_invest_funds
+from Portfolio import set_port_and_portfolio
+from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
+from Recommendations import set_recom
 from Stock import plot_stock
-from PortfolioTab import assets, plot_p, stock_growth, plot_common
-from canvas import GraphicsCanvas
-from pandasmodel import PandasModel
+from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
+from GUI.canvas import GraphicsCanvas
+from GUI.pandasmodel import PandasModel
 
 
 def main():  # ф-ция рассчета размера окна
@@ -27,7 +27,6 @@ def main():  # ф-ция рассчета размера окна
     heignt = sizeObject.height()
     width = sizeObject.width()
     return [int(heignt), int(width)]
-
 
 def read_port():  # ф-ция читки портфеля
     l = []
@@ -121,8 +120,8 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        self.model_3 = PandasModel(t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-                                   headers_row=[str(i) for i in range(1, t_port_sect.shape[0] + 1)])
+        self.model_3 = PandasModel(set_t_port_sect(uni_var), headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, set_t_port_sect(uni_var).shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
 
@@ -132,8 +131,8 @@ class Ui_MainWindow(object):
         self.widget_for_g_2 = QtWidgets.QWidget(self.tab_3)
         self.widget_for_g_2.setGeometry(1250, 480, 600, 480)
 
-        self.fig_1 = plot_c()  # график
-        self.fig_2 = plot_s()
+        self.fig_1 = plot_c(uni_var)  # график
+        self.fig_2 = plot_s(uni_var)
         self.layout_for_mpl_1 = QtWidgets.QVBoxLayout(self.widget_for_g_1)  # виджет для компоновки объектов
         self.layout_for_mpl_2 = QtWidgets.QVBoxLayout(self.widget_for_g_2)
         self.canvas_1 = GraphicsCanvas(self.fig_1)  # создаем холст для прорисовки графика
@@ -175,24 +174,24 @@ class Ui_MainWindow(object):
         self.view_5 = QtWidgets.QTableView(self.tab_4)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5.setObjectName("table_data_5")
-        self.model_5 = PandasModel(assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
+        self.model_5 = PandasModel(set_assets(uni_var), headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
                                                            'Volume', 'Div. (per year)',
                                                            '% of Shares Held by All Insider',
                                                            '% of Shares Held by Inst.',
                                                            '% of Float Held by Inst.',
                                                            'Number of Inst. Hold. Shares'],
-                                   headers_row=[str(i) for i in range(1, assets.shape[0] + 1)])
+                                   headers_row=[str(i) for i in range(1, set_assets(uni_var).shape[0] + 1)])
         self.view_5.setModel(self.model_5)
-        for i in range(int(assets.shape[1]/2) + 1):  # изменения размера колонок
+        for i in range(int(set_assets(uni_var).shape[1]/2) + 1):  # изменения размера колонок
             self.view_5.setColumnWidth(i, 100)
-        for i in range(int(assets.shape[1]/2) + 2, assets.shape[1] + 1):
+        for i in range(int(set_assets(uni_var).shape[1]/2) + 2, set_assets(uni_var).shape[1] + 1):
             self.view_5.setColumnWidth(i, 250)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
         self.view_6.setObjectName("table_data_6")
-        self.model_6 = PandasModel(stock_growth, headers_column=['Stocks', 'Stock growth %', 'Stock growth, RUB'],
-                                   headers_row=[str(i) for i in range(1, stock_growth.shape[0] + 1)])
+        self.model_6 = PandasModel(set_stock_growth(uni_var), headers_column=['Stocks', 'Stock growth %', 'Stock growth, RUB'],
+                                   headers_row=[str(i) for i in range(1, set_stock_growth(uni_var).shape[0] + 1)])
         self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_6.setModel(self.model_6)
 
@@ -202,7 +201,7 @@ class Ui_MainWindow(object):
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_4)
         self.widget_for_g_c.setGeometry(1100, 480, 800, 480)
 
-        self.fig_p = plot_p()
+        self.fig_p = plot_p(uni_var)
         self.comboBox_4 = QtWidgets.QComboBox(self.tab_4)
         self.comboBox_4.setGeometry(QtCore.QRect(1292, 500, 100, 31))
         self.comboBox_4.setObjectName("set_period")
@@ -213,7 +212,7 @@ class Ui_MainWindow(object):
         self.renew_btn_period.setGeometry(QtCore.QRect(1645, 500, 141, 31))
         self.renew_btn_period.setObjectName("renew_btn_period")
 
-        self.fig_c = plot_common(40)
+        self.fig_c = plot_common(40, uni_var)
         self.layout_for_mpl_p = QtWidgets.QVBoxLayout(self.widget_for_g_p)
         self.layout_for_mpl_c = QtWidgets.QVBoxLayout(self.widget_for_g_c)
         self.canvas_p = GraphicsCanvas(self.fig_p)
@@ -237,9 +236,9 @@ class Ui_MainWindow(object):
         self.view_7 = QtWidgets.QTableView(self.tab_5)
         self.view_7.setGeometry(QtCore.QRect(30, 150, 1500, 254))
         self.view_7.setObjectName("table_data_7")
-        self.model_7 = PandasModel(recom, headers_column=['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
+        self.model_7 = PandasModel(set_recom(3, uni_var), headers_column=['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                                                           'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg'],
-                                   headers_row=[str(i) for i in range(1, recom.shape[0] + 1)])
+                                   headers_row=[str(i) for i in range(1, set_recom(3, uni_var).shape[0] + 1)])
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model_7)
         self.tabWidget.addTab(self.tab_5, "")
@@ -455,7 +454,7 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
-
+    uni_var = set_port_and_portfolio(read_port())
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

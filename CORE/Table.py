@@ -1,3 +1,0 @@
-from Sectors import *
-
-tcapa
