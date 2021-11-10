@@ -16,7 +16,7 @@ def plot_stock(stock, period):  # передаю не только период,
     fig_st.set_facecolor('#19232D')  # меняю background графика
     plt.style.use('dark_background')
     return fig_st
-    #plt.show()
+    # plt.show()
 
 
 # show actions (dividends, splits)

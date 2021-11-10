@@ -16,7 +16,8 @@ from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
 from Recommendations import set_recom
-from Stock import plot_stock
+from Stock import plot_stock, get_stock_quarterly_earnings, get_stock, get_stock_quarterly_balance_sheet, \
+    get_stock_quarterly_cashflow, get_stock_isin
 from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
 from canvas import GraphicsCanvas
 from pandasmodel import PandasModel
@@ -27,6 +28,7 @@ def main():  # ф-ция рассчета размера окна
     heignt = sizeObject.height()
     width = sizeObject.width()
     return [int(heignt), int(width)]
+
 
 def read_port():  # ф-ция читки портфеля
     l = []
@@ -111,6 +113,7 @@ class Ui_MainWindow(object):
                                               'Recommendations'])  # создаепм модель готового класса
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
+
         self.view_2 = QtWidgets.QTableView(self.tab_3)
         self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 439))
         self.view_2.setObjectName("table_data_2")
@@ -118,6 +121,7 @@ class Ui_MainWindow(object):
                                    headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
         self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_2.setModel(self.model_2)
+
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
@@ -233,8 +237,9 @@ class Ui_MainWindow(object):
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.activated['QString'].connect(self.set_strategy)
+
         self.view_7 = QtWidgets.QTableView(self.tab_5)
-        self.view_7.setGeometry(QtCore.QRect(30, 150, 1500, 254))
+        self.view_7.setGeometry(QtCore.QRect(30, 150, 1300, 254))
         self.view_7.setObjectName("table_data_7")
         self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
@@ -257,14 +262,37 @@ class Ui_MainWindow(object):
         self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
+        self.isin = QtWidgets.QLabel(self.tab_6)
+        self.isin.setGeometry(QtCore.QRect(300, 100, 200, 50))
+        self.isin.setText(get_stock_isin(get_stock('msft')))
         self.widget_for_stock_p = QtWidgets.QWidget(self.tab_6)
-        self.widget_for_stock_p.setGeometry(20, 300, 700, 500)
+        self.widget_for_stock_p.setGeometry(20, 150, 600, 450)
         self.fig = plot_stock('MSFT', 150)
         self.layout_for_mpl_stock = QtWidgets.QVBoxLayout(self.widget_for_stock_p)
         self.canvas_stock = GraphicsCanvas(self.fig)
         self.layout_for_mpl_stock.addWidget(self.canvas_stock)
         self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
         self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+
+        self.view_8 = QtWidgets.QTableView(self.tab_6)
+        self.view_8.setGeometry(QtCore.QRect(20, 650, 500, 180))
+        self.view_8.setObjectName("table_data_8")
+        self.rows_ = [str(i) for i in range(1, get_stock_quarterly_earnings(get_stock('msft')).shape[0] + 1)]
+        self.model_8 = PandasModel(get_stock_quarterly_earnings(get_stock('msft')),
+                                   headers_column=['Quarter', 'Revenue', 'Earnings'],
+                                   headers_row=self.rows_)
+        self.view_8.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_8.setModel(self.model_8)
+
+        self.view_9 = QtWidgets.QTableView(self.tab_6)
+        self.view_9.setGeometry(QtCore.QRect(700, 100, 900, 800))
+        self.view_9.setObjectName("table_data_9")
+        self.rows_ = [str(i) for i in range(1, get_stock_quarterly_cashflow(get_stock('msft')).shape[0] + 1)]
+        self.model_9 = PandasModel(get_stock_quarterly_cashflow(get_stock('msft')),
+                                   headers_column=get_stock_quarterly_cashflow(get_stock('msft')).columns.tolist(),
+                                   headers_row=self.rows_)
+        self.view_9.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_9.setModel(self.model_9)
         self.tabWidget.addTab(self.tab_6, "")
 
         self.tab_7 = QtWidgets.QWidget()
