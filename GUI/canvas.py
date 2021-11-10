@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QSizePolicy
+from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 
@@ -8,3 +9,5 @@ class GraphicsCanvas(FigureCanvas):  # холст для помещения гр
         FigureCanvas.__init__(self, self.fig)  # в конструктор супепр-класса помещаем график
         FigureCanvas.setSizePolicy(self, QSizePolicy.Maximum, QSizePolicy.Expanding)  # график будет на всю область
         FigureCanvas.updateGeometry(self)
+        plt.style.use('dark_background')
+        plt.grid(b=None)

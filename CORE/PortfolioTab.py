@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 
-plt.style.use('dark_background')
-
 
 # assets Pandas DataFrame
 def set_assets(uni_var):
@@ -72,5 +70,6 @@ def plot_common(period, uni_var):
 
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     fig_c.set_facecolor('#19232D')
+    plt.style.use('dark_background')
 
     return fig_c

@@ -12,14 +12,14 @@ from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import qdarkstyle
 
-from GUI.parse import parsing_RBC, parsing_moex, parsing_invest_funds
+from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
 from Recommendations import set_recom
 from Stock import plot_stock
 from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
-from GUI.canvas import GraphicsCanvas
-from GUI.pandasmodel import PandasModel
+from canvas import GraphicsCanvas
+from pandasmodel import PandasModel
 
 
 def main():  # ф-ция рассчета размера окна
@@ -61,6 +61,7 @@ def clear_all():  # ф-ция очистки портфеля
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        self.uni_var = set_port_and_portfolio(read_port())
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(main()[1], main()[0])
 
@@ -120,8 +121,8 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        self.model_3 = PandasModel(set_t_port_sect(uni_var), headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-                                   headers_row=[str(i) for i in range(1, set_t_port_sect(uni_var).shape[0] + 1)])
+        self.model_3 = PandasModel(set_t_port_sect(self.uni_var), headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, set_t_port_sect(self.uni_var).shape[0] + 1)])
         self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
 
@@ -174,24 +175,24 @@ class Ui_MainWindow(object):
         self.view_5 = QtWidgets.QTableView(self.tab_4)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5.setObjectName("table_data_5")
-        self.model_5 = PandasModel(set_assets(uni_var), headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
+        self.model_5 = PandasModel(set_assets(self.uni_var), headers_column=['Stocks', 'Number', 'Open', 'High', 'Low', 'Close',
                                                            'Volume', 'Div. (per year)',
                                                            '% of Shares Held by All Insider',
                                                            '% of Shares Held by Inst.',
                                                            '% of Float Held by Inst.',
                                                            'Number of Inst. Hold. Shares'],
-                                   headers_row=[str(i) for i in range(1, set_assets(uni_var).shape[0] + 1)])
+                                   headers_row=[str(i) for i in range(1, set_assets(self.uni_var).shape[0] + 1)])
         self.view_5.setModel(self.model_5)
-        for i in range(int(set_assets(uni_var).shape[1]/2) + 1):  # изменения размера колонок
+        for i in range(int(set_assets(self.uni_var).shape[1]/2) + 1):  # изменения размера колонок
             self.view_5.setColumnWidth(i, 100)
-        for i in range(int(set_assets(uni_var).shape[1]/2) + 2, set_assets(uni_var).shape[1] + 1):
+        for i in range(int(set_assets(self.uni_var).shape[1]/2) + 2, set_assets(self.uni_var).shape[1] + 1):
             self.view_5.setColumnWidth(i, 250)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
         self.view_6.setObjectName("table_data_6")
-        self.model_6 = PandasModel(set_stock_growth(uni_var), headers_column=['Stocks', 'Stock growth %', 'Stock growth, RUB'],
-                                   headers_row=[str(i) for i in range(1, set_stock_growth(uni_var).shape[0] + 1)])
+        self.model_6 = PandasModel(set_stock_growth(self.uni_var), headers_column=['Stocks', 'Stock growth %', 'Stock growth, RUB'],
+                                   headers_row=[str(i) for i in range(1, set_stock_growth(self.uni_var).shape[0] + 1)])
         self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_6.setModel(self.model_6)
 
@@ -208,9 +209,7 @@ class Ui_MainWindow(object):
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
-        self.renew_btn_period = QtWidgets.QPushButton(self.tab_4)
-        self.renew_btn_period.setGeometry(QtCore.QRect(1645, 500, 141, 31))
-        self.renew_btn_period.setObjectName("renew_btn_period")
+        self.comboBox_4.activated['QString'].connect(self.set_period)
 
         self.fig_c = plot_common(40, uni_var)
         self.layout_for_mpl_p = QtWidgets.QVBoxLayout(self.widget_for_g_p)
@@ -219,7 +218,7 @@ class Ui_MainWindow(object):
         self.canvas_c = GraphicsCanvas(self.fig_c)
         self.layout_for_mpl_p.addWidget(self.canvas_p)
         self.layout_for_mpl_c.addWidget(self.canvas_c)
-        self.toolbar_p = NavigationToolbar(self.canvas_p,MainWindow)
+        self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
         self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
         self.layout_for_mpl_p.addWidget(self.toolbar_p)
         self.layout_for_mpl_c.addWidget(self.toolbar_c)
@@ -233,12 +232,15 @@ class Ui_MainWindow(object):
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
+        self.comboBox_5.activated['QString'].connect(self.set_strategy)
         self.view_7 = QtWidgets.QTableView(self.tab_5)
         self.view_7.setGeometry(QtCore.QRect(30, 150, 1500, 254))
         self.view_7.setObjectName("table_data_7")
-        self.model_7 = PandasModel(set_recom(3, uni_var), headers_column=['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
-                                                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg'],
-                                   headers_row=[str(i) for i in range(1, set_recom(3, uni_var).shape[0] + 1)])
+        self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
+                         'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
+        self.rows_ = [str(i) for i in range(1, set_recom(1, self.uni_var).shape[0] + 1)]
+        self.model_7 = PandasModel(set_recom(1, self.uni_var), headers_column=self.columns_,
+                                   headers_row=self.rows_)
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model_7)
         self.tabWidget.addTab(self.tab_5, "")
@@ -281,7 +283,6 @@ class Ui_MainWindow(object):
         # при нажатии на кнопку происходит действие переданной ф-ции
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(clear_all)
-        self.renew_btn_period.clicked.connect(self.set_period)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -306,7 +307,6 @@ class Ui_MainWindow(object):
         self.comboBox_6.setItemText(0, _translate("MainWindow", "20"))
         self.comboBox_6.setItemText(1, _translate("MainWindow", "150"))
         self.comboBox_6.setItemText(2, _translate("MainWindow", "360"))
-        self.renew_btn_period.setText(_translate("MainWindow", "RENEW PERIOD"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Page 5"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "Page 6"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "Page 7"))
@@ -324,27 +324,20 @@ class Ui_MainWindow(object):
             self.NEWS_label.setText('MOEX')
             self.news_NEWS.setText(parsing_moex())
 
-    def set_period(self):
-        self.layout_for_mpl_c.removeWidget(self.canvas_c)  # удаление старых данных с виджета
-        self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-        self.toolbar_c.deleteLater()
-        self.canvas_c.deleteLater()
-        self.canvas_c.hide()
-        self.toolbar_c.hide()
-        if self.comboBox_4.currentText() == '20':  # добавление новых данных в зависимости от текста внутри combobox
-            self.fig_c = plot_common(20)
-            self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
-            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
-            self.layout_for_mpl_c.addWidget(self.toolbar_c)
-        elif self.comboBox_4.currentText() == '150':
-            self.fig_c = plot_common(150)
-            self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
-            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
-            self.layout_for_mpl_c.addWidget(self.toolbar_c)
-        elif self.comboBox_4.currentText() == '360':
-            self.fig_c = plot_common(360)
+    def set_period(self, period):
+        if period != '':
+            self.layout_for_mpl_c.removeWidget(self.canvas_c)  # удаление старых данных с виджета
+            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+            self.toolbar_c.deleteLater()
+            self.canvas_c.deleteLater()
+            self.canvas_c.hide()
+            self.toolbar_c.hide()
+            if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
+                self.fig_c = plot_common(20, set_port_and_portfolio(read_port()))
+            elif period == '150':
+                self.fig_c = plot_common(150, set_port_and_portfolio(read_port()))
+            elif period == '360':
+                self.fig_c = plot_common(360, set_port_and_portfolio(read_port()))
             self.canvas_c = GraphicsCanvas(self.fig_c)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
@@ -361,22 +354,14 @@ class Ui_MainWindow(object):
                 self.toolbar_stock.hide()
                 if period == '20':
                     self.fig = plot_stock(self.write_stock.toPlainText().upper(), 20)
-                    self.canvas_stock = GraphicsCanvas(self.fig)
-                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
                 elif period == '150':
                     self.fig = plot_stock(self.write_stock.toPlainText().upper(), 150)
-                    self.canvas_stock = GraphicsCanvas(self.fig)
-                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
                 elif period == '360':
                     self.fig = plot_stock(self.write_stock.toPlainText().upper(), 360)
-                    self.canvas_stock = GraphicsCanvas(self.fig)
-                    self.layout_for_mpl_stock.addWidget(self.canvas_stock)
-                    self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
-                    self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+                self.canvas_stock = GraphicsCanvas(self.fig)
+                self.layout_for_mpl_stock.addWidget(self.canvas_stock)
+                self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
+                self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
             else:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
@@ -389,6 +374,23 @@ class Ui_MainWindow(object):
             error.setText("Пустой текст")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
+
+    def set_strategy(self, strategy):
+        if strategy == 'Long-term strategy':
+            self.model = PandasModel(set_recom(1, self.uni_var),
+                                       headers_column=self.columns_,
+                                       headers_row=self.rows_)
+        if strategy == 'Medium strategy':
+            self.model = PandasModel(set_recom(2, self.uni_var),
+                                     headers_column=self.columns_,
+                                     headers_row=self.rows_)
+        if strategy == 'Quick strategy':
+            self.model = PandasModel(set_recom(3, self.uni_var),
+                                     headers_column=self.columns_,
+                                     headers_row=self.rows_)
+        self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_7.setModel(self.model)
+
 
 
     def add_to_the_portfolio(self):
