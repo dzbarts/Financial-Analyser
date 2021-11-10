@@ -14,6 +14,7 @@ def plot_stock(stock, period):  # передаю не только период,
     ax1.plot(yf.download(stock).Close[-period:])
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     fig_st.set_facecolor('#19232D')  # меняю background графика
+    plt.style.use('dark_background')
     return fig_st
     #plt.show()
 
