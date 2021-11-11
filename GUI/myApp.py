@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import qdarkstyle
 
+#это изменение для корректного изменения (429-493 строки)
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
