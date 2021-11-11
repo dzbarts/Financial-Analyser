@@ -1,5 +1,6 @@
 import pandas as pd
 from Plots import *
+import yfinance as yf
 
 
 def set_recom(risk, uni_var):
@@ -44,3 +45,31 @@ def set_recom(risk, uni_var):
     recom = recom.replace(to_replace=6, value='NT', regex=True)
 
     return recom
+
+
+def final_plot(period, data, risk, x):
+    data = yf.download(data)
+    if x == 1:
+        return plot_SMA(period, data, risk)[1:3]
+    elif x == 2:
+        return plot_twoSMA(period, data, risk)[1:4]
+    elif x == 3:
+        return plot_EMA(period, data, risk)[1:3]
+    elif x == 4:
+        return plot_DEMA(period, data, risk)[1:3]
+    elif x == 5:
+        return plot_TEMA(period, data, risk)[1:3]
+    elif x == 6:
+        return plot_MACD(period, data)[1:4]
+    elif x == 7:
+        return plot_CHV(period, data, risk)[1:3]
+    elif x == 8:
+        return plot_RSI(period, data, risk)[1:4]
+    elif x == 9:
+        return plot_bulls(period, data, risk)[1:3]
+    elif x == 10:
+        return plot_bears(period, data, risk)[1:3]
+    elif x == 11:
+        return plot_ER(period, data, risk)[1:5]
+    else:
+        return plot_MI(period, data, risk)[1:4]
