@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib
 
 
-# assets Pandas DataFrame
 def set_assets(uni_var):
     # column of dividends
     dividends = []
