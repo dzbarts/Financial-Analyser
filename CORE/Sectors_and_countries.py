@@ -23,6 +23,7 @@ def set_t_port_sect(uni_var):
         'Countries': list_of_all_countries,
         'Sectors': list_of_all_sectors
     })
+    t_port_sect.set_index(uni_var[2])
     return t_port_sect
 
 
