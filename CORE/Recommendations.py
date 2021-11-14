@@ -4,7 +4,7 @@ import yfinance as yf
 
 
 def set_recom(risk, uni_var):
-    recom = pd.DataFrame()
+    recom = pd.DataFrame(index=uni_var[2])
     recom['Stocks'] = uni_var[2]
     recom['SMA'] = list(map(lambda x: plot_SMA(300, x, risk)[0], uni_var[7]))
     recom['twoSMA'] = list(map(lambda x: plot_twoSMA(300, x, risk)[0], uni_var[7]))

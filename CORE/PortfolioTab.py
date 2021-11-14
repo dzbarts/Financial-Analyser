@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 
+from Portfolio import set_port_and_portfolio
+
 
 def set_assets(uni_var):
     # column of dividends

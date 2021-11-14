@@ -13,7 +13,6 @@ from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import qdarkstyle
 
-#это изменение для корректного изменения (429-493 строки)
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
@@ -128,11 +127,11 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        # self.t_port_sect = set_t_port_sect(self.uni_var)
-        # self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-        #                            headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-        # self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_3.setModel(self.model_3)
+        self.t_port_sect = set_t_port_sect(self.uni_var)
+        self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+        self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_3.setModel(self.model_3)
 
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
@@ -200,11 +199,12 @@ class Ui_MainWindow(object):
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
         self.view_6.setObjectName("table_data_6")
-        # self.model_6 = PandasModel(set_stock_growth(self.uni_var), headers_column=['Stocks', 'Stock growth %',
-        #                                                                             'Stock growth, RUB'],
-        #                             headers_row=[str(i) for i in range(1, set_stock_growth(self.uni_var).shape[0] + 1)])
-        # self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_6.setModel(self.model_6)
+        self.stock_growth = set_stock_growth(self.uni_var)
+        self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+                                                                      'Stock growth, RUB'],
+                                   headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
+        self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_6.setModel(self.model_6)
 
         self.widget_for_g_p = QtWidgets.QWidget(self.tab_4)
         self.widget_for_g_p.setGeometry(550, 480, 500, 480)
@@ -249,11 +249,12 @@ class Ui_MainWindow(object):
         self.view_7.setObjectName("table_data_7")
         self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
-        self.rows_ = [str(i) for i in range(1, set_recom(1, self.uni_var).shape[0] + 1)]
-        # self.model_7 = PandasModel(set_recom(1, self.uni_var), headers_column=self.columns_,
-        #                            headers_row=self.rows_)
-        # self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_7.setModel(self.model_7)
+        self.start_rec_num = 1
+        self.recom = set_recom(self.start_rec_num, self.uni_var)
+        self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+                                   headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+        self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_7.setModel(self.model_7)
         self.tabWidget.addTab(self.tab_5, "")
 
         self.tab_6 = QtWidgets.QWidget()
@@ -283,12 +284,13 @@ class Ui_MainWindow(object):
         self.view_8 = QtWidgets.QTableView(self.tab_6)
         self.view_8.setGeometry(QtCore.QRect(20, 650, 500, 180))
         self.view_8.setObjectName("table_data_8")
-        # self.rows_ = [str(i) for i in range(1, get_stock_quarterly_earnings(get_stock('msft')).shape[0] + 1)]
-        # self.model_8 = PandasModel(get_stock_quarterly_earnings(get_stock('msft')),
-        #                            headers_column=['Quarter', 'Revenue', 'Earnings'],
-        #                            headers_row=self.rows_)
-        # self.view_8.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_8.setModel(self.model_8)
+        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock('msft'))
+        self.rows_ = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
+        self.model_8 = PandasModel(self.stock_qt_earnings,
+                                   headers_column=['Quarter', 'Revenue', 'Earnings'],
+                                   headers_row=self.rows_)
+        self.view_8.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_8.setModel(self.model_8)
 
         self.view_9 = QtWidgets.QTableView(self.tab_6)
         self.view_9.setGeometry(QtCore.QRect(700, 100, 900, 800))
@@ -412,17 +414,20 @@ class Ui_MainWindow(object):
 
     def set_strategy(self, strategy):
         if strategy == 'Long-term strategy':
-            self.model = PandasModel(set_recom(1, self.uni_var),
+            self.start_rec_num = 1
+            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
                                      headers_column=self.columns_,
-                                     headers_row=self.rows_)
+                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
         if strategy == 'Medium strategy':
-            self.model = PandasModel(set_recom(2, self.uni_var),
+            self.start_rec_num = 2
+            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
                                      headers_column=self.columns_,
-                                     headers_row=self.rows_)
+                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
         if strategy == 'Quick strategy':
-            self.model = PandasModel(set_recom(3, self.uni_var),
+            self.start_rec_num = 3
+            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
                                      headers_column=self.columns_,
-                                     headers_row=self.rows_)
+                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model)
 
@@ -431,31 +436,53 @@ class Ui_MainWindow(object):
         if (changed_port == self.start_port) | (changed_port == []):
             error = QMessageBox()
             error.setWindowTitle("Ошибка")
-            error.setText("Ошибка обновления: пустой текст или нет обновлений")
+            error.setText("Ошибка обновления: нет данных или нет обновлений")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
         else:
             cp = set_port_and_portfolio(changed_port)
+            self.layout_for_mpl_1.removeWidget(self.canvas_1)
+            self.layout_for_mpl_1.removeWidget(self.toolbar_1)
+            self.layout_for_mpl_2.removeWidget(self.canvas_2)
+            self.layout_for_mpl_2.removeWidget(self.toolbar_2)
             self.layout_for_mpl_p.removeWidget(self.canvas_p)
             self.layout_for_mpl_p.removeWidget(self.toolbar_p)
             self.layout_for_mpl_c.removeWidget(self.canvas_c)
             self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+            self.toolbar_1.deleteLater()
+            self.toolbar_2.deleteLater()
             self.toolbar_p.deleteLater()
             self.toolbar_c.deleteLater()
+            self.canvas_1.deleteLater()
+            self.canvas_2.deleteLater()
             self.canvas_p.deleteLater()
             self.canvas_c.deleteLater()
+            self.canvas_1.hide()
+            self.canvas_2.hide()
             self.canvas_p.hide()
             self.canvas_c.hide()
+            self.toolbar_1.hide()
+            self.toolbar_2.hide()
             self.toolbar_p.hide()
             self.toolbar_c.hide()
+            self.fig_1 = plot_c(cp)
+            self.fig_2 = plot_s(cp)
             self.fig_p = plot_p(cp)
             self.fig_c = plot_common(40, cp)
+            self.canvas_1 = GraphicsCanvas(self.fig_1)
+            self.canvas_2 = GraphicsCanvas(self.fig_2)
             self.canvas_p = GraphicsCanvas(self.fig_p)
             self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_1.addWidget(self.canvas_1)
+            self.layout_for_mpl_2.addWidget(self.canvas_2)
             self.layout_for_mpl_p.addWidget(self.canvas_p)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
+            self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
             self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_1.addWidget(self.toolbar_1)
+            self.layout_for_mpl_2.addWidget(self.toolbar_2)
             self.layout_for_mpl_p.addWidget(self.toolbar_p)
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
@@ -464,9 +491,16 @@ class Ui_MainWindow(object):
         if len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
             if stock in changed_port:  # если она все еще есть в портфеле, значит надо просто менять кол-во акций
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
+                self.t_port_sect.loc[stock, 'Number'] = changed_port.count(stock)
             else:
                 # если его нет в новом портфеле, значит надо удалить строку с этой акцией
                 self.assets = self.assets.drop(stock)
+                self.t_port_sect = self.t_port_sect.drop(stock)
+                self.stock_growth = self.stock_growth.drop(stock)
+                self.recom = self.recom.drop(stock)
+            self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                       headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+            self.view_3.setModel(self.model_3)
             self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
                                                                     'Close', 'Volume', 'Div. (per year)',
                                                                     '% of Shares Held by All Insider',
@@ -475,14 +509,33 @@ class Ui_MainWindow(object):
                                                                     'Number of Inst. Hold. Shares'],
                                        headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
             self.view_5.setModel(self.model_5)
+            self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+                                                                          'Stock growth, RUB'],
+                                       headers_row=[str(i) for i in
+                                                    range(1, self.stock_growth.shape[0] + 1)])
+            self.view_6.setModel(self.model_6)
+            self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+                                       headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            self.view_7.setModel(self.model_7)
         elif len(old_p) < len(changed_port):  # если в новом портфеле акций больше, значит акция была добавлена
             if old_p.count(stock) >= 1:  # если акция уже была в портфеле, значит надо просто менять кол-во акций
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
+                self.t_port_sect.loc[stock, 'Number'] = changed_port.count(stock)
             else:
-                # если акций не было, добавляем строку с акцией, а также менять кол-во, т.к. можно добавлять неск. акций
+                # если акций не было, добавляем строку с акцией, а также меняем кол-во, т.к. можно добавлять неск. акций
                 stock_inf_1 = set_assets(set_port_and_portfolio([stock]))
                 stock_inf_1.loc[stock, 'Number'] = changed_port.count(stock)
+                stock_inf_2 = set_t_port_sect(set_port_and_portfolio([stock]))
+                stock_inf_2.loc[stock, 'Number'] = changed_port.count(stock)
+                stock_inf_3 = set_stock_growth(set_port_and_portfolio([stock]))
+                stock_inf_4 = set_recom(self.start_rec_num, set_port_and_portfolio([stock]))
                 self.assets = pd.concat([self.assets, stock_inf_1])
+                self.t_port_sect = pd.concat([self.t_port_sect, stock_inf_2])
+                self.stock_growth = pd.concat([self.stock_growth, stock_inf_3])
+                self.recom = pd.concat([self.recom, stock_inf_4])
+            self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                       headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+            self.view_3.setModel(self.model_3)
             self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
                                                                     'Close', 'Volume', 'Div. (per year)',
                                                                     '% of Shares Held by All Insider',
@@ -491,6 +544,14 @@ class Ui_MainWindow(object):
                                                                     'Number of Inst. Hold. Shares'],
                                        headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
             self.view_5.setModel(self.model_5)
+            self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+                                                                          'Stock growth, RUB'],
+                                       headers_row=[str(i) for i in
+                                                    range(1, self.stock_growth.shape[0] + 1)])
+            self.view_6.setModel(self.model_6)
+            self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+                                       headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            self.view_7.setModel(self.model_7)
 
     def add_to_the_portfolio(self):
         old_port = read_port()
