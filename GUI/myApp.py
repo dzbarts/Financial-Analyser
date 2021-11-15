@@ -294,6 +294,16 @@ class Ui_MainWindow(object):
 
         self.tab_7 = QtWidgets.QWidget()
         self.tab_7.setObjectName("tab_7")
+        self.book = QtWidgets.QTextBrowser(self.tab_7)
+        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 350))
+        self.book.setObjectName("book")
+        self.tutorial = open('tutorial.txt', encoding='utf-8').read()
+        self.tutorial_eng = open('tutorial_eng.txt', encoding='utf-8').read()
+        self.book.setText(self.tutorial_eng)
+        self.change_lng = QtWidgets.QPushButton(self.tab_7)
+        self.change_lng.setGeometry(QtCore.QRect(1000, 20, 300, 50))
+        self.change_lng.setObjectName("change_lng_btn")
+        self.change_lng.setText("Change the language")
         self.tabWidget.addTab(self.tab_7, "")
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -309,6 +319,7 @@ class Ui_MainWindow(object):
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(self.clear_the_portfolio)
         self.renew_plots.clicked.connect(self.renew_all_plots)
+        self.change_lng.clicked.connect(self.change_language)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -574,6 +585,12 @@ class Ui_MainWindow(object):
                                        headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
             self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_7.setModel(self.model_7)
+
+    def change_language(self):
+        if self.book.toPlainText() == self.tutorial:
+            self.book.setText(self.tutorial_eng)
+        else:
+            self.book.setText(self.tutorial)
 
     def add_to_the_portfolio(self):
         old_port = read_port()
