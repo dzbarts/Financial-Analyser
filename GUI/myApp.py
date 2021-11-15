@@ -77,17 +77,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setIconSize(QtCore.QSize(50, 20))
         self.tabWidget.setObjectName("tabWidget")
 
-        self.tab_1 = QtWidgets.QWidget()
-        self.tab_1.setObjectName("tab_1")
-        self.comboBox = QtWidgets.QComboBox(self.tab_1)
-        self.comboBox.setGeometry(QtCore.QRect(20, 20, 181, 41))
-        self.comboBox.setEditable(True)
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.tabWidget.addTab(self.tab_1, "")
-
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.comboBox_NEWS = QtWidgets.QComboBox(self.tab_2)
@@ -101,7 +90,7 @@ class Ui_MainWindow(object):
         self.NEWS_label.setGeometry(QtCore.QRect(20, 70, 271, 41))
         self.NEWS_label.setObjectName("NEWS_label")
         self.news_NEWS = QtWidgets.QTextBrowser(self.tab_2)
-        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 50, main()[0] - 350))
+        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 500, main()[0] - 350))
         self.news_NEWS.setObjectName("news_NEWS")
         self.tabWidget.addTab(self.tab_2, "")
 
@@ -271,7 +260,7 @@ class Ui_MainWindow(object):
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
         self.isin = QtWidgets.QLabel(self.tab_6)
         self.isin.setGeometry(QtCore.QRect(300, 100, 200, 50))
-        # self.isin.setText(get_stock_isin(get_stock('msft')))
+        self.isin.setText(get_stock_isin(get_stock('msft')))
         self.widget_for_stock_p = QtWidgets.QWidget(self.tab_6)
         self.widget_for_stock_p.setGeometry(20, 150, 600, 450)
         self.fig = plot_stock('MSFT', 150)
@@ -318,16 +307,12 @@ class Ui_MainWindow(object):
         self.add_btn.clicked.connect(self.add_to_the_portfolio)  # добавляем обработчик событий:
         # при нажатии на кнопку происходит действие переданной ф-ции
         self.remove_btn.clicked.connect(self.remove_the_stock)
-        self.clear_all_btn.clicked.connect(clear_all)
+        self.clear_all_btn.clicked.connect(self.clear_the_portfolio)
         self.renew_plots.clicked.connect(self.renew_all_plots)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "New Item 1"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "New Item 2"))
-        self.comboBox.setItemText(2, _translate("MainWindow", "New Item 3"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("MainWindow", "Page 1"))
         self.comboBox_NEWS.setItemText(0, _translate("MainWindow", "RBC"))
         self.comboBox_NEWS.setItemText(1, _translate("MainWindow", "Invest Funds: Today News"))
         self.comboBox_NEWS.setItemText(2, _translate("MainWindow", "MOEX"))
@@ -381,8 +366,10 @@ class Ui_MainWindow(object):
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
     def set_period_current_stock(self, period):
-        if self.write_stock.toPlainText() != '':
-            if len(yf.Ticker(self.write_stock.toPlainText()).info) != 2:
+        stock = self.write_stock.toPlainText().upper()
+        if stock != '':
+            if len(yf.Ticker(stock).info) != 2:
+                self.isin.setText(get_stock_isin(get_stock(stock)))
                 self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
                 self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
                 self.toolbar_stock.deleteLater()
@@ -390,11 +377,11 @@ class Ui_MainWindow(object):
                 self.canvas_stock.hide()
                 self.toolbar_stock.hide()
                 if period == '20':
-                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 20)
+                    self.fig = plot_stock(stock, 20)
                 elif period == '150':
-                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 150)
+                    self.fig = plot_stock(stock, 150)
                 elif period == '360':
-                    self.fig = plot_stock(self.write_stock.toPlainText().upper(), 360)
+                    self.fig = plot_stock(stock, 360)
                 self.canvas_stock = GraphicsCanvas(self.fig)
                 self.layout_for_mpl_stock.addWidget(self.canvas_stock)
                 self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
@@ -488,11 +475,33 @@ class Ui_MainWindow(object):
 
     def renew_all_tables(self, old_p, stock):
         changed_port = read_port()
-        if len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
+        if (stock == '') & (not changed_port):
+            empty_data_1 = pd.DataFrame(columns=['Stocks', 'Number', 'Countries', 'Sectors'])
+            empty_data_2 = pd.DataFrame(columns=['Stocks', 'Number', 'Open', 'High', 'Low',
+                                                 'Close', 'Volume', 'Div. (per year)',
+                                                 '% of Shares Held by All Insider',
+                                                 '% of Shares Held by Inst.',
+                                                 '% of Float Held by Inst.',
+                                                 'Number of Inst. Hold. Shares'])
+            empty_data_3 = pd.DataFrame(columns=['Stocks', 'Stock growth %', 'Stock growth, RUB'])
+            empty_data_4 = pd.DataFrame(columns=self.columns_)
+            self.model_3 = PandasModel(empty_data_1, headers_column=empty_data_1.columns,
+                                       headers_row=[str(i) for i in range(1, empty_data_1.shape[0] + 1)])
+            self.model_5 = PandasModel(empty_data_2, headers_column=empty_data_2.columns,
+                                       headers_row=[str(i) for i in range(1, empty_data_2.shape[0] + 1)])
+            self.model_6 = PandasModel(empty_data_3, headers_column=empty_data_3.columns,
+                                       headers_row=[str(i) for i in range(1, empty_data_3.shape[0] + 1)])
+            self.model_7 = PandasModel(empty_data_4, headers_column=empty_data_4.columns,
+                                       headers_row=[str(i) for i in range(1, empty_data_4.shape[0] + 1)])
+            self.view_3.setModel(self.model_3)
+            self.view_5.setModel(self.model_5)
+            self.view_6.setModel(self.model_6)
+            self.view_7.setModel(self.model_7)
+        elif len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
             if stock in changed_port:  # если она все еще есть в портфеле, значит надо просто менять кол-во акций
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
                 self.t_port_sect.loc[stock, 'Number'] = changed_port.count(stock)
-            else:
+            elif (stock not in changed_port) & (stock != ''):
                 # если его нет в новом портфеле, значит надо удалить строку с этой акцией
                 self.assets = self.assets.drop(stock)
                 self.t_port_sect = self.t_port_sect.drop(stock)
@@ -529,12 +538,23 @@ class Ui_MainWindow(object):
                 stock_inf_2.loc[stock, 'Number'] = changed_port.count(stock)
                 stock_inf_3 = set_stock_growth(set_port_and_portfolio([stock]))
                 stock_inf_4 = set_recom(self.start_rec_num, set_port_and_portfolio([stock]))
-                self.assets = pd.concat([self.assets, stock_inf_1])
-                self.t_port_sect = pd.concat([self.t_port_sect, stock_inf_2])
-                self.stock_growth = pd.concat([self.stock_growth, stock_inf_3])
-                self.recom = pd.concat([self.recom, stock_inf_4])
+                if old_p:
+                    self.assets = pd.concat([self.assets, stock_inf_1])
+                    self.t_port_sect = pd.concat([self.t_port_sect, stock_inf_2])
+                    self.stock_growth = pd.concat([self.stock_growth, stock_inf_3])
+                    self.recom = pd.concat([self.recom, stock_inf_4])
+                else:
+                    self.assets = stock_inf_1
+                    self.t_port_sect = stock_inf_2
+                    self.stock_growth = stock_inf_3
+                    self.recom = stock_inf_4
+                    for i in range(int(self.assets.shape[1] / 2) + 1):
+                        self.view_5.setColumnWidth(i, 100)
+                    for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
+                        self.view_5.setColumnWidth(i, 250)
             self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                        headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+            self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_3.setModel(self.model_3)
             self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
                                                                     'Close', 'Volume', 'Div. (per year)',
@@ -548,9 +568,11 @@ class Ui_MainWindow(object):
                                                                           'Stock growth, RUB'],
                                        headers_row=[str(i) for i in
                                                     range(1, self.stock_growth.shape[0] + 1)])
+            self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_6.setModel(self.model_6)
             self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
                                        headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_7.setModel(self.model_7)
 
     def add_to_the_portfolio(self):
@@ -616,6 +638,18 @@ class Ui_MainWindow(object):
                 error.exec_()
             self.edit.clear()
             self.edit_n.clear()
+
+    def clear_the_portfolio(self):
+        old_port = read_port()
+        if not old_port:
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка")
+            error.setText("Портфель уже пуст")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+        else:
+            clear_all()
+            self.renew_all_tables(old_port, '')
 
 
 if __name__ == "__main__":
