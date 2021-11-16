@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 
-from Portfolio import set_port_and_portfolio
-
 
 def set_assets(uni_var):
     # column of dividends
@@ -58,7 +56,9 @@ def set_stock_growth(uni_var):
 def plot_p(uni_var):
     fig_p, ax1 = plt.subplots()
     ax1.pie(uni_var[4], labels=uni_var[2])
+    plt.style.use('dark_background')
     fig_p.set_facecolor('#19232D')
+    ax1.set_title('Amount of stocks from portfolio')
 
     return fig_p
 
@@ -68,9 +68,11 @@ def plot_common(period, uni_var):
     fig_c, ax1 = plt.subplots()
     for i in range(uni_var[6]):
         ax1.plot(uni_var[7][i].Close[-period:])
-
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.legend(uni_var[2])
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('Price of stocks from portfolio')
     fig_c.set_facecolor('#19232D')
     plt.style.use('dark_background')
-
     return fig_c

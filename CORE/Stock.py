@@ -9,12 +9,14 @@ def get_stock(stock):
 
 def plot_stock(stock, period):  # передаю не только период, но и акцию,
     # чтобы можно было выводить график по определенной акции
-    plt.style.use('seaborn')
     fig_st, ax1 = plt.subplots()
     ax1.plot(yf.download(stock).Close[-period:])
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     fig_st.set_facecolor('#19232D')  # меняю background графика
     plt.style.use('dark_background')
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('Price of stocks from portfolio')
     return fig_st
     # plt.show()
 

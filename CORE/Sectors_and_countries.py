@@ -1,8 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-plt.style.use('dark_background')
-
 
 def get_sector(el):
     return el.info['sector']
@@ -39,12 +37,15 @@ def plot_s(uni_var):
 
     fig_s, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_s, labels=list_of_sectors)
+    plt.style.use('dark_background')
     fig_s.set_facecolor('#19232D')
+    ax1.set_title('Share by sectors')
     return fig_s
 
 
 # pie plot for countries
 def plot_c(uni_var):
+    plt.style.use('dark_background')
     list_of_all_countries = list(map(get_country, uni_var[3]))
     list_of_countries = list(set(list_of_all_countries))
     weight_for_plot_c = [0] * len(list_of_countries)
@@ -56,6 +57,7 @@ def plot_c(uni_var):
     fig_c, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_c, labels=list_of_countries)
     fig_c.set_facecolor('#19232D')
+    ax1.set_title('Share by countries')
     return fig_c
     # plt.show()
 
