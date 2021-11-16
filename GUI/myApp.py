@@ -104,29 +104,44 @@ class Ui_MainWindow(object):
         #                                      'Recommendations'])  # создаепм модель готового класса
         # self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         # self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
+        self.label_tsect = QtWidgets.QLabel(self.tab_3)
+        self.label_tsect.setGeometry(QtCore.QRect(50, 379, 300, 30))
+        self.label_tsect.setText('Table 2.1 Share Sectors due to Cycle')
 
         self.view_2 = QtWidgets.QTableView(self.tab_3)
-        self.view_2.setGeometry(QtCore.QRect(50, 400, 700, 439))
+        self.view_2.setGeometry(QtCore.QRect(50, 450, 700, 439))
         self.view_2.setObjectName("table_data_2")
         # self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
         #                           headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
         # self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         # self.view_2.setModel(self.model_2)
+        self.label_tcapa = QtWidgets.QLabel(self.tab_3)
+        self.label_tcapa.setGeometry(QtCore.QRect(50, 890, 300, 30))
+        self.label_tcapa.setText('Table 2.2 CAPA Index')
 
         self.view_3 = QtWidgets.QTableView(self.tab_3)
-        self.view_3.setGeometry(QtCore.QRect(770, 400, 480, 254))
+        self.view_3.setGeometry(QtCore.QRect(770, 450, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        self.t_port_sect = set_t_port_sect(self.uni_var)
-        self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-                                   headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-        self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_3.setModel(self.model_3)
+        # self.t_port_sect = set_t_port_sect(self.uni_var)
+        # self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+        #                            headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+        # self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.view_3.setModel(self.model_3)
+        self.label_tpc = QtWidgets.QLabel(self.tab_3)
+        self.label_tpc.setGeometry(QtCore.QRect(770, 705, 300, 30))
+        self.label_tpc.setText('Table 2.3 Countries and Sectors of Stocks')
 
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_3)  # создаем виджет для добавления графика
-        self.widget_for_g_1.setGeometry(1250, 0, 500, 480)
+        self.widget_for_g_1.setGeometry(1250, 0, 650, 385)
+        self.label_g1 = QtWidgets.QLabel(self.tab_3)
+        self.label_g1.setGeometry(QtCore.QRect(1250, 379, 300, 30))
+        self.label_g1.setText('Plot 2.1 ')
 
         self.widget_for_g_2 = QtWidgets.QWidget(self.tab_3)
-        self.widget_for_g_2.setGeometry(1250, 480, 600, 480)
+        self.widget_for_g_2.setGeometry(1250, 450, 650, 440)
+        self.label_g2 = QtWidgets.QLabel(self.tab_3)
+        self.label_g2.setGeometry(QtCore.QRect(1250, 882, 300, 30))
+        self.label_g2.setText('Plot 2.2 ')
 
         self.fig_1 = plot_c(self.uni_var)  # график
         self.fig_2 = plot_s(self.uni_var)
@@ -148,9 +163,15 @@ class Ui_MainWindow(object):
         self.edit = QtWidgets.QTextEdit(self.tab_4)
         self.edit.setGeometry(QtCore.QRect(20, 40, 200, 50))
         self.edit.setObjectName("editable_stock")
+        self.label_stock = QtWidgets.QLabel(self.tab_4)
+        self.label_stock.setGeometry(QtCore.QRect(20, 10, 300, 30))
+        self.label_stock.setText('Enter the name of the stock')
         self.edit_n = QtWidgets.QTextEdit(self.tab_4)
         self.edit_n.setGeometry(QtCore.QRect(20, 120, 200, 50))
         self.edit_n.setObjectName("editable_number")
+        self.label_num = QtWidgets.QLabel(self.tab_4)
+        self.label_num.setGeometry(QtCore.QRect(20, 90, 300, 30))
+        self.label_num.setText('Enter the number of the stock')
         self.add_btn = QtWidgets.QPushButton(self.tab_4)
         self.add_btn.setGeometry(QtCore.QRect(720, 20, 230, 50))
         self.add_btn.setObjectName("add_btn")
@@ -171,43 +192,58 @@ class Ui_MainWindow(object):
         self.view_5 = QtWidgets.QTableView(self.tab_4)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
         self.view_5.setObjectName("table_data_5")
-        self.assets = set_assets(self.uni_var)
-        self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
-                                                                'Close', 'Volume', 'Div. (per year)',
-                                                                '% of Shares Held by All Insider',
-                                                                '% of Shares Held by Inst.',
-                                                                '% of Float Held by Inst.',
-                                                                'Number of Inst. Hold. Shares'],
-                                   headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
-        self.view_5.setModel(self.model_5)
-        for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
-            self.view_5.setColumnWidth(i, 100)
-        for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
-            self.view_5.setColumnWidth(i, 250)
+        self.label_assets = QtWidgets.QLabel(self.tab_4)
+        self.label_assets.setGeometry(QtCore.QRect(30, 455, 300, 30))
+        self.label_assets.setText('Table 3.1 Collective Information of Stocks')
+        # self.assets = set_assets(self.uni_var)
+        # self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
+        #                                                         'Close', 'Volume', 'Div. (per year)',
+        #                                                         '% of Shares Held by All Insider',
+        #                                                         '% of Shares Held by Inst.',
+        #                                                         '% of Float Held by Inst.',
+        #                                                         'Number of Inst. Hold. Shares'],
+        #                            headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
+        # self.view_5.setModel(self.model_5)
+        # for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
+        #     self.view_5.setColumnWidth(i, 100)
+        # for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
+        #     self.view_5.setColumnWidth(i, 250)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
         self.view_6.setObjectName("table_data_6")
-        self.stock_growth = set_stock_growth(self.uni_var)
-        self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
-                                                                      'Stock growth, RUB'],
-                                   headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
-        self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_6.setModel(self.model_6)
+        self.label_stock_growth = QtWidgets.QLabel(self.tab_4)
+        self.label_stock_growth.setGeometry(QtCore.QRect(30, 755, 200, 30))
+        self.label_stock_growth.setText('Table 3.2 Dynamic of Stocks')
+        # self.stock_growth = set_stock_growth(self.uni_var)
+        # self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+        #                                                               'Stock growth, RUB'],
+        #                            headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
+        # self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.view_6.setModel(self.model_6)
 
         self.widget_for_g_p = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_g_p.setGeometry(550, 480, 500, 480)
+        self.widget_for_g_p.setGeometry(550, 470, 500, 460)
+        self.label_g_p = QtWidgets.QLabel(self.tab_4)
+        self.label_g_p.setGeometry(QtCore.QRect(552, 920, 200, 30))
+        self.label_g_p.setText('Plot 3.1 ')
 
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_g_c.setGeometry(1100, 480, 800, 480)
+        self.widget_for_g_c.setGeometry(1100, 490, 700, 440)
+        self.label_g_c = QtWidgets.QLabel(self.tab_4)
+        self.label_g_c.setGeometry(QtCore.QRect(1102, 920, 200, 30))
+        self.label_g_c.setText('Plot 3.2 ')
 
         self.comboBox_4 = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_4.setGeometry(QtCore.QRect(1292, 500, 100, 31))
+        self.comboBox_4.setGeometry(QtCore.QRect(1192, 495, 100, 31))
         self.comboBox_4.setObjectName("set_period")
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.activated['QString'].connect(self.set_period)
+        self.label_combob_4 = QtWidgets.QLabel(self.tab_4)
+        self.label_combob_4.setGeometry(QtCore.QRect(1190, 462, 200, 30))
+        self.label_combob_4.setText('Select period')
 
         self.fig_p = plot_p(self.uni_var)
         self.fig_c = plot_common(40, self.uni_var)
@@ -226,44 +262,63 @@ class Ui_MainWindow(object):
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
         self.comboBox_5 = QtWidgets.QComboBox(self.tab_5)
-        self.comboBox_5.setGeometry(QtCore.QRect(30, 20, 200, 50))
+        self.comboBox_5.setGeometry(QtCore.QRect(30, 70, 200, 50))
         self.comboBox_5.setObjectName("set_strategy")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.activated['QString'].connect(self.set_strategy)
+        self.label_combob_5 = QtWidgets.QLabel(self.tab_5)
+        self.label_combob_5.setGeometry(QtCore.QRect(30, 38, 200, 30))
+        self.label_combob_5.setText('Select strategy')
 
         self.view_7 = QtWidgets.QTableView(self.tab_5)
         self.view_7.setGeometry(QtCore.QRect(30, 150, 1300, 254))
         self.view_7.setObjectName("table_data_7")
+        self.label_recom = QtWidgets.QLabel(self.tab_5)
+        self.label_recom.setGeometry(QtCore.QRect(30, 405, 300, 30))
+        self.label_recom.setText('Table 4.1 Recommendations on Strategies')
         self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
         self.start_rec_num = 1
-        self.recom = set_recom(self.start_rec_num, self.uni_var)
-        self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
-                                   headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-        self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_7.setModel(self.model_7)
+        # self.recom = set_recom(self.start_rec_num, self.uni_var)
+        # self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+        #                            headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+        # self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.view_7.setModel(self.model_7)
         self.tabWidget.addTab(self.tab_5, "")
 
         self.tab_6 = QtWidgets.QWidget()
         self.tab_6.setObjectName("tab_6")
         self.write_stock = QtWidgets.QTextEdit(self.tab_6)
-        self.write_stock.setGeometry(QtCore.QRect(20, 20, 200, 50))
+        self.write_stock.setGeometry(QtCore.QRect(20, 40, 200, 50))
         self.write_stock.setObjectName("write_stock")
+        self.label_cur_stock = QtWidgets.QLabel(self.tab_6)
+        self.label_cur_stock.setGeometry(QtCore.QRect(20, 10, 200, 30))
+        self.label_cur_stock.setText('Enter the name of the stock')
         self.comboBox_6 = QtWidgets.QComboBox(self.tab_6)
-        self.comboBox_6.setGeometry(QtCore.QRect(20, 100, 200, 50))
+        self.comboBox_6.setGeometry(QtCore.QRect(20, 120, 200, 50))
         self.comboBox_6.setObjectName("set_period_for_stock")
+        self.label_cur_period = QtWidgets.QLabel(self.tab_6)
+        self.label_cur_period.setGeometry(QtCore.QRect(20, 90, 200, 30))
+        self.label_cur_period.setText('Select period')
         self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
-        self.isin = QtWidgets.QLabel(self.tab_6)
-        self.isin.setGeometry(QtCore.QRect(300, 100, 200, 50))
-        self.isin.setText(get_stock_isin(get_stock('msft')))
+        self.isin = QtWidgets.QTextBrowser(self.tab_6)
+        self.isin.setGeometry(QtCore.QRect(300, 120, 200, 50))
+        self.chosen_stock = 'MSFT'
+        self.isin.setText(get_stock_isin(get_stock(self.chosen_stock)))
+        self.label_isin = QtWidgets.QLabel(self.tab_6)
+        self.label_isin.setGeometry(QtCore.QRect(300, 90, 400, 30))
+        self.label_isin.setText(f'International Securities Identification Number of {self.chosen_stock} stock')
         self.widget_for_stock_p = QtWidgets.QWidget(self.tab_6)
-        self.widget_for_stock_p.setGeometry(20, 150, 600, 450)
-        self.fig = plot_stock('MSFT', 150)
+        self.widget_for_stock_p.setGeometry(20, 170, 700, 450)
+        self.label_stock_p = QtWidgets.QLabel(self.tab_6)
+        self.label_stock_p.setGeometry(QtCore.QRect(20, 610, 200, 30))
+        self.label_stock_p.setText(f'Dynamic plot of {self.chosen_stock} stock')
+        self.fig = plot_stock(self.chosen_stock, 150)
         self.layout_for_mpl_stock = QtWidgets.QVBoxLayout(self.widget_for_stock_p)
         self.canvas_stock = GraphicsCanvas(self.fig)
         self.layout_for_mpl_stock.addWidget(self.canvas_stock)
@@ -271,25 +326,32 @@ class Ui_MainWindow(object):
         self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
 
         self.view_8 = QtWidgets.QTableView(self.tab_6)
-        self.view_8.setGeometry(QtCore.QRect(20, 650, 500, 180))
+        self.view_8.setGeometry(QtCore.QRect(20, 700, 700, 185))
         self.view_8.setObjectName("table_data_8")
-        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock('msft'))
-        self.rows_ = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
+        self.label_qt_earnings = QtWidgets.QLabel(self.tab_6)
+        self.label_qt_earnings.setGeometry(QtCore.QRect(20, 885, 200, 30))
+        self.label_qt_earnings.setText(f'Table 5.1 Quarterly Earnings of {self.chosen_stock} stock')
+        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(self.chosen_stock))
+        self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
         self.model_8 = PandasModel(self.stock_qt_earnings,
                                    headers_column=['Quarter', 'Revenue', 'Earnings'],
-                                   headers_row=self.rows_)
+                                   headers_row=self.rows_qearn)
         self.view_8.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_8.setModel(self.model_8)
 
         self.view_9 = QtWidgets.QTableView(self.tab_6)
-        self.view_9.setGeometry(QtCore.QRect(700, 100, 900, 800))
+        self.view_9.setGeometry(QtCore.QRect(800, 100, 900, 777))
         self.view_9.setObjectName("table_data_9")
-        # self.rows_ = [str(i) for i in range(1, get_stock_quarterly_cashflow(get_stock('msft')).shape[0] + 1)]
-        # self.model_9 = PandasModel(get_stock_quarterly_cashflow(get_stock('msft')),
-        #                            headers_column=get_stock_quarterly_cashflow(get_stock('msft')).columns.tolist(),
-        #                            headers_row=self.rows_)
-        # self.view_9.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_9.setModel(self.model_9)
+        self.label_qt_cashflow = QtWidgets.QLabel(self.tab_6)
+        self.label_qt_cashflow.setGeometry(QtCore.QRect(800, 877, 400, 30))
+        self.label_qt_cashflow.setText(f'Table 5.2 Quarterly Balance Sheet  of {self.chosen_stock} stock')
+        self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(self.chosen_stock))
+        self.rows_qcash = [str(i) for i in range(1, self.stock_qt_cashflow.shape[0] + 1)]
+        self.model_9 = PandasModel(self.stock_qt_cashflow,
+                                   headers_column=self.stock_qt_cashflow.columns.tolist(),
+                                   headers_row=self.rows_qcash)
+        self.view_9.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_9.setModel(self.model_9)
         self.tabWidget.addTab(self.tab_6, "")
 
         self.tab_7 = QtWidgets.QWidget()
@@ -328,9 +390,9 @@ class Ui_MainWindow(object):
         self.comboBox_NEWS.setItemText(1, _translate("MainWindow", "Invest Funds: Today News"))
         self.comboBox_NEWS.setItemText(2, _translate("MainWindow", "MOEX"))
         self.NEWS_label.setText(_translate("MainWindow", "RBC"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Page 2"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Page 3"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Page 4"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "News"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Countries && Sectors"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Portfolio"))
         self.comboBox_4.setItemText(0, _translate("MainWindow", "20"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "150"))
         self.comboBox_4.setItemText(2, _translate("MainWindow", "360"))
@@ -340,9 +402,10 @@ class Ui_MainWindow(object):
         self.comboBox_6.setItemText(0, _translate("MainWindow", "20"))
         self.comboBox_6.setItemText(1, _translate("MainWindow", "150"))
         self.comboBox_6.setItemText(2, _translate("MainWindow", "360"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Page 5"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "Page 6"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "Page 7"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Strategies && "
+                                                                                               "Recommendations"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "Stock"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "INFO"))
 
     def path_to_the_page(self, text):
         if text == 'RBC':
@@ -381,6 +444,7 @@ class Ui_MainWindow(object):
         if stock != '':
             if len(yf.Ticker(stock).info) != 2:
                 self.isin.setText(get_stock_isin(get_stock(stock)))
+                self.label_isin.setText(f'International Securities Identification Number of {stock} stock')
                 self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
                 self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
                 self.toolbar_stock.deleteLater()
@@ -397,6 +461,24 @@ class Ui_MainWindow(object):
                 self.layout_for_mpl_stock.addWidget(self.canvas_stock)
                 self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
                 self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
+                self.label_stock_p.setText(f'Dynamic plot of {stock} stock')
+
+                self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(stock))
+                self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
+                self.model_8 = PandasModel(self.stock_qt_earnings,
+                                           headers_column=['Quarter', 'Revenue', 'Earnings'],
+                                           headers_row=self.rows_qearn)
+                self.view_8.setModel(self.model_8)
+                self.label_qt_earnings.setText(f'Quarterly Earnings of {stock} stock')
+
+                self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(stock))
+                self.rows_qcash = [str(i) for i in
+                                   range(1, self.stock_qt_cashflow.shape[0] + 1)]
+                self.model_9 = PandasModel(self.stock_qt_cashflow,
+                                           headers_column=self.stock_qt_cashflow.columns.tolist(),
+                                           headers_row=self.rows_qcash)
+                self.view_9.setModel(self.model_9)
+                self.label_qt_cashflow.setText(f'Quarterly Balance Sheet of {stock} stock')
             else:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")

@@ -51,6 +51,7 @@ def get_stock_quarterly_cashflow(stock):
     stock_quarterly_cashflow = stock_quarterly_cashflow.reset_index()
     return stock_quarterly_cashflow
 
+
 # show quarterly_earnings
 def get_stock_quarterly_earnings(stock):
     stock_quarterly_earnings = stock.quarterly_earnings
@@ -68,4 +69,4 @@ def get_stock_sustainability(stock):
 # show ISIN code - *experimental*
 # ISIN = International Securities Identification Number
 def get_stock_isin(stock):
-    return ('ISIN is ' + stock.isin)
+    return stock.isin
