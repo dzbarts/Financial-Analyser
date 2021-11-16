@@ -39,7 +39,7 @@ def plot_s(uni_var):
     ax1.pie(weight_for_plot_s, labels=list_of_sectors)
     plt.style.use('dark_background')
     fig_s.set_facecolor('#19232D')
-    ax1.set_title('Share by sectors')
+    ax1.set_title('Share by Sectors')
     return fig_s
 
 
@@ -57,7 +57,7 @@ def plot_c(uni_var):
     fig_c, ax1 = plt.subplots()
     ax1.pie(weight_for_plot_c, labels=list_of_countries)
     fig_c.set_facecolor('#19232D')
-    ax1.set_title('Share by countries')
+    ax1.set_title('Share by Countries')
     return fig_c
     # plt.show()
 

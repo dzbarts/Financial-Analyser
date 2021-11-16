@@ -58,7 +58,7 @@ def plot_p(uni_var):
     ax1.pie(uni_var[4], labels=uni_var[2])
     plt.style.use('dark_background')
     fig_p.set_facecolor('#19232D')
-    ax1.set_title('Amount of stocks from portfolio')
+    ax1.set_title('Amount of Stocks')
 
     return fig_p
 
@@ -72,7 +72,7 @@ def plot_common(period, uni_var):
     ax1.legend(uni_var[2])
     ax1.set_xlabel('Date, d/m')
     ax1.set_ylabel('Price, $')
-    ax1.set_title('Price of stocks from portfolio')
+    ax1.set_title('Price of Stocks')
     fig_c.set_facecolor('#19232D')
     plt.style.use('dark_background')
     return fig_c

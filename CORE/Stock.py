@@ -16,7 +16,7 @@ def plot_stock(stock, period):  # передаю не только период,
     plt.style.use('dark_background')
     ax1.set_xlabel('Date, d/m')
     ax1.set_ylabel('Price, $')
-    ax1.set_title('Price of stocks from portfolio')
+    ax1.set_title('Price of Stock')
     return fig_st
     # plt.show()
 
@@ -68,4 +68,4 @@ def get_stock_sustainability(stock):
 # show ISIN code - *experimental*
 # ISIN = International Securities Identification Number
 def get_stock_isin(stock):
-    return stock.isin
+    return ('ISIN is ' + stock.isin)
