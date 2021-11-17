@@ -16,7 +16,7 @@ import qdarkstyle
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
-from Recommendations import set_recom
+from Recommendations import set_recom, final_plot
 from Stock import plot_stock, get_stock_quarterly_earnings, get_stock, get_stock_quarterly_balance_sheet, \
     get_stock_quarterly_cashflow, get_stock_isin
 from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
@@ -79,19 +79,26 @@ class Ui_MainWindow(object):
 
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
+        self.label_for_pic = QtWidgets.QLabel(self.tab_2)
+        self.label_for_pic.setGeometry(0, 0, main()[1], main()[0])
+        self.label_for_pic.setPixmap(QtGui.QPixmap("Bez_imeni-3.png"))
+        self.label_news = QtWidgets.QLabel(self.tab_2)
+        self.label_news.setGeometry(QtCore.QRect(20, 20, 300, 30))
+        self.label_news.setObjectName('label_news')
+        self.label_news.setText('<h3 style="color: #000000;"> Select the financial news source <h3>')
+        self.label_news.setStyleSheet('QLabel{background-color: transparent;}')
         self.comboBox_NEWS = QtWidgets.QComboBox(self.tab_2)
-        self.comboBox_NEWS.setGeometry(QtCore.QRect(20, 20, 171, 41))
+        self.comboBox_NEWS.setGeometry(QtCore.QRect(20, 50, 200, 41))
         self.comboBox_NEWS.setObjectName("comboBox_NEWS")
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.activated['QString'].connect(self.path_to_the_page)
-        self.NEWS_label = QtWidgets.QLabel(self.tab_2)
-        self.NEWS_label.setGeometry(QtCore.QRect(20, 70, 271, 41))
-        self.NEWS_label.setObjectName("NEWS_label")
         self.news_NEWS = QtWidgets.QTextBrowser(self.tab_2)
-        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 500, main()[0] - 350))
+        self.show = True
+        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, 0, 0))
         self.news_NEWS.setObjectName("news_NEWS")
+        self.news_NEWS.setOpenExternalLinks(True)  # опция для перенаправления при нажатии на ссылку
         self.tabWidget.addTab(self.tab_2, "")
 
         self.tab_3 = QtWidgets.QWidget()
@@ -374,8 +381,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.news_NEWS.setText(parsing_RBC())
-        self.news_NEWS.setOpenExternalLinks(True)  # опция для перенаправления при нажатии на ссылку
         self.add_btn.clicked.connect(self.add_to_the_portfolio)  # добавляем обработчик событий:
         # при нажатии на кнопку происходит действие переданной ф-ции
         self.remove_btn.clicked.connect(self.remove_the_stock)
@@ -389,7 +394,6 @@ class Ui_MainWindow(object):
         self.comboBox_NEWS.setItemText(0, _translate("MainWindow", "RBC"))
         self.comboBox_NEWS.setItemText(1, _translate("MainWindow", "Invest Funds: Today News"))
         self.comboBox_NEWS.setItemText(2, _translate("MainWindow", "MOEX"))
-        self.NEWS_label.setText(_translate("MainWindow", "RBC"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "News"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Countries && Sectors"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Portfolio"))
@@ -408,21 +412,41 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "INFO"))
 
     def path_to_the_page(self, text):
+        if self.show:
+            self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 500, main()[0] - 350))
+            self.show = False
         if text == 'RBC':
-            self.NEWS_label.setText('RBS')
             self.news_NEWS.setText(parsing_RBC())
+            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
+                                              self.news_NEWS.contentsMargins().top() * 2))
+            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
+                                         self.news_NEWS.contentsMargins().left() +
+                                         self.news_NEWS.contentsMargins().right()))
         elif text == 'Invest Funds: Today News':
-            self.NEWS_label.setText('Invest Funds: Today News')
             self.news_NEWS.setText(parsing_invest_funds())
+            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
+                                              self.news_NEWS.contentsMargins().top() * 2))
+            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
+                                         self.news_NEWS.contentsMargins().left() +
+                                         self.news_NEWS.contentsMargins().right()))
             if len(parsing_invest_funds()) == 0:
                 self.news_NEWS.setText("News can't be founded today. Go to sleep and wait for it!")
+                self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
+                                                  self.news_NEWS.contentsMargins().top() * 2))
+                self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
+                                         self.news_NEWS.contentsMargins().left() +
+                                         self.news_NEWS.contentsMargins().right()))
         elif text == 'MOEX':
-            self.NEWS_label.setText('MOEX')
             self.news_NEWS.setText(parsing_moex())
+            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
+                                              self.news_NEWS.contentsMargins().top() * 2))
+            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
+                                         self.news_NEWS.contentsMargins().left() +
+                                         self.news_NEWS.contentsMargins().right()))
 
     def set_period(self, period):
         if period != '':
-            self.layout_for_mpl_c.removeWidget(self.canvas_c)  # удаление старых данных с виджета
+            self.layout_for_mpl_c.removeWidget(self.canvas_c)
             self.layout_for_mpl_c.removeWidget(self.toolbar_c)
             self.toolbar_c.deleteLater()
             self.canvas_c.deleteLater()
@@ -671,8 +695,10 @@ class Ui_MainWindow(object):
     def change_language(self):
         if self.book.toPlainText() == self.tutorial:
             self.book.setText(self.tutorial_eng)
+            self.book.setFixedHeight(int(self.book.document().size().height() + self.book.contentsMargins().top() * 2))
         else:
             self.book.setText(self.tutorial)
+            self.book.setFixedHeight(int(self.book.document().size().height() + self.book.contentsMargins().top() * 2))
 
     def add_to_the_portfolio(self):
         old_port = read_port()
