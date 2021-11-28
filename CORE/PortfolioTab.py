@@ -5,12 +5,6 @@ import matplotlib
 
 
 def set_assets(uni_var):
-    # column of dividends
-    dividends = []
-
-    for i in range(uni_var[5]):
-        dividends.append(uni_var[3][i].info['dividendRate'])
-
     assets = []
 
     for i in range(uni_var[6]):
@@ -19,7 +13,7 @@ def set_assets(uni_var):
     assets = pd.concat(assets)
     assets.index = uni_var[2]
     assets = assets.round(2)
-    assets['Dividends (per year)'] = dividends
+    assets['Dividends (per year)'] = uni_var[8]
     assets.insert(0, 'Number', uni_var[4])
 
     major_holders = []
@@ -66,6 +60,7 @@ def plot_p(uni_var):
 # plot of time series
 def plot_common(period, uni_var):
     fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
     for i in range(uni_var[6]):
         ax1.plot(uni_var[7][i].Close[-period:])
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))

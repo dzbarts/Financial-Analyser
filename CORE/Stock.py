@@ -1,7 +1,7 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
 import matplotlib
-
+import datetime
 
 def get_stock(stock):
     return yf.Ticker(stock)
@@ -9,11 +9,13 @@ def get_stock(stock):
 
 def plot_stock(stock, period):  # передаю не только период, но и акцию,
     # чтобы можно было выводить график по определенной акции
+    plt.style.use('dark_background')
     fig_st, ax1 = plt.subplots()
-    ax1.plot(yf.download(stock).Close[-period:])
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=361),
+                         end=datetime.date.today()).Close[-period:])
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     fig_st.set_facecolor('#19232D')  # меняю background графика
-    plt.style.use('dark_background')
     ax1.set_xlabel('Date, d/m')
     ax1.set_ylabel('Price, $')
     ax1.set_title('Price of Stock')
@@ -70,3 +72,24 @@ def get_stock_sustainability(stock):
 # ISIN = International Securities Identification Number
 def get_stock_isin(stock):
     return stock.isin
+
+
+def get_list_of_stock(stock):
+    data = yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=361),
+                         end=datetime.date.today())
+    price = data['Close'][-1]
+    date = datetime.date.today()
+    gr1 = round(price - data['Close'][-2], 2)
+    if gr1 > 0:
+        gr1 = str('+' + gr1)
+    else:
+        gr1 = str(gr1)
+    gr2 = round((price / data['Close'][-2] - 1) * 100, 2)
+    gr2 = str(gr2) + '%'
+
+    return str.upper(stock), round(price, 2), date, gr1, gr2
+
+# import time
+# start_time = time.time()
+# print(get_list_of_stock('poly'))
+# print("--- %s seconds ---" % (time.time() - start_time))

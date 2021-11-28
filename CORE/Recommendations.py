@@ -1,23 +1,22 @@
 import pandas as pd
-from Plots import *
-import yfinance as yf
+from Recs import *
 
 
 def set_recom(risk, uni_var):
     recom = pd.DataFrame(index=uni_var[2])
     recom['Stocks'] = uni_var[2]
-    recom['SMA'] = list(map(lambda x: plot_SMA(300, x, risk)[0], uni_var[7]))
-    recom['twoSMA'] = list(map(lambda x: plot_twoSMA(300, x, risk)[0], uni_var[7]))
-    recom['EMA'] = list(map(lambda x: plot_EMA(300, x, risk)[0], uni_var[7]))
-    recom['DEMA'] = list(map(lambda x: plot_DEMA(300, x, risk)[0], uni_var[7]))
-    recom['TEMA'] = list(map(lambda x: plot_TEMA(300, x, risk)[0], uni_var[7]))
-    recom['MACD'] = list(map(lambda x: plot_MACD(300, x)[0], uni_var[7]))
-    recom['CHV'] = list(map(lambda x: plot_CHV(300, x, risk)[0], uni_var[7]))
-    recom['RSI'] = list(map(lambda x: plot_RSI(300, x, risk)[0], uni_var[7]))
-    recom['bulls'] = list(map(lambda x: plot_bulls(300, x, risk)[0], uni_var[7]))
-    recom['bears'] = list(map(lambda x: plot_bears(300, x, risk)[0], uni_var[7]))
-    recom['ER'] = list(map(lambda x: plot_ER(300, x, risk)[0], uni_var[7]))
-    recom['MI'] = list(map(lambda x: plot_MI(300, x)[0], uni_var[7]))
+    recom['SMA'] = list(map(lambda x: rec_SMA(300, x, risk), uni_var[7]))
+    recom['twoSMA'] = list(map(lambda x: rec_twoSMA(300, x, risk), uni_var[7]))
+    recom['EMA'] = list(map(lambda x: rec_EMA(300, x, risk), uni_var[7]))
+    recom['DEMA'] = list(map(lambda x: rec_DEMA(300, x, risk), uni_var[7]))
+    recom['TEMA'] = list(map(lambda x: rec_TEMA(300, x, risk), uni_var[7]))
+    recom['MACD'] = list(map(lambda x: rec_MACD(300, x), uni_var[7]))
+    recom['CHV'] = list(map(lambda x: rec_CHV(300, x, risk), uni_var[7]))
+    recom['RSI'] = list(map(lambda x: rec_RSI(300, x, risk), uni_var[7]))
+    recom['bulls'] = list(map(lambda x: rec_bulls(300, x, risk), uni_var[7]))
+    recom['bears'] = list(map(lambda x: rec_bears(300, x, risk), uni_var[7]))
+    recom['ER'] = list(map(lambda x: rec_ER(300, x, risk), uni_var[7]))
+    recom['MI'] = list(map(lambda x: rec_MI(300, x), uni_var[7]))
 
     agg1 = recom[recom.columns[1:8]].sum(axis=1)
     agg = []
@@ -46,30 +45,30 @@ def set_recom(risk, uni_var):
 
     return recom
 
-
-def final_plot(period, data, risk, x):
-    data = yf.download(data)
-    if x == 1:
-        return plot_SMA(period, data, risk)[1:3]
-    elif x == 2:
-        return plot_twoSMA(period, data, risk)[1:4]
-    elif x == 3:
-        return plot_EMA(period, data, risk)[1:3]
-    elif x == 4:
-        return plot_DEMA(period, data, risk)[1:3]
-    elif x == 5:
-        return plot_TEMA(period, data, risk)[1:3]
-    elif x == 6:
-        return plot_MACD(period, data)[1:4]
-    elif x == 7:
-        return plot_CHV(period, data, risk)[1:3]
-    elif x == 8:
-        return plot_RSI(period, data, risk)[1:4]
-    elif x == 9:
-        return plot_bulls(period, data, risk)[1:3]
-    elif x == 10:
-        return plot_bears(period, data, risk)[1:3]
-    elif x == 11:
-        return plot_ER(period, data, risk)[1:5]
-    else:
-        return plot_MI(period, data, risk)[1:4]
+#
+# def final_plot(period, data, risk, x):
+#     data = yf.download(data)
+#     if x == 1:
+#         return rec_SMA(period, data, risk)[1:3]
+#     elif x == 2:
+#         return rec_twoSMA(period, data, risk)[1:4]
+#     elif x == 3:
+#         return rec_EMA(period, data, risk)[1:3]
+#     elif x == 4:
+#         return rec_DEMA(period, data, risk)[1:3]
+#     elif x == 5:
+#         return rec_TEMA(period, data, risk)[1:3]
+#     elif x == 6:
+#         return rec_MACD(period, data)[1:4]
+#     elif x == 7:
+#         return rec_CHV(period, data, risk)[1:3]
+#     elif x == 8:
+#         return rec_RSI(period, data, risk)[1:4]
+#     elif x == 9:
+#         return rec_bulls(period, data, risk)[1:3]
+#     elif x == 10:
+#         return rec_bears(period, data, risk)[1:3]
+#     elif x == 11:
+#         return rec_ER(period, data, risk)[1:5]
+#     else:
+#         return rec_MI(period, data, risk)[1:4]

@@ -1,9 +1,2 @@
-AAPL
-RY
-RY
-RY
-AAPL
-RY
-RY
-DIS
-SBUX
+aapl
+TSLA	

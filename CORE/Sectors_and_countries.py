@@ -2,41 +2,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def get_sector(el):
-    return el.info['sector']
-
-
-def get_country(el):
-    return el.info['country']
-
-
 # sectors Pandas DataFrame
 def set_t_port_sect(uni_var):
-    list_of_all_countries = list(map(get_country, uni_var[3]))
-    list_of_all_sectors = list(map(get_sector, uni_var[3]))
-
     t_port_sect = pd.DataFrame({
         'Stocks': uni_var[2],
         'Number': uni_var[4],
-        'Countries': list_of_all_countries,
-        'Sectors': list_of_all_sectors
+        'Countries': uni_var[9],
+        'Sectors': uni_var[10]
     }, index=uni_var[2])
     return t_port_sect
 
 
 def plot_s(uni_var):
-    list_of_all_sectors = list(map(get_sector, uni_var[3]))
-
-    list_of_sectors = list(set(list_of_all_sectors))
-
-    weight_for_plot_s = [0] * len(list_of_sectors)
+    weight_for_plot_s = [0] * len(uni_var[11])
 
     # cycle of getting weight_for_plot_s
     for i in range(len(uni_var[4])):
-        weight_for_plot_s[list_of_sectors.index(list_of_all_sectors[i])] += uni_var[4][i]
+        weight_for_plot_s[uni_var[11].index(uni_var[10][i])] += uni_var[4][i]
 
     fig_s, ax1 = plt.subplots()
-    ax1.pie(weight_for_plot_s, labels=list_of_sectors)
+    ax1.pie(weight_for_plot_s, labels=uni_var[11])
     plt.style.use('dark_background')
     fig_s.set_facecolor('#19232D')
     ax1.set_title('Share by Sectors')
@@ -46,16 +31,14 @@ def plot_s(uni_var):
 # pie plot for countries
 def plot_c(uni_var):
     plt.style.use('dark_background')
-    list_of_all_countries = list(map(get_country, uni_var[3]))
-    list_of_countries = list(set(list_of_all_countries))
-    weight_for_plot_c = [0] * len(list_of_countries)
+    weight_for_plot_c = [0] * len(uni_var[12])
 
     # cycle of getting weight_for_plot_c
     for i in range(len(uni_var[4])):
-        weight_for_plot_c[list_of_countries.index(list_of_all_countries[i])] += uni_var[4][i]
+        weight_for_plot_c[uni_var[12].index(uni_var[9][i])] += uni_var[4][i]
 
     fig_c, ax1 = plt.subplots()
-    ax1.pie(weight_for_plot_c, labels=list_of_countries)
+    ax1.pie(weight_for_plot_c, labels=uni_var[12])
     fig_c.set_facecolor('#19232D')
     ax1.set_title('Share by Countries')
     return fig_c

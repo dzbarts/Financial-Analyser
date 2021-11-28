@@ -16,7 +16,7 @@ import qdarkstyle
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
-from Recommendations import set_recom, final_plot
+from Recommendations import set_recom
 from Stock import plot_stock, get_stock_quarterly_earnings, get_stock, get_stock_quarterly_balance_sheet, \
     get_stock_quarterly_cashflow, get_stock_isin
 from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
@@ -106,11 +106,11 @@ class Ui_MainWindow(object):
         self.view = QtWidgets.QTableView(self.tab_3)
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data_1")
-        # self.model = PandasModel(tsectors, headers_column=['Trough', 'Expansion', 'Peak', 'Recession'],
-        #                         headers_row=['1', '2', '3', '4', '5', '6', '',
-        #                                      'Recommendations'])  # создаепм модель готового класса
-        # self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
+        self.model = PandasModel(tsectors, headers_column=['Trough', 'Expansion', 'Peak', 'Recession'],
+                                headers_row=['1', '2', '3', '4', '5', '6', '',
+                                             'Recommendations'])  # создаепм модель готового класса
+        self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
         self.label_tsect = QtWidgets.QLabel(self.tab_3)
         self.label_tsect.setGeometry(QtCore.QRect(50, 379, 300, 30))
         self.label_tsect.setText('Table 2.1 Share Sectors due to Cycle')
@@ -118,10 +118,10 @@ class Ui_MainWindow(object):
         self.view_2 = QtWidgets.QTableView(self.tab_3)
         self.view_2.setGeometry(QtCore.QRect(50, 450, 700, 439))
         self.view_2.setObjectName("table_data_2")
-        # self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
-        #                           headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
-        # self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_2.setModel(self.model_2)
+        self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
+                                  headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
+        self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_2.setModel(self.model_2)
         self.label_tcapa = QtWidgets.QLabel(self.tab_3)
         self.label_tcapa.setGeometry(QtCore.QRect(50, 890, 300, 30))
         self.label_tcapa.setText('Table 2.2 CAPA Index')
@@ -129,11 +129,11 @@ class Ui_MainWindow(object):
         self.view_3 = QtWidgets.QTableView(self.tab_3)
         self.view_3.setGeometry(QtCore.QRect(770, 450, 480, 254))
         self.view_3.setObjectName("table_data_3")
-        # self.t_port_sect = set_t_port_sect(self.uni_var)
-        # self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-        #                            headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-        # self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_3.setModel(self.model_3)
+        self.t_port_sect = set_t_port_sect(self.uni_var)
+        self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+        self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_3.setModel(self.model_3)
         self.label_tpc = QtWidgets.QLabel(self.tab_3)
         self.label_tpc.setGeometry(QtCore.QRect(770, 705, 300, 30))
         self.label_tpc.setText('Table 2.3 Countries and Sectors of Stocks')
@@ -202,19 +202,19 @@ class Ui_MainWindow(object):
         self.label_assets = QtWidgets.QLabel(self.tab_4)
         self.label_assets.setGeometry(QtCore.QRect(30, 455, 300, 30))
         self.label_assets.setText('Table 3.1 Collective Information of Stocks')
-        # self.assets = set_assets(self.uni_var)
-        # self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
-        #                                                         'Close', 'Volume', 'Div. (per year)',
-        #                                                         '% of Shares Held by All Insider',
-        #                                                         '% of Shares Held by Inst.',
-        #                                                         '% of Float Held by Inst.',
-        #                                                         'Number of Inst. Hold. Shares'],
-        #                            headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
-        # self.view_5.setModel(self.model_5)
-        # for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
-        #     self.view_5.setColumnWidth(i, 100)
-        # for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
-        #     self.view_5.setColumnWidth(i, 250)
+        self.assets = set_assets(self.uni_var)
+        self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
+                                                                'Close', 'Volume', 'Div. (per year)',
+                                                                '% of Shares Held by All Insider',
+                                                                '% of Shares Held by Inst.',
+                                                                '% of Float Held by Inst.',
+                                                                'Number of Inst. Hold. Shares'],
+                                   headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
+        self.view_5.setModel(self.model_5)
+        for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
+            self.view_5.setColumnWidth(i, 100)
+        for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
+            self.view_5.setColumnWidth(i, 250)
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
@@ -222,12 +222,12 @@ class Ui_MainWindow(object):
         self.label_stock_growth = QtWidgets.QLabel(self.tab_4)
         self.label_stock_growth.setGeometry(QtCore.QRect(30, 755, 200, 30))
         self.label_stock_growth.setText('Table 3.2 Dynamic of Stocks')
-        # self.stock_growth = set_stock_growth(self.uni_var)
-        # self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
-        #                                                               'Stock growth, RUB'],
-        #                            headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
-        # self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_6.setModel(self.model_6)
+        self.stock_growth = set_stock_growth(self.uni_var)
+        self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+                                                                      'Stock growth, RUB'],
+                                   headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
+        self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_6.setModel(self.model_6)
 
         self.widget_for_g_p = QtWidgets.QWidget(self.tab_4)
         self.widget_for_g_p.setGeometry(550, 470, 500, 460)
@@ -288,11 +288,11 @@ class Ui_MainWindow(object):
         self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
         self.start_rec_num = 1
-        # self.recom = set_recom(self.start_rec_num, self.uni_var)
-        # self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
-        #                            headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-        # self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.view_7.setModel(self.model_7)
+        self.recom = set_recom(self.start_rec_num, self.uni_var)
+        self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+                                   headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+        self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view_7.setModel(self.model_7)
         self.tabWidget.addTab(self.tab_5, "")
 
         self.tab_6 = QtWidgets.QWidget()
@@ -324,7 +324,7 @@ class Ui_MainWindow(object):
         self.widget_for_stock_p.setGeometry(20, 170, 700, 450)
         self.label_stock_p = QtWidgets.QLabel(self.tab_6)
         self.label_stock_p.setGeometry(QtCore.QRect(20, 610, 200, 30))
-        self.label_stock_p.setText(f'Dynamic plot of {self.chosen_stock} stock')
+        self.label_stock_p.setText(f'Plot of {self.chosen_stock} stock')
         self.fig = plot_stock(self.chosen_stock, 150)
         self.layout_for_mpl_stock = QtWidgets.QVBoxLayout(self.widget_for_stock_p)
         self.canvas_stock = GraphicsCanvas(self.fig)
@@ -453,11 +453,11 @@ class Ui_MainWindow(object):
             self.canvas_c.hide()
             self.toolbar_c.hide()
             if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                self.fig_c = plot_common(20, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(20, self.uni_var)
             elif period == '150':
-                self.fig_c = plot_common(150, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(150, self.uni_var)
             elif period == '360':
-                self.fig_c = plot_common(360, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(360, self.uni_var)
             self.canvas_c = GraphicsCanvas(self.fig_c)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
