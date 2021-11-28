@@ -1,47 +1,39 @@
 import matplotlib.pyplot as plt
-import numpy as np
-import datetime as dt
+import matplotlib
+from pandas import Series
+from Indicators import *
 
 
-# я обозначил дата за 0, тк не обозначать нельзя
-# мне ее оставить пустой, чтобы она как глобальная переменная была,или добавить как аргумент?
-
-# параметр n отвечает за покупку - продажу акций
-# если n = 2 - покупать (SELL)
-#      n = 1 - ничего (WAIT)
-#      n = 0 - продавать (SELL)
-#      n = 3 - не продавать (NSELL)
-#      n = 4 - не покупать  (NBUY)
-#      n = 5 - индикатор не против торговли (OK)
-#      n = 6 - не торговать (NT)
-from Indicators import EMA, SMA, DEMA, TEMA, RSI, MACD, Bulls_power, Bears_power, Elder_Rays, MI, CHV
-
-
-def plot_SMA(lenData, data, risk=2):
+def plot_SMA(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
         window = 10
     else:  # средний риска
         window = 50
-    sma = SMA(data['Close'], window)
 
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
+
+    sma = SMA(data, window)
     sma = sma[(-lenData):]
+
     data = data[(-lenData):]
 
-    if (data['Close'].values[-1] <= sma[-1] and data['Close'].values[-2] > sma[-2]):
-        n = 0
-    elif (data['Close'].values[-1] >= sma[-1] and data['Close'].values[-2] < sma[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(data)
+    ax1.plot(sma)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('SMA Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], sma), \
-           lambda blank: blank.plot(data['Date'], data['Close'])
 
-
-def plot_twoSMA(lenData, data, risk=2):
+def plot_twoSMA(lenData, data, risk=2, st=0):
     if risk == 1:  # низкий риск
         window1 = 70
         window2 = 140
@@ -52,27 +44,30 @@ def plot_twoSMA(lenData, data, risk=2):
         window1 = 5
         window2 = 10
 
-    smaShort = SMA(data['Close'], window1)
-    smaLong = SMA(data['Close'], window2)
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
 
+    smaShort = SMA(data, window1)
+    smaLong = SMA(data, window2)
     smaShort = smaShort[(-lenData):]
     smaLong = smaLong[(-lenData):]
     data = data[(-lenData):]
 
-    if (smaShort[-1] <= smaLong[-1] and smaShort[-2] > smaLong[-2]):
-        n = 0
-    elif (smaShort[-1] >= smaLong[-1] and smaShort[-2] < smaLong[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(data)
+    ax1.plot(smaShort)
+    ax1.plot(smaLong)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('twoSMA Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], smaShort), \
-           lambda blank: blank.plot(data['Date'], smaLong), \
-           lambda blank: blank.plot(data['Date'], data['Close'])
 
-
-def plot_EMA(lenData, data, risk=2):
+def plot_EMA(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -80,24 +75,28 @@ def plot_EMA(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
-    ema = EMA(data['Close'], window)
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
 
+    ema = EMA(data, window)
     ema = ema[(-lenData):]
+
     data = data[(-lenData):]
 
-    if (data['Close'].values[-1] <= ema[-1] and data['Close'].values[-2] > ema[-2]):
-        n = 0
-    elif (data['Close'].values[-1] >= ema[-1] and data['Close'].values[-2] < ema[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(data)
+    ax1.plot(ema)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('EMA Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], ema), \
-           lambda blank: blank.plot(data['Date'], data['Close'])
 
-
-def plot_DEMA(lenData, data, risk=2):
+def plot_DEMA(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -105,24 +104,28 @@ def plot_DEMA(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
-    dema = DEMA(data['Close'], window)
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
 
+    dema = DEMA(data, window)
     dema = dema[(-lenData):]
+
     data = data[(-lenData):]
 
-    if (data['Close'].values[-1] <= dema[-1] and data['Close'].values[-2] > dema[-2]):
-        n = 0
-    elif (data['Close'].values[-1] >= dema[-1] and data['Close'].values[-2] < dema[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(data)
+    ax1.plot(dema)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('DEMA Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], dema), \
-           lambda blank: blank.plot(data['Date'], data['Close'])
 
-
-def plot_TEMA(lenData, data, risk=2):
+def plot_TEMA(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -130,24 +133,28 @@ def plot_TEMA(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
-    tema = TEMA(data['Close'], window)
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
 
+    tema = TEMA(data, window)
     tema = tema[(-lenData):]
+
     data = data[(-lenData):]
 
-    if (data['Close'].values[-1] <= tema[-1] and data['Close'].values[-2] > tema[-2]):
-        n = 0
-    elif (data['Close'].values[-1] >= tema[-1] and data['Close'].values[-2] < tema[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(data)
+    ax1.plot(tema)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('TEMA Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], tema), \
-           lambda blank: blank.plot(data['Date'], data['Close'])
 
-
-def plot_RSI(lenData, data, risk=2):
+def plot_RSI(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -155,25 +162,29 @@ def plot_RSI(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
-    rsi = RSI(data['Close'], window)
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
 
+    rsi = RSI(data, window)
     rsi = rsi[(-lenData):]
+
     data = data[(-lenData):]
 
-    if rsi[-1] > 70:
-        n = 4
-    elif rsi[-1] < 30:
-        n = 3
-    else:
-        n = 5
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot([30] * len(data))
+    ax1.plot([70] * len(data))
+    ax1.plot(rsi)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('RSI Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], rsi), \
-           lambda blank: blank.plot(data['Date'], [30] * len(data['Close'])), \
-           lambda blank: blank.plot(data['Date'], [70] * len(data['Close']))
 
-
-def plot_MACD(lenData, data, risk=1):
+def plot_MACD(lenData, data, risk=2, st=0):
     if risk == 1:  # низкий риск
         shortwindow = 12
         longwindow = 26
@@ -183,7 +194,11 @@ def plot_MACD(lenData, data, risk=1):
         longwindow = 35
         signalwindow = 5
 
-    macd_all = MACD(data['Close'], shortwindow, longwindow, signalwindow)
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]['Close']
+    data = Series.to_list(data)
+
+    macd_all = MACD(data, shortwindow, longwindow, signalwindow)
 
     macd = macd_all[0]
     macdsignal = macd_all[1]
@@ -192,68 +207,80 @@ def plot_MACD(lenData, data, risk=1):
     macd = macd[(-lenData):]
     macdsignal = macdsignal[(-lenData):]
     macdhist = macdhist[(-lenData):]
-    data = data[(-lenData):]
 
-    if (macdhist[-1] <= macdsignal[-1] and macdhist[-2] > macdsignal[-2]):
-        n = 0
-    elif (macdhist[-1] >= macdsignal[-1] and macdhist[-2] < macdsignal[-2]):
-        n = 2
-    else:
-        n = 1
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.bar(date, macd)
+    ax1.bar(date, macdhist, color='#F5D27A')
+    ax1.plot(date, macdsignal, color='#F2EEAC')
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('MACD Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           lambda blank: blank.plot(data['Date'], macdsignal, zorder=3), \
-           lambda blank: blank.bar(data['Date'], macdhist, zorder=2), \
-           lambda blank: blank.bar(data['Date'], macd, zorder=1)
 
-
-def plot_bulls(lenData, data, risk=2):
+def plot_bulls(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
         window = 10
     else:  # средний риска
         window = 50
+
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]
 
     bulls = Bulls_power(data, window)
 
     bulls = bulls[(-lenData):]
-    data = data[(-lenData):]
+    # data = data['Close'][(-lenData):]
 
-    if (bulls.values[-1] < bulls.values[-2] and bulls.values[-1] > 0 and bulls.values[-2] > 0):
-        n = 3
-    else:
-        n = 5
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    # ax1.plot(date, data)
+    ax1.bar(date, bulls)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('Bulls Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           (lambda blank: blank.bar(data['Date'], bulls)), \
-           (lambda blank: blank.plot(data['Date'], data['Close']))
 
-
-def plot_bears(lenData, data, risk=2):
+def plot_bears(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
         window = 10
     else:  # средний риска
         window = 50
+
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]
 
     bears = Bears_power(data, window);
 
     bears = bears[(-lenData):]
-    data = data[(-lenData):]
+    # data = data['Close'][(-lenData):]
 
-    if (bears.values[-1] > bears.values[-2] and bears.values[-1] < 0 and bears.values[-2] < 0):
-        n = 4
-    else:
-        n = 5
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    # ax1.plot(date, data)
+    ax1.bar(date, bears)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('Bears Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
-    return n, \
-           (lambda blank: blank.bar(data['Date'], bears)), \
-           (lambda blank: blank.plot(data['Date'], data['Close']))
 
-
-def plot_ER(lenData, data, risk=2):
+def plot_ER(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -261,30 +288,35 @@ def plot_ER(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
-    ema = Elder_Rays(data, window)[0]
-    bulls = Elder_Rays(data, window)[1]
-    bears = Elder_Rays(data, window)[2]
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]
 
-    ema = ema[(-lenData):]
+    er = Elder_Rays(data, window)
+    ema = er[0]
+    bulls = er[1]
+    bears = er[2]
+
+    # ema = ema[(-lenData):]
     bears = bears[(-lenData):]
     bulls = bulls[(-lenData):]
-    data = data[(-lenData):]
 
-    if (bears.values[-1] > bears.values[-2] and bears.values[-1] < 0 and bears.values[-2] < 0):
-        n = 4
-    elif (bulls.values[-1] < bulls.values[-2] and bulls.values[-1] > 0 and bulls.values[-2] > 0):
-        n = 3
-    else:
-        n = 5
-
-    return n, \
-           (lambda blank: blank.plot(data['Date'], ema)), \
-           (lambda blank: blank.bar(data['Date'], bulls)), \
-           (lambda blank: blank.bar(data['Date'], bears)), \
-           (lambda blank: blank.plot(data['Date'], data['Close']))
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.bar(date, bulls)
+    ax1.bar(date, bears)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('Elder Rays Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
 
-def plot_MI(lenData, data):
+def plot_MI(lenData, data, risk=2, st=0):
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]
+
     mi = MI(data, 9)
 
     result = []
@@ -294,27 +326,22 @@ def plot_MI(lenData, data):
     mi = result
 
     mi = mi[(-lenData):]
-    data = data[(-lenData):]
 
-    mislice = mi[-20:-1]
-    flag = 6
-
-    for i in range(len(mislice)):
-        if (mi[i] > 26.5 and mi[i] < 27):
-            flag = 5
-
-    if (flag == 5 and mi[-1] < 26.5):
-        n = 5
-    else:
-        n = 6
-
-    return n, \
-           lambda blank: blank.plot(data['Date'], mi), \
-           lambda blank: blank.plot(data['Date'], [27] * len(data['Close'])), \
-           lambda blank: blank.plot(data['Date'], [26.5] * len(data['Close']))
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(date, [27] * lenData)
+    ax1.plot(date, [26.5] * lenData)
+    ax1.plot(date, mi)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index, unit')
+    ax1.set_title('Mass Index Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
 
 
-def plot_CHV(lenData, data, risk=2):
+def plot_CHV(lenData, data, risk=2, st=0):
     if risk == 1:
         window = 100  # низкий риск
     elif risk == 3:  # высокий риск
@@ -322,18 +349,22 @@ def plot_CHV(lenData, data, risk=2):
     else:  # средний риска
         window = 50
 
+    date = data[7][st].index[(-lenData):]
+    data = data[7][st]
+
     chv = CHV(data, window)
-
     chv = chv[(-lenData):]
-    data = data[(-lenData):]
 
-    if all(chv[i - 1] <= chv[i] for i in range(10)):
-        n = 2
-    elif all(chv[i - 1] >= chv[i] for i in range(10)):
-        n = 0
-    else:
-        n = 1
+    data = data['Close'][(-lenData):]
 
-    return n, \
-           (lambda blank: blank.plot(data['Date'], chv)), \
-           (lambda blank: blank.plot(data['Date'], data['Close']))
+    plt.style.use('dark_background')
+    fig_c, ax1 = plt.subplots()
+    ax1.grid(linewidth=0.5, linestyle='--')
+    ax1.plot(date, data)
+    ax1.plot(date, chv)
+    ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Index/Price, unit/$')
+    ax1.set_title('Chaikin Volatility Strategy')
+    fig_c.set_facecolor('#19232D')
+    return fig_c
