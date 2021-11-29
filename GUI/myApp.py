@@ -16,7 +16,7 @@ import qdarkstyle
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
 from Portfolio import set_port_and_portfolio
 from Sectors_and_countries import tsectors, set_t_port_sect, plot_s, tcapa, plot_c
-from Recommendations import set_recom
+from Recommendations import set_recom, final_plot
 from Stock import plot_stock, get_stock_quarterly_earnings, get_stock, get_stock_quarterly_balance_sheet, \
     get_stock_quarterly_cashflow, get_stock_isin
 from PortfolioTab import set_assets, plot_p, set_stock_growth, plot_common
@@ -107,8 +107,8 @@ class Ui_MainWindow(object):
         self.view.setGeometry(QtCore.QRect(50, 50, 1200, 328))
         self.view.setObjectName("table_data_1")
         self.model = PandasModel(tsectors, headers_column=['Trough', 'Expansion', 'Peak', 'Recession'],
-                                headers_row=['1', '2', '3', '4', '5', '6', '',
-                                             'Recommendations'])  # создаепм модель готового класса
+                                 headers_row=['1', '2', '3', '4', '5', '6', '',
+                                              'Recommendations'])  # создаем модель готового класса
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
         self.label_tsect = QtWidgets.QLabel(self.tab_3)
@@ -119,7 +119,7 @@ class Ui_MainWindow(object):
         self.view_2.setGeometry(QtCore.QRect(50, 450, 700, 439))
         self.view_2.setObjectName("table_data_2")
         self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
-                                  headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
+                                   headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
         self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_2.setModel(self.model_2)
         self.label_tcapa = QtWidgets.QLabel(self.tab_3)
@@ -204,11 +204,11 @@ class Ui_MainWindow(object):
         self.label_assets.setText('Table 3.1 Collective Information of Stocks')
         self.assets = set_assets(self.uni_var)
         self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
-                                                                'Close', 'Volume', 'Div. (per year)',
+                                                                'Close', 'Volume', 'Dividends (per year)',
                                                                 '% of Shares Held by All Insider',
-                                                                '% of Shares Held by Inst.',
-                                                                '% of Float Held by Inst.',
-                                                                'Number of Inst. Hold. Shares'],
+                                                                '% of Shares Held by Institutions',
+                                                                '% of Float Held by Institutions',
+                                                                'Number of Institutions Holding Shares'],
                                    headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
         self.view_5.setModel(self.model_5)
         for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
@@ -293,6 +293,41 @@ class Ui_MainWindow(object):
                                    headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model_7)
+        self.widget_for_final_plot = QtWidgets.QWidget(self.tab_5)
+        self.widget_for_final_plot.setGeometry(30, 520, 700, 350)
+        self.fig_final = final_plot(40, 'MSFT', 1, 1)
+        self.layout_for_final_plot = QtWidgets.QVBoxLayout(self.widget_for_final_plot)
+        self.canvas_final = GraphicsCanvas(self.fig_final)
+        self.layout_for_final_plot.addWidget(self.canvas_final)
+        self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
+        self.layout_for_final_plot.addWidget(self.toolbar_final)
+
+        self.comboBox_final_period = QtWidgets.QComboBox(self.tab_5)
+        self.comboBox_final_period.setGeometry(QtCore.QRect(30, 490, 200, 30))
+        self.comboBox_final_period.addItem("")
+        self.comboBox_final_period.addItem("")
+        self.comboBox_final_period.addItem("")
+
+        self.comboBox_final_stock = QtWidgets.QComboBox(self.tab_5)
+        self.comboBox_final_stock.setGeometry(QtCore.QRect(250, 490, 200, 30))
+        for i in list(set(self.start_port)):
+            self.comboBox_final_stock.addItem("")
+
+        self.comboBox_final_type = QtWidgets.QComboBox(self.tab_5)
+        self.comboBox_final_type.setGeometry(QtCore.QRect(500, 490, 200, 30))
+        self.comboBox_final_type.addItem("")
+        self.comboBox_final_type.addItem("")
+        self.comboBox_final_type.addItem("")
+
+        self.combobox_final_strategy = QtWidgets.QComboBox(self.tab_5)
+        self.combobox_final_strategy.setGeometry(QtCore.QRect(750, 490, 200, 30))
+        strategies = ['SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD', 'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI']
+        for i in strategies:
+            self.combobox_final_strategy.addItem("")
+
+        self.final_btn = QtWidgets.QPushButton(self.tab_5)
+        self.final_btn.setGeometry(QtCore.QRect(1000, 490, 200, 30))
+        self.final_btn.setText('Renew final plot')
         self.tabWidget.addTab(self.tab_5, "")
 
         self.tab_6 = QtWidgets.QWidget()
@@ -378,7 +413,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.add_btn.clicked.connect(self.add_to_the_portfolio)  # добавляем обработчик событий:
@@ -387,6 +422,7 @@ class Ui_MainWindow(object):
         self.clear_all_btn.clicked.connect(self.clear_the_portfolio)
         self.renew_plots.clicked.connect(self.renew_all_plots)
         self.change_lng.clicked.connect(self.change_language)
+        self.final_btn.clicked.connect(self.renew_final_plot)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -408,6 +444,17 @@ class Ui_MainWindow(object):
         self.comboBox_6.setItemText(2, _translate("MainWindow", "360"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Strategies && "
                                                                                                "Recommendations"))
+        self.comboBox_final_period.setItemText(0, _translate("MainWindow", "20"))
+        self.comboBox_final_period.setItemText(1, _translate("MainWindow", "150"))
+        self.comboBox_final_period.setItemText(2, _translate("MainWindow", "360"))
+        for i, stock in zip(range(len(set(read_port()))), list(set(read_port()))):
+            self.comboBox_final_stock.setItemText(i, _translate("MainWindow", stock))
+        self.comboBox_final_type.setItemText(0, _translate("MainWindow", "Long-term strategy"))
+        self.comboBox_final_type.setItemText(1, _translate("MainWindow", "Medium strategy"))
+        self.comboBox_final_type.setItemText(2, _translate("MainWindow", "Quick strategy"))
+        strategies = ['SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD', 'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI']
+        for i, strategy in zip(range(12), strategies):
+            self.combobox_final_strategy.setItemText(i, _translate("MainWindow", strategy))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "Stock"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("MainWindow", "INFO"))
 
@@ -420,29 +467,29 @@ class Ui_MainWindow(object):
             self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
                                               self.news_NEWS.contentsMargins().top() * 2))
             self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                         self.news_NEWS.contentsMargins().left() +
-                                         self.news_NEWS.contentsMargins().right()))
+                                             self.news_NEWS.contentsMargins().left() +
+                                             self.news_NEWS.contentsMargins().right()))
         elif text == 'Invest Funds: Today News':
             self.news_NEWS.setText(parsing_invest_funds())
             self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
                                               self.news_NEWS.contentsMargins().top() * 2))
             self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                         self.news_NEWS.contentsMargins().left() +
-                                         self.news_NEWS.contentsMargins().right()))
+                                             self.news_NEWS.contentsMargins().left() +
+                                             self.news_NEWS.contentsMargins().right()))
             if len(parsing_invest_funds()) == 0:
                 self.news_NEWS.setText("News can't be founded today. Go to sleep and wait for it!")
                 self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
                                                   self.news_NEWS.contentsMargins().top() * 2))
                 self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                         self.news_NEWS.contentsMargins().left() +
-                                         self.news_NEWS.contentsMargins().right()))
+                                                 self.news_NEWS.contentsMargins().left() +
+                                                 self.news_NEWS.contentsMargins().right()))
         elif text == 'MOEX':
             self.news_NEWS.setText(parsing_moex())
             self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
                                               self.news_NEWS.contentsMargins().top() * 2))
             self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                         self.news_NEWS.contentsMargins().left() +
-                                         self.news_NEWS.contentsMargins().right()))
+                                             self.news_NEWS.contentsMargins().left() +
+                                             self.news_NEWS.contentsMargins().right()))
 
     def set_period(self, period):
         if period != '':
@@ -453,11 +500,11 @@ class Ui_MainWindow(object):
             self.canvas_c.hide()
             self.toolbar_c.hide()
             if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                self.fig_c = plot_common(20, self.uni_var)
+                self.fig_c = plot_common(20, set_port_and_portfolio(read_port()))
             elif period == '150':
-                self.fig_c = plot_common(150, self.uni_var)
+                self.fig_c = plot_common(150, set_port_and_portfolio(read_port()))
             elif period == '360':
-                self.fig_c = plot_common(360, self.uni_var)
+                self.fig_c = plot_common(360, set_port_and_portfolio(read_port()))
             self.canvas_c = GraphicsCanvas(self.fig_c)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
@@ -590,6 +637,22 @@ class Ui_MainWindow(object):
             self.layout_for_mpl_p.addWidget(self.toolbar_p)
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
+    def renew_final_plot(self):
+        self.layout_for_final_plot.removeWidget(self.canvas_final)
+        self.layout_for_final_plot.removeWidget(self.toolbar_final)
+        self.canvas_final.deleteLater()
+        self.canvas_final.hide()
+        dict_types = {'Long-term strategy': 1, 'Medium strategy': 2, 'Quick strategy': 3}
+        dict_strategies = {'SMA': 1, 'twoSMA': 2, 'EMA': 3, 'DEMA': 4, 'TEMA': 5, 'MACD': 6, 'CHV': 7, 'RSI': 8,
+                           'bulls': 9, 'bears': 10, 'ER': 11, 'MI': 12}
+        self.fig_final = final_plot(int(self.comboBox_final_period.currentText()), self.comboBox_final_stock.currentText(),
+                                    dict_types[self.comboBox_final_type.currentText()],
+                                    dict_strategies[self.combobox_final_strategy.currentText()])
+        self.canvas_final = GraphicsCanvas(self.fig_final)
+        self.layout_for_final_plot.addWidget(self.canvas_final)
+        self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
+        self.layout_for_final_plot.addWidget(self.toolbar_final)
+
     def renew_all_tables(self, old_p, stock):
         changed_port = read_port()
         if (stock == '') & (not changed_port):
@@ -614,6 +677,7 @@ class Ui_MainWindow(object):
             self.view_5.setModel(self.model_5)
             self.view_6.setModel(self.model_6)
             self.view_7.setModel(self.model_7)
+            self.comboBox_final_stock.clear()
         elif len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
             if stock in changed_port:  # если она все еще есть в портфеле, значит надо просто менять кол-во акций
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
@@ -624,6 +688,7 @@ class Ui_MainWindow(object):
                 self.t_port_sect = self.t_port_sect.drop(stock)
                 self.stock_growth = self.stock_growth.drop(stock)
                 self.recom = self.recom.drop(stock)
+                self.comboBox_final_stock.removeItem(list(set(old_p)).index(stock))
             self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                        headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
             self.view_3.setModel(self.model_3)
@@ -648,6 +713,9 @@ class Ui_MainWindow(object):
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
                 self.t_port_sect.loc[stock, 'Number'] = changed_port.count(stock)
             else:
+                self.comboBox_final_stock.addItem("")
+                _translate = QtCore.QCoreApplication.translate
+                self.comboBox_final_stock.setItemText(len(set(changed_port)) - 1, _translate("MainWindow", stock))
                 # если акций не было, добавляем строку с акцией, а также меняем кол-во, т.к. можно добавлять неск. акций
                 stock_inf_1 = set_assets(set_port_and_portfolio([stock]))
                 stock_inf_1.loc[stock, 'Number'] = changed_port.count(stock)
@@ -723,7 +791,7 @@ class Ui_MainWindow(object):
                     error.setText("Такой акции не существует")
                     error.setIcon(QMessageBox.Warning)
                     error.exec_()
-            except ValueError:
+            except TypeError:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
                 error.setText("Неверный формат текста")
@@ -755,7 +823,7 @@ class Ui_MainWindow(object):
                     error.setText("У Вас осталось " + str(read_port().count(stock)) + " акций")
                     error.setIcon(QMessageBox.Warning)
                     error.exec_()
-            except ValueError:
+            except TypeError:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
                 error.setText("Неверный формат текста")
