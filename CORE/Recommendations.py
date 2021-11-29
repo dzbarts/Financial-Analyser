@@ -1,4 +1,8 @@
 import pandas as pd
+import datetime
+import yfinance as yf
+
+from Plots import *
 from Recs import *
 
 
@@ -45,30 +49,31 @@ def set_recom(risk, uni_var):
 
     return recom
 
-#
-# def final_plot(period, data, risk, x):
-#     data = yf.download(data)
-#     if x == 1:
-#         return rec_SMA(period, data, risk)[1:3]
-#     elif x == 2:
-#         return rec_twoSMA(period, data, risk)[1:4]
-#     elif x == 3:
-#         return rec_EMA(period, data, risk)[1:3]
-#     elif x == 4:
-#         return rec_DEMA(period, data, risk)[1:3]
-#     elif x == 5:
-#         return rec_TEMA(period, data, risk)[1:3]
-#     elif x == 6:
-#         return rec_MACD(period, data)[1:4]
-#     elif x == 7:
-#         return rec_CHV(period, data, risk)[1:3]
-#     elif x == 8:
-#         return rec_RSI(period, data, risk)[1:4]
-#     elif x == 9:
-#         return rec_bulls(period, data, risk)[1:3]
-#     elif x == 10:
-#         return rec_bears(period, data, risk)[1:3]
-#     elif x == 11:
-#         return rec_ER(period, data, risk)[1:5]
-#     else:
-#         return rec_MI(period, data, risk)[1:4]
+
+def final_plot(period, stck, risk, x):
+    t = period + 301
+    data = yf.download(stck, start=datetime.date.today() - datetime.timedelta(days=t), end=datetime.date.today())
+    if x == 1:
+        return plot_SMA(period, data, risk)
+    elif x == 2:
+        return plot_twoSMA(period, data, risk)
+    elif x == 3:
+        return plot_EMA(period, data, risk)
+    elif x == 4:
+        return plot_DEMA(period, data, risk)
+    elif x == 5:
+        return plot_TEMA(period, data, risk)
+    elif x == 6:
+        return plot_MACD(period, data)
+    elif x == 7:
+        return plot_CHV(period, data, risk)
+    elif x == 8:
+        return plot_RSI(period, data, risk)
+    elif x == 9:
+        return plot_bulls(period, data, risk)
+    elif x == 10:
+        return plot_bears(period, data, risk)
+    elif x == 11:
+        return plot_ER(period, data, risk)
+    else:
+        return plot_MI(period, data)
