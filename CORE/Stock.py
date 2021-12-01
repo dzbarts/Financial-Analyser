@@ -12,8 +12,8 @@ def plot_stock(stock, period):  # передаю не только период,
     plt.style.use('dark_background')
     fig_st, ax1 = plt.subplots()
     ax1.grid(linewidth=0.5, linestyle='--')
-    ax1.plot(yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=361),
-                         end=datetime.date.today()).Close[-period:])
+    ax1.plot(yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=period),
+                         end=datetime.date.today()).Close)
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
     fig_st.set_facecolor('#19232D')  # меняю background графика
     ax1.set_xlabel('Date, d/m')

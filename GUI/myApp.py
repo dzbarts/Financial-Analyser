@@ -253,7 +253,7 @@ class Ui_MainWindow(object):
         self.label_combob_4.setText('Select period')
 
         self.fig_p = plot_p(self.uni_var)
-        self.fig_c = plot_common(40, self.uni_var)
+        self.fig_c = plot_common(40, read_port())
         self.layout_for_mpl_p = QtWidgets.QVBoxLayout(self.widget_for_g_p)
         self.layout_for_mpl_c = QtWidgets.QVBoxLayout(self.widget_for_g_c)
         self.canvas_p = GraphicsCanvas(self.fig_p)
@@ -515,11 +515,11 @@ class Ui_MainWindow(object):
             self.canvas_c.hide()
             self.toolbar_c.hide()
             if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                self.fig_c = plot_common(20, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(20, read_port())
             elif period == '150':
-                self.fig_c = plot_common(150, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(150, read_port())
             elif period == '360':
-                self.fig_c = plot_common(360, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(360, read_port())
             self.canvas_c = GraphicsCanvas(self.fig_c)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
@@ -634,7 +634,7 @@ class Ui_MainWindow(object):
             self.fig_1 = plot_c(cp)
             self.fig_2 = plot_s(cp)
             self.fig_p = plot_p(cp)
-            self.fig_c = plot_common(40, cp)
+            self.fig_c = plot_common(40, read_port())
             self.canvas_1 = GraphicsCanvas(self.fig_1)
             self.canvas_2 = GraphicsCanvas(self.fig_2)
             self.canvas_p = GraphicsCanvas(self.fig_p)

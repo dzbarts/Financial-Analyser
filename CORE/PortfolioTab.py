@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
-
+import yfinance as yf
+import datetime
 
 def set_assets(uni_var):
     assets = []
@@ -58,13 +59,15 @@ def plot_p(uni_var):
 
 
 # plot of time series
-def plot_common(period, uni_var):
+def plot_common(period, var):
+    var = list(set(var))
     fig_c, ax1 = plt.subplots()
     ax1.grid(linewidth=0.5, linestyle='--')
-    for i in range(uni_var[6]):
-        ax1.plot(uni_var[7][i].Close[-period:])
+    for i in range(len(var)):
+        ax1.plot(yf.download(var[i], start=datetime.date.today() - datetime.timedelta(days=period),
+                             end=datetime.date.today()).Close)
     ax1.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%d/%m"))
-    ax1.legend(uni_var[2])
+    ax1.legend(var)
     ax1.set_xlabel('Date, d/m')
     ax1.set_ylabel('Price, $')
     ax1.set_title('Price of Stocks')
