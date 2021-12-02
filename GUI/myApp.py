@@ -68,6 +68,8 @@ class Ui_MainWindow(object):
         self.start_port = read_port()
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(main()[1], main()[0])
+        MainWindow.setWindowTitle("Your Trading Helper (Stock analyzer)")
+        MainWindow.setWindowIcon(QtGui.QIcon('graph-up-arrow.svg'))  # установили иконку у глвного окна
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -76,6 +78,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, main()[1], main()[0]))
         self.tabWidget.setIconSize(QtCore.QSize(50, 20))
         self.tabWidget.setObjectName("tabWidget")
+        self.tabWidget.setMovable(True)  # теперь можно перемещать вкладки
 
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -192,12 +195,12 @@ class Ui_MainWindow(object):
         self.clear_all_btn.setObjectName("clear_btn")
         self.clear_all_btn.setText("Clear the portfolio")
         self.renew_plots = QtWidgets.QPushButton(self.tab_4)
-        self.renew_plots.setGeometry(QtCore.QRect(1500, 80, 200, 50))
+        self.renew_plots.setGeometry(QtCore.QRect(1500, 100, 200, 50))
         self.renew_plots.setObjectName("renew_plots")
         self.renew_plots.setText("Renew plots")
 
         self.view_5 = QtWidgets.QTableView(self.tab_4)
-        self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
+        self.view_5.setGeometry(QtCore.QRect(30, 200, 1570, 254))
         self.view_5.setObjectName("table_data_5")
         self.label_assets = QtWidgets.QLabel(self.tab_4)
         self.label_assets.setGeometry(QtCore.QRect(30, 455, 300, 30))
@@ -211,10 +214,7 @@ class Ui_MainWindow(object):
                                                                 'Number of Institutions Holding Shares'],
                                    headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
         self.view_5.setModel(self.model_5)
-        for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
-            self.view_5.setColumnWidth(i, 100)
-        for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
-            self.view_5.setColumnWidth(i, 250)
+        self.view_5.resizeColumnsToContents()
 
         self.view_6 = QtWidgets.QTableView(self.tab_4)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
@@ -280,7 +280,7 @@ class Ui_MainWindow(object):
         self.label_combob_5.setText('Select strategy')
 
         self.view_7 = QtWidgets.QTableView(self.tab_5)
-        self.view_7.setGeometry(QtCore.QRect(30, 150, 1300, 254))
+        self.view_7.setGeometry(QtCore.QRect(30, 150, 1230, 254))
         self.view_7.setObjectName("table_data_7")
         self.label_recom = QtWidgets.QLabel(self.tab_5)
         self.label_recom.setGeometry(QtCore.QRect(30, 405, 300, 30))
@@ -296,9 +296,9 @@ class Ui_MainWindow(object):
         self.widget_for_final_plot = QtWidgets.QWidget(self.tab_5)
         self.widget_for_final_plot.setGeometry(30, 520, 700, 430)
         self.label_final = QtWidgets.QLabel(self.tab_5)
-        self.label_final.setGeometry(QtCore.QRect(30, 950, 200, 30))
+        self.label_final.setGeometry(QtCore.QRect(30, 930, 200, 30))
         self.label_final.setText('Plot 4.1 ')
-        self.fig_final = final_plot(40, 'MSFT', 1, 1)
+        self.fig_final = final_plot(150, 'MSFT', 3, 1)
         self.layout_for_final_plot = QtWidgets.QVBoxLayout(self.widget_for_final_plot)
         self.canvas_final = GraphicsCanvas(self.fig_final)
         self.layout_for_final_plot.addWidget(self.canvas_final)
@@ -316,7 +316,7 @@ class Ui_MainWindow(object):
 
         self.comboBox_final_stock = QtWidgets.QComboBox(self.tab_5)
         self.comboBox_final_stock.setGeometry(QtCore.QRect(280, 490, 200, 30))
-        for i in list(set(self.start_port)):
+        for _ in list(set(self.start_port)):
             self.comboBox_final_stock.addItem("")
         self.label_fin_stck = QtWidgets.QLabel(self.tab_5)
         self.label_fin_stck.setGeometry(QtCore.QRect(280, 455, 300, 30))
@@ -334,7 +334,7 @@ class Ui_MainWindow(object):
         self.combobox_final_strategy = QtWidgets.QComboBox(self.tab_5)
         self.combobox_final_strategy.setGeometry(QtCore.QRect(780, 490, 200, 30))
         strategies = ['SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD', 'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI']
-        for i in strategies:
+        for _ in strategies:
             self.combobox_final_strategy.addItem("")
         self.label_fin_strat = QtWidgets.QLabel(self.tab_5)
         self.label_fin_strat.setGeometry(QtCore.QRect(780, 455, 200, 30))
@@ -366,7 +366,8 @@ class Ui_MainWindow(object):
         self.isin = QtWidgets.QTextBrowser(self.tab_6)
         self.isin.setGeometry(QtCore.QRect(300, 120, 200, 50))
         self.chosen_stock = 'MSFT'
-        self.isin.setText(get_stock_isin(get_stock(self.chosen_stock)))
+        self.get_chosen_stock = get_stock(self.chosen_stock)
+        self.isin.setText(get_stock_isin(self.get_chosen_stock))
         self.label_isin = QtWidgets.QLabel(self.tab_6)
         self.label_isin.setGeometry(QtCore.QRect(300, 90, 400, 30))
         self.label_isin.setText(f'International Securities Identification Number of {self.chosen_stock} stock')
@@ -388,7 +389,7 @@ class Ui_MainWindow(object):
         self.label_qt_earnings = QtWidgets.QLabel(self.tab_6)
         self.label_qt_earnings.setGeometry(QtCore.QRect(20, 885, 200, 30))
         self.label_qt_earnings.setText(f'Table 5.1 Quarterly Earnings of {self.chosen_stock} stock')
-        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(self.chosen_stock))
+        self.stock_qt_earnings = get_stock_quarterly_earnings(self.get_chosen_stock)
         self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
         self.model_8 = PandasModel(self.stock_qt_earnings,
                                    headers_column=['Quarter', 'Revenue', 'Earnings'],
@@ -402,7 +403,7 @@ class Ui_MainWindow(object):
         self.label_qt_cashflow = QtWidgets.QLabel(self.tab_6)
         self.label_qt_cashflow.setGeometry(QtCore.QRect(800, 877, 400, 30))
         self.label_qt_cashflow.setText(f'Table 5.2 Quarterly Balance Sheet  of {self.chosen_stock} stock')
-        self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(self.chosen_stock))
+        self.stock_qt_cashflow = get_stock_quarterly_cashflow(self.get_chosen_stock)
         self.rows_qcash = [str(i) for i in range(1, self.stock_qt_cashflow.shape[0] + 1)]
         self.model_9 = PandasModel(self.stock_qt_cashflow,
                                    headers_column=self.stock_qt_cashflow.columns.tolist(),
@@ -414,7 +415,7 @@ class Ui_MainWindow(object):
         self.tab_7 = QtWidgets.QWidget()
         self.tab_7.setObjectName("tab_7")
         self.book = QtWidgets.QTextBrowser(self.tab_7)
-        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 350))
+        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 850))
         self.book.setObjectName("book")
         self.tutorial = open('tutorial.txt', encoding='utf-8').read()
         self.tutorial_eng = open('tutorial_eng.txt', encoding='utf-8').read()
@@ -441,7 +442,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Your Trading Helper (Stocks analyzer)"))
         self.comboBox_NEWS.setItemText(0, _translate("MainWindow", "RBC"))
         self.comboBox_NEWS.setItemText(1, _translate("MainWindow", "Invest Funds: Today News"))
         self.comboBox_NEWS.setItemText(2, _translate("MainWindow", "MOEX"))
@@ -507,6 +508,7 @@ class Ui_MainWindow(object):
                                              self.news_NEWS.contentsMargins().right()))
 
     def set_period(self, period):
+        self.uni_var = set_port_and_portfolio(read_port())
         if period != '':
             self.layout_for_mpl_c.removeWidget(self.canvas_c)
             self.layout_for_mpl_c.removeWidget(self.toolbar_c)
@@ -515,11 +517,11 @@ class Ui_MainWindow(object):
             self.canvas_c.hide()
             self.toolbar_c.hide()
             if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                self.fig_c = plot_common(20, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(20, self.uni_var)
             elif period == '150':
-                self.fig_c = plot_common(150, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(150, self.uni_var)
             elif period == '360':
-                self.fig_c = plot_common(360, set_port_and_portfolio(read_port()))
+                self.fig_c = plot_common(360, self.uni_var)
             self.canvas_c = GraphicsCanvas(self.fig_c)
             self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
@@ -527,9 +529,10 @@ class Ui_MainWindow(object):
 
     def set_period_current_stock(self, period):
         stock = self.write_stock.toPlainText().upper()
+        self.get_chosen_stock = get_stock(stock)
         if stock != '':
             if len(yf.Ticker(stock).info) != 2:
-                self.isin.setText(get_stock_isin(get_stock(stock)))
+                self.isin.setText(get_stock_isin(self.get_chosen_stock))
                 self.label_isin.setText(f'International Securities Identification Number of {stock} stock')
                 self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
                 self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
@@ -549,7 +552,7 @@ class Ui_MainWindow(object):
                 self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
                 self.label_stock_p.setText(f'Dynamic plot of {stock} stock')
 
-                self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(stock))
+                self.stock_qt_earnings = get_stock_quarterly_earnings(self.get_chosen_stock)
                 self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
                 self.model_8 = PandasModel(self.stock_qt_earnings,
                                            headers_column=['Quarter', 'Revenue', 'Earnings'],
@@ -557,7 +560,7 @@ class Ui_MainWindow(object):
                 self.view_8.setModel(self.model_8)
                 self.label_qt_earnings.setText(f'Quarterly Earnings of {stock} stock')
 
-                self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(stock))
+                self.stock_qt_cashflow = get_stock_quarterly_cashflow(self.get_chosen_stock)
                 self.rows_qcash = [str(i) for i in
                                    range(1, self.stock_qt_cashflow.shape[0] + 1)]
                 self.model_9 = PandasModel(self.stock_qt_cashflow,
@@ -579,6 +582,7 @@ class Ui_MainWindow(object):
             error.exec_()
 
     def set_strategy(self, strategy):
+        self.uni_var = set_port_and_portfolio(read_port())
         if strategy == 'Long-term strategy':
             self.start_rec_num = 1
             self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
