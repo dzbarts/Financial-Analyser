@@ -579,6 +579,7 @@ class Ui_MainWindow(object):
             error.exec_()
 
     def set_strategy(self, strategy):
+        self.uni_var = set_port_and_portfolio(read_port())
         if strategy == 'Long-term strategy':
             self.start_rec_num = 1
             self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
