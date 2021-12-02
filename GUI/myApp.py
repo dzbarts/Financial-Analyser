@@ -68,7 +68,6 @@ class Ui_MainWindow(object):
         self.start_port = read_port()
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(main()[1], main()[0])
-        MainWindow.setWindowTitle("Your Trading Helper (Stock analyzer)")
         MainWindow.setWindowIcon(QtGui.QIcon('graph-up-arrow.svg'))  # установили иконку у глвного окна
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
