@@ -733,12 +733,13 @@ class Ui_MainWindow(object):
                 _translate = QtCore.QCoreApplication.translate
                 self.comboBox_final_stock.setItemText(len(set(changed_port)) - 1, _translate("MainWindow", stock))
                 # если акций не было, добавляем строку с акцией, а также меняем кол-во, т.к. можно добавлять неск. акций
-                stock_inf_1 = set_assets(set_port_and_portfolio([stock]))
+                get_inf_stock = set_port_and_portfolio([stock])
+                stock_inf_1 = set_assets(get_inf_stock)
                 stock_inf_1.loc[stock, 'Number'] = changed_port.count(stock)
-                stock_inf_2 = set_t_port_sect(set_port_and_portfolio([stock]))
+                stock_inf_2 = set_t_port_sect(get_inf_stock)
                 stock_inf_2.loc[stock, 'Number'] = changed_port.count(stock)
-                stock_inf_3 = set_stock_growth(set_port_and_portfolio([stock]))
-                stock_inf_4 = set_recom(self.start_rec_num, set_port_and_portfolio([stock]))
+                stock_inf_3 = set_stock_growth(get_inf_stock)
+                stock_inf_4 = set_recom(self.start_rec_num, get_inf_stock)
                 if old_p:
                     self.assets = pd.concat([self.assets, stock_inf_1])
                     self.t_port_sect = pd.concat([self.t_port_sect, stock_inf_2])
