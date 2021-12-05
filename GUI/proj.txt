@@ -1,7 +1,5 @@
-RY
-RY
-RY
-RY
+AAPL
+AAPL
 RY
 RY
 RY
@@ -9,9 +7,4 @@ RY
 NKE
 NKE
 NKE
-NKE
-NKE
-NKE
-YNDX
-YNDX
 DIS
