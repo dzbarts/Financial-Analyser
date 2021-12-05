@@ -73,4 +73,11 @@ def plot_common(period, var):
     ax1.set_title('Price of Stocks')
     fig_c.set_facecolor('#19232D')
     plt.style.use('dark_background')
-    return fig_c
+    return fig_c, ax1
+
+
+def add_to_plot_common(stock, period, prev_plot_common):
+    prev_plot_common[1].plot(yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=period),
+                             end=datetime.date.today()).Close)
+    return prev_plot_common[0]
+
