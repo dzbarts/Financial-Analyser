@@ -75,12 +75,12 @@ def empty_pie(title):
     return fig
 
 
-def empty_plot():
+def empty_plot(title):
     plt.style.use('dark_background')
     fig, ax1 = plt.subplots()
     ax1.set_xlabel('Date, d/m')
     ax1.set_ylabel('Price, $')
-    ax1.set_title('Price of Stocks')
+    ax1.set_title(title)
     ax1.axes.xaxis.set_ticklabels([])
     ax1.axes.yaxis.set_ticklabels([])
     fig.set_facecolor('#19232D')
@@ -331,7 +331,7 @@ class Ui_MainWindow(QMainWindow):
         for i in list(set(self.start_port)):
             self.comboBox_final_stock.addItem("")
         self.label_final = QtWidgets.QLabel(self.tab_4)
-        self.label_final.setGeometry(QtCore.QRect(30, 930, 300, 30))
+        self.label_final.setGeometry(QtCore.QRect(30, 930, 500, 30))
         self.label_final.setText(f'Plot 4.1 Strategy for {value}')
         self.label_fin_stck = QtWidgets.QLabel(self.tab_4)
         self.label_fin_stck.setGeometry(QtCore.QRect(280, 455, 300, 30))
@@ -662,7 +662,7 @@ class Ui_MainWindow(QMainWindow):
 
     def renew_all_tables(self, old_p, stock):
         changed_port = read_port()
-        if (stock == '') & (not changed_port):
+        if not changed_port:
             self.t_port_sect = pd.DataFrame(columns=['Stocks', 'Number', 'Countries', 'Sectors'])
             self.assets = pd.DataFrame(columns=['Stocks', 'Number', 'Open', 'High', 'Low',
                                                 'Close', 'Volume', 'Dividends (per year)',
@@ -672,6 +672,16 @@ class Ui_MainWindow(QMainWindow):
                                                 'Number of Inst. Hold. Shares'])
             self.stock_growth = pd.DataFrame(columns=['Stocks', 'Stock growth %', 'Stock growth, RUB'])
             self.recom = pd.DataFrame(columns=self.columns_)
+            self.label_final.setText('Plot 4.1')
+            self.layout_for_final_plot.removeWidget(self.canvas_final)
+            self.layout_for_final_plot.removeWidget(self.toolbar_final)
+            self.canvas_final.deleteLater()
+            self.canvas_final.hide()
+            self.fig_final = empty_plot("Strategy for stock")
+            self.canvas_final = GraphicsCanvas(self.fig_final)
+            self.layout_for_final_plot.addWidget(self.canvas_final)
+            self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
+            self.layout_for_final_plot.addWidget(self.toolbar_final)
             self.comboBox_final_stock.clear()
         elif len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
             if stock in changed_port:  # если она все еще есть в портфеле, значит надо просто менять кол-во акций
@@ -735,7 +745,7 @@ class Ui_MainWindow(QMainWindow):
         self.view_7.setModel(self.model_7)
 
         cp = set_port_and_portfolio(changed_port)
-        if changed_port == []:
+        if not changed_port:
             self.layout_for_mpl_c.removeWidget(self.canvas_c)
             self.layout_for_mpl_c.removeWidget(self.toolbar_c)
             self.toolbar_1.deleteLater()
@@ -757,7 +767,7 @@ class Ui_MainWindow(QMainWindow):
             self.fig_1 = empty_pie('Share by Countries')
             self.fig_2 = empty_pie('Share by Sectors')
             self.fig_p = empty_pie('Amount of Stocks')
-            self.fig_c = empty_plot()
+            self.fig_c = empty_plot('Price of Stocks')
             self.canvas_1 = GraphicsCanvas(self.fig_1)
             self.canvas_2 = GraphicsCanvas(self.fig_2)
             self.canvas_p = GraphicsCanvas(self.fig_p)
@@ -833,8 +843,8 @@ class Ui_MainWindow(QMainWindow):
         else:
             try:
                 n = int(self.edit_n.text())
-                stock = self.edit.text().upper()
-                if len(yf.Ticker(self.edit.text()).info) != 2:
+                stock = self.edit.text().upper().replace(' ', '')
+                if len(yf.Ticker(stock).info) != 2:
                     while n > 0:
                         rewrite_port(stock)
                         n = n - 1
@@ -865,7 +875,7 @@ class Ui_MainWindow(QMainWindow):
         else:
             try:
                 n = int(self.edit_n.text())
-                stock = self.edit.text().upper()
+                stock = self.edit.text().upper().replace(' ', '')
                 if read_port().count(stock) >= n:
                     while n > 0:
                         remove_from_port(stock)
