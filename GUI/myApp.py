@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox, QMainWindow
 import qdarkstyle
+import matplotlib.pyplot as plt
 from loading_window import loading_window
 
 from parse import parsing_RBC, parsing_moex, parsing_invest_funds
@@ -64,13 +65,33 @@ def clear_all():  # ф-ция очистки портфеля
     with open('proj.txt', 'w'):
         pass
 
+def empty_pie(title):
+    plt.style.use('dark_background')
+    fig, ax1 = plt.subplots()
+    ax1.set_title(title)
+    plt.axis('off')
+    fig.set_facecolor('#19232D')
+    return fig
+
+
+def empty_plot():
+    plt.style.use('dark_background')
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel('Date, d/m')
+    ax1.set_ylabel('Price, $')
+    ax1.set_title('Price of Stocks')
+    ax1.axes.xaxis.set_ticklabels([])
+    ax1.axes.yaxis.set_ticklabels([])
+    fig.set_facecolor('#19232D')
+    return fig
+
 
 class Ui_MainWindow(QMainWindow):
     loaded = pyqtSignal(int)
 
-    def __init__(self, loader, parrent=None):
+    def __init__(self, loader, parent=None):
         self.loader = loader
-        QMainWindow.__init__(self, parrent)
+        QMainWindow.__init__(self, parent)
 
     def setupUi(self, MainWindow):
         self.loaded.emit(1)
@@ -89,7 +110,7 @@ class Ui_MainWindow(QMainWindow):
         self.tab = QtWidgets.QWidget()
         self.label_for_pic = QtWidgets.QLabel(self.tab)
         self.label_for_pic.setGeometry(0, 0, main()[1], main()[0])
-        self.label_for_pic.setPixmap(QtGui.QPixmap("Bez_imeni-3.png"))
+        self.label_for_pic.setPixmap(QtGui.QPixmap("a_news.png"))
         self.label_news = QtWidgets.QLabel(self.tab)
         self.label_news.setGeometry(QtCore.QRect(20, 20, 300, 30))
         self.label_news.setText('<h3 style="color: #000000;"> Select the financial news source <h3>')
@@ -173,13 +194,13 @@ class Ui_MainWindow(QMainWindow):
 
 
         self.tab_3 = QtWidgets.QWidget()
-        self.edit = QtWidgets.QTextEdit(self.tab_3)
-        self.edit.setGeometry(QtCore.QRect(20, 40, 200, 50))
+        self.edit = QtWidgets.QLineEdit(self.tab_3)
+        self.edit.setGeometry(QtCore.QRect(20, 40, 200, 40))
         self.label_stock = QtWidgets.QLabel(self.tab_3)
         self.label_stock.setGeometry(QtCore.QRect(20, 10, 300, 30))
         self.label_stock.setText('Enter the name of the stock')
-        self.edit_n = QtWidgets.QTextEdit(self.tab_3)
-        self.edit_n.setGeometry(QtCore.QRect(20, 120, 200, 50))
+        self.edit_n = QtWidgets.QLineEdit(self.tab_3)
+        self.edit_n.setGeometry(QtCore.QRect(20, 120, 200, 40))
         self.label_num = QtWidgets.QLabel(self.tab_3)
         self.label_num.setGeometry(QtCore.QRect(20, 90, 300, 30))
         self.label_num.setText('Enter the number of the stock')
@@ -192,9 +213,6 @@ class Ui_MainWindow(QMainWindow):
         self.clear_all_btn = QtWidgets.QPushButton(self.tab_3)
         self.clear_all_btn.setGeometry(QtCore.QRect(1500, 20, 200, 50))
         self.clear_all_btn.setText("Clear the portfolio")
-        self.renew_plots = QtWidgets.QPushButton(self.tab_3)
-        self.renew_plots.setGeometry(QtCore.QRect(1500, 80, 200, 50))
-        self.renew_plots.setText("Renew plots")
 
         self.view_5 = QtWidgets.QTableView(self.tab_3)
         self.view_5.setGeometry(QtCore.QRect(30, 200, 1847, 254))
@@ -291,11 +309,9 @@ class Ui_MainWindow(QMainWindow):
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model_7)
         self.widget_for_final_plot = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_final_plot.setGeometry(30, 520, 700, 430)
-        self.label_final = QtWidgets.QLabel(self.tab_4)
-        self.label_final.setGeometry(QtCore.QRect(30, 950, 200, 30))
-        self.label_final.setText('Plot 4.1 ')
-        self.fig_final = final_plot(40, 'MSFT', 1, 1)
+        self.widget_for_final_plot.setGeometry(30, 500, 700, 430)
+        value = read_port()[0]
+        self.fig_final = final_plot(40, value, 1, 1)
         self.layout_for_final_plot = QtWidgets.QVBoxLayout(self.widget_for_final_plot)
         self.canvas_final = GraphicsCanvas(self.fig_final)
         self.layout_for_final_plot.addWidget(self.canvas_final)
@@ -315,6 +331,9 @@ class Ui_MainWindow(QMainWindow):
         self.comboBox_final_stock.setGeometry(QtCore.QRect(280, 490, 200, 30))
         for i in list(set(self.start_port)):
             self.comboBox_final_stock.addItem("")
+        self.label_final = QtWidgets.QLabel(self.tab_4)
+        self.label_final.setGeometry(QtCore.QRect(30, 930, 300, 30))
+        self.label_final.setText(f'Plot 4.1 Strategy for {value}')
         self.label_fin_stck = QtWidgets.QLabel(self.tab_4)
         self.label_fin_stck.setGeometry(QtCore.QRect(280, 455, 300, 30))
         self.label_fin_stck.setText('Select stock (from portfolio)')
@@ -346,7 +365,7 @@ class Ui_MainWindow(QMainWindow):
 
 
         self.tab_5 = QtWidgets.QWidget()
-        self.write_stock = QtWidgets.QTextEdit(self.tab_5)
+        self.write_stock = QtWidgets.QLineEdit(self.tab_5)
         self.write_stock.setGeometry(QtCore.QRect(20, 40, 200, 50))
         self.label_cur_stock = QtWidgets.QLabel(self.tab_5)
         self.label_cur_stock.setGeometry(QtCore.QRect(20, 10, 200, 30))
@@ -362,17 +381,16 @@ class Ui_MainWindow(QMainWindow):
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
         self.isin = QtWidgets.QTextBrowser(self.tab_5)
         self.isin.setGeometry(QtCore.QRect(300, 120, 200, 50))
-        self.chosen_stock = 'MSFT'
-        self.isin.setText(get_stock_isin(get_stock(self.chosen_stock)))
+        self.isin.setText(get_stock_isin(get_stock(value)))
         self.label_isin = QtWidgets.QLabel(self.tab_5)
         self.label_isin.setGeometry(QtCore.QRect(300, 90, 400, 30))
-        self.label_isin.setText(f'International Securities Identification Number of {self.chosen_stock} stock')
+        self.label_isin.setText(f'International Securities Identification Number of {value} stock')
         self.widget_for_stock_p = QtWidgets.QWidget(self.tab_5)
         self.widget_for_stock_p.setGeometry(20, 170, 700, 450)
         self.label_stock_p = QtWidgets.QLabel(self.tab_5)
         self.label_stock_p.setGeometry(QtCore.QRect(20, 610, 200, 30))
-        self.label_stock_p.setText(f'Plot of {self.chosen_stock} stock')
-        self.fig = plot_stock(self.chosen_stock, 150)
+        self.label_stock_p.setText(f'Plot of {value} stock')
+        self.fig = plot_stock(value, 150)
         self.layout_for_mpl_stock = QtWidgets.QVBoxLayout(self.widget_for_stock_p)
         self.canvas_stock = GraphicsCanvas(self.fig)
         self.layout_for_mpl_stock.addWidget(self.canvas_stock)
@@ -382,9 +400,9 @@ class Ui_MainWindow(QMainWindow):
         self.view_8 = QtWidgets.QTableView(self.tab_5)
         self.view_8.setGeometry(QtCore.QRect(20, 700, 700, 185))
         self.label_qt_earnings = QtWidgets.QLabel(self.tab_5)
-        self.label_qt_earnings.setGeometry(QtCore.QRect(20, 885, 200, 30))
-        self.label_qt_earnings.setText(f'Table 5.1 Quarterly Earnings of {self.chosen_stock} stock')
-        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(self.chosen_stock))
+        self.label_qt_earnings.setGeometry(QtCore.QRect(20, 885, 300, 30))
+        self.label_qt_earnings.setText(f'Table 5.1 Quarterly Earnings of {value} stock')
+        self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(value))
         self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
         self.model_8 = PandasModel(self.stock_qt_earnings,
                                    headers_column=['Quarter', 'Revenue', 'Earnings'],
@@ -393,14 +411,15 @@ class Ui_MainWindow(QMainWindow):
         self.view_8.setModel(self.model_8)
 
         self.view_9 = QtWidgets.QTableView(self.tab_5)
-        self.view_9.setGeometry(QtCore.QRect(800, 100, 900, 777))
+        self.view_9.setGeometry(QtCore.QRect(800, 100, 1000, 777))
         self.label_qt_cashflow = QtWidgets.QLabel(self.tab_5)
         self.label_qt_cashflow.setGeometry(QtCore.QRect(800, 877, 400, 30))
-        self.label_qt_cashflow.setText(f'Table 5.2 Quarterly Balance Sheet  of {self.chosen_stock} stock')
-        self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(self.chosen_stock))
+        self.label_qt_cashflow.setText(f'Table 5.2 Quarterly Balance Sheet  of {value} stock')
+        self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(value))
         self.rows_qcash = [str(i) for i in range(1, self.stock_qt_cashflow.shape[0] + 1)]
         self.model_9 = PandasModel(self.stock_qt_cashflow,
-                                   headers_column=self.stock_qt_cashflow.columns.tolist(),
+                                   headers_column=list(map(lambda x: str(x).replace(' 00:00:00', ''),
+                                                           self.stock_qt_cashflow.columns)),
                                    headers_row=self.rows_qcash)
         self.view_9.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_9.setModel(self.model_9)
@@ -433,7 +452,6 @@ class Ui_MainWindow(QMainWindow):
         # при нажатии на кнопку происходит действие переданной ф-ции
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(self.clear_the_portfolio)
-        self.renew_plots.clicked.connect(self.renew_all_plots)
         self.change_lng.clicked.connect(self.change_language)
         self.final_btn.clicked.connect(self.renew_final_plot)
 
@@ -508,26 +526,33 @@ class Ui_MainWindow(QMainWindow):
                                              self.news_NEWS.contentsMargins().right()))
 
     def set_period(self, period):
-        if period != '':
-            self.layout_for_mpl_c.removeWidget(self.canvas_c)
-            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-            self.toolbar_c.deleteLater()
-            self.canvas_c.deleteLater()
-            self.canvas_c.hide()
-            self.toolbar_c.hide()
-            if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                self.fig_c = plot_common(20, read_port())
-            elif period == '150':
-                self.fig_c = plot_common(150, read_port())
-            elif period == '360':
-                self.fig_c = plot_common(360, read_port())
-            self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
-            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
-            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+        if not read_port():
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка обновления")
+            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+        else:
+            if period != '':
+                self.layout_for_mpl_c.removeWidget(self.canvas_c)
+                self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+                self.toolbar_c.deleteLater()
+                self.canvas_c.deleteLater()
+                self.canvas_c.hide()
+                self.toolbar_c.hide()
+                if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
+                    self.fig_c = plot_common(20, read_port())
+                elif period == '150':
+                    self.fig_c = plot_common(150, read_port())
+                elif period == '360':
+                    self.fig_c = plot_common(360, read_port())
+                self.canvas_c = GraphicsCanvas(self.fig_c)
+                self.layout_for_mpl_c.addWidget(self.canvas_c)
+                self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+                self.layout_for_mpl_c.addWidget(self.toolbar_c)
 
     def set_period_current_stock(self, period):
-        stock = self.write_stock.toPlainText().upper()
+        stock = self.write_stock.text().upper()
         if stock != '':
             if len(yf.Ticker(stock).info) != 2:
                 self.isin.setText(get_stock_isin(get_stock(stock)))
@@ -562,10 +587,12 @@ class Ui_MainWindow(QMainWindow):
                 self.rows_qcash = [str(i) for i in
                                    range(1, self.stock_qt_cashflow.shape[0] + 1)]
                 self.model_9 = PandasModel(self.stock_qt_cashflow,
-                                           headers_column=self.stock_qt_cashflow.columns.tolist(),
+                                           headers_column=list(map(lambda x: str(x).replace(' 00:00:00', ''),
+                                                           self.stock_qt_cashflow.columns)),
                                            headers_row=self.rows_qcash)
                 self.view_9.setModel(self.model_9)
                 self.label_qt_cashflow.setText(f'Quarterly Balance Sheet of {stock} stock')
+                self.label_cur_stock.clear()
             else:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
@@ -580,95 +607,56 @@ class Ui_MainWindow(QMainWindow):
             error.exec_()
 
     def set_strategy(self, strategy):
-        self.uni_var = set_port_and_portfolio(read_port())
-        if strategy == 'Long-term strategy':
-            self.start_rec_num = 1
-            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                     headers_column=self.columns_,
-                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-        if strategy == 'Medium strategy':
-            self.start_rec_num = 2
-            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                     headers_column=self.columns_,
-                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-        if strategy == 'Quick strategy':
-            self.start_rec_num = 3
-            self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                     headers_column=self.columns_,
-                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-        self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_7.setModel(self.model)
-
-    def renew_all_plots(self):
-        changed_port = read_port()
-        if (changed_port == self.start_port) | (changed_port == []):
+        if not read_port():
             error = QMessageBox()
-            error.setWindowTitle("Ошибка")
-            error.setText("Ошибка обновления: нет данных или нет обновлений")
+            error.setWindowTitle("Ошибка обновления")
+            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
         else:
-            cp = set_port_and_portfolio(changed_port)
-            self.layout_for_mpl_1.removeWidget(self.canvas_1)
-            self.layout_for_mpl_1.removeWidget(self.toolbar_1)
-            self.layout_for_mpl_2.removeWidget(self.canvas_2)
-            self.layout_for_mpl_2.removeWidget(self.toolbar_2)
-            self.layout_for_mpl_p.removeWidget(self.canvas_p)
-            self.layout_for_mpl_p.removeWidget(self.toolbar_p)
-            self.layout_for_mpl_c.removeWidget(self.canvas_c)
-            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-            self.toolbar_1.deleteLater()
-            self.toolbar_2.deleteLater()
-            self.toolbar_p.deleteLater()
-            self.toolbar_c.deleteLater()
-            self.canvas_1.deleteLater()
-            self.canvas_2.deleteLater()
-            self.canvas_p.deleteLater()
-            self.canvas_c.deleteLater()
-            self.canvas_1.hide()
-            self.canvas_2.hide()
-            self.canvas_p.hide()
-            self.canvas_c.hide()
-            self.toolbar_1.hide()
-            self.toolbar_2.hide()
-            self.toolbar_p.hide()
-            self.toolbar_c.hide()
-            self.fig_1 = plot_c(cp)
-            self.fig_2 = plot_s(cp)
-            self.fig_p = plot_p(cp)
-            self.fig_c = plot_common(40, read_port())
-            self.canvas_1 = GraphicsCanvas(self.fig_1)
-            self.canvas_2 = GraphicsCanvas(self.fig_2)
-            self.canvas_p = GraphicsCanvas(self.fig_p)
-            self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_1.addWidget(self.canvas_1)
-            self.layout_for_mpl_2.addWidget(self.canvas_2)
-            self.layout_for_mpl_p.addWidget(self.canvas_p)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
-            self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
-            self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
-            self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
-            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
-            self.layout_for_mpl_1.addWidget(self.toolbar_1)
-            self.layout_for_mpl_2.addWidget(self.toolbar_2)
-            self.layout_for_mpl_p.addWidget(self.toolbar_p)
-            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+            self.uni_var = set_port_and_portfolio(read_port())
+            if strategy == 'Long-term strategy':
+                self.start_rec_num = 1
+                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
+                                         headers_column=self.columns_,
+                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            if strategy == 'Medium strategy':
+                self.start_rec_num = 2
+                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
+                                         headers_column=self.columns_,
+                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            if strategy == 'Quick strategy':
+                self.start_rec_num = 3
+                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
+                                         headers_column=self.columns_,
+                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            self.view_7.setModel(self.model)
 
     def renew_final_plot(self):
-        self.layout_for_final_plot.removeWidget(self.canvas_final)
-        self.layout_for_final_plot.removeWidget(self.toolbar_final)
-        self.canvas_final.deleteLater()
-        self.canvas_final.hide()
-        dict_types = {'Long-term strategy': 1, 'Medium strategy': 2, 'Quick strategy': 3}
-        dict_strategies = {'SMA': 1, 'twoSMA': 2, 'EMA': 3, 'DEMA': 4, 'TEMA': 5, 'MACD': 6, 'CHV': 7, 'RSI': 8,
-                           'bulls': 9, 'bears': 10, 'ER': 11, 'MI': 12}
-        self.fig_final = final_plot(int(self.comboBox_final_period.currentText()), self.comboBox_final_stock.currentText(),
-                                    dict_types[self.comboBox_final_type.currentText()],
-                                    dict_strategies[self.combobox_final_strategy.currentText()])
-        self.canvas_final = GraphicsCanvas(self.fig_final)
-        self.layout_for_final_plot.addWidget(self.canvas_final)
-        self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
-        self.layout_for_final_plot.addWidget(self.toolbar_final)
+        if self.comboBox_final_stock.currentText() == '':
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка обновления")
+            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
+            error.setIcon(QMessageBox.Warning)
+            error.exec_()
+        else:
+            value = self.comboBox_final_stock.currentText()
+            self.label_final.setText(f'Plot 4.1 Strategy for {value}')
+            self.layout_for_final_plot.removeWidget(self.canvas_final)
+            self.layout_for_final_plot.removeWidget(self.toolbar_final)
+            self.canvas_final.deleteLater()
+            self.canvas_final.hide()
+            dict_types = {'Long-term strategy': 1, 'Medium strategy': 2, 'Quick strategy': 3}
+            dict_strategies = {'SMA': 1, 'twoSMA': 2, 'EMA': 3, 'DEMA': 4, 'TEMA': 5, 'MACD': 6, 'CHV': 7, 'RSI': 8,
+                               'bulls': 9, 'bears': 10, 'ER': 11, 'MI': 12}
+            self.fig_final = final_plot(int(self.comboBox_final_period.currentText()), self.comboBox_final_stock.currentText(),
+                                        dict_types[self.comboBox_final_type.currentText()],
+                                        dict_strategies[self.combobox_final_strategy.currentText()])
+            self.canvas_final = GraphicsCanvas(self.fig_final)
+            self.layout_for_final_plot.addWidget(self.canvas_final)
+            self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
+            self.layout_for_final_plot.addWidget(self.toolbar_final)
 
     def renew_all_tables(self, old_p, stock):
         changed_port = read_port()
@@ -778,6 +766,86 @@ class Ui_MainWindow(QMainWindow):
             self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_7.setModel(self.model_7)
 
+        cp = set_port_and_portfolio(changed_port)
+        if changed_port == []:
+            self.layout_for_mpl_c.removeWidget(self.canvas_c)
+            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+            self.toolbar_1.deleteLater()
+            self.toolbar_2.deleteLater()
+            self.toolbar_p.deleteLater()
+            self.toolbar_c.deleteLater()
+            self.canvas_1.deleteLater()
+            self.canvas_2.deleteLater()
+            self.canvas_p.deleteLater()
+            self.canvas_c.deleteLater()
+            self.canvas_1.hide()
+            self.canvas_2.hide()
+            self.canvas_p.hide()
+            self.canvas_c.hide()
+            self.toolbar_1.hide()
+            self.toolbar_2.hide()
+            self.toolbar_p.hide()
+            self.toolbar_c.hide()
+            self.fig_1 = empty_pie('Share by Countries')
+            self.fig_2 = empty_pie('Share by Sectors')
+            self.fig_p = empty_pie('Amount of Stocks')
+            self.fig_c = empty_plot()
+            self.canvas_1 = GraphicsCanvas(self.fig_1)
+            self.canvas_2 = GraphicsCanvas(self.fig_2)
+            self.canvas_p = GraphicsCanvas(self.fig_p)
+            self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_1.addWidget(self.canvas_1)
+            self.layout_for_mpl_2.addWidget(self.canvas_2)
+            self.layout_for_mpl_p.addWidget(self.canvas_p)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
+            self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
+            self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
+            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_1.addWidget(self.toolbar_1)
+            self.layout_for_mpl_2.addWidget(self.toolbar_2)
+            self.layout_for_mpl_p.addWidget(self.toolbar_p)
+            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+        else:
+            self.layout_for_mpl_c.removeWidget(self.canvas_c)
+            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
+            self.toolbar_1.deleteLater()
+            self.toolbar_2.deleteLater()
+            self.toolbar_p.deleteLater()
+            self.toolbar_c.deleteLater()
+            self.canvas_1.deleteLater()
+            self.canvas_2.deleteLater()
+            self.canvas_p.deleteLater()
+            self.canvas_c.deleteLater()
+            self.canvas_1.hide()
+            self.canvas_2.hide()
+            self.canvas_p.hide()
+            self.canvas_c.hide()
+            self.toolbar_1.hide()
+            self.toolbar_2.hide()
+            self.toolbar_p.hide()
+            self.toolbar_c.hide()
+            self.fig_1 = plot_c(cp)
+            self.fig_2 = plot_s(cp)
+            self.fig_p = plot_p(cp)
+            self.fig_c = plot_common(40, read_port())
+            self.canvas_1 = GraphicsCanvas(self.fig_1)
+            self.canvas_2 = GraphicsCanvas(self.fig_2)
+            self.canvas_p = GraphicsCanvas(self.fig_p)
+            self.canvas_c = GraphicsCanvas(self.fig_c)
+            self.layout_for_mpl_1.addWidget(self.canvas_1)
+            self.layout_for_mpl_2.addWidget(self.canvas_2)
+            self.layout_for_mpl_p.addWidget(self.canvas_p)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
+            self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
+            self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
+            self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
+            self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_1.addWidget(self.toolbar_1)
+            self.layout_for_mpl_2.addWidget(self.toolbar_2)
+            self.layout_for_mpl_p.addWidget(self.toolbar_p)
+            self.layout_for_mpl_c.addWidget(self.toolbar_c)
+
     def change_language(self):
         if self.book.toPlainText() == self.tutorial:
             self.book.setText(self.tutorial_eng)
@@ -788,7 +856,7 @@ class Ui_MainWindow(QMainWindow):
 
     def add_to_the_portfolio(self):
         old_port = read_port()
-        if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):
+        if (self.edit.text() == '') | (self.edit_n.text() == ''):
             error = QMessageBox()
             error.setWindowTitle("Ошибка набора")
             error.setText("Пустой текст")
@@ -796,9 +864,9 @@ class Ui_MainWindow(QMainWindow):
             error.exec_()
         else:
             try:
-                n = int(self.edit_n.toPlainText())
-                stock = self.edit.toPlainText().upper()
-                if len(yf.Ticker(self.edit.toPlainText()).info) != 2:
+                n = int(self.edit_n.text())
+                stock = self.edit.text().upper()
+                if len(yf.Ticker(self.edit.text()).info) != 2:
                     while n > 0:
                         rewrite_port(stock)
                         n = n - 1
@@ -809,7 +877,7 @@ class Ui_MainWindow(QMainWindow):
                     error.setText("Такой акции не существует")
                     error.setIcon(QMessageBox.Warning)
                     error.exec_()
-            except TypeError:
+            except ValueError:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
                 error.setText("Неверный формат текста")
@@ -820,7 +888,7 @@ class Ui_MainWindow(QMainWindow):
 
     def remove_the_stock(self):
         old_port = read_port()
-        if (self.edit.toPlainText() == '') | (self.edit_n.toPlainText() == ''):
+        if (self.edit.text() == '') | (self.edit_n.text() == ''):
             error = QMessageBox()
             error.setWindowTitle("Ошибка набора")
             error.setText("Пустой текст")
@@ -828,8 +896,8 @@ class Ui_MainWindow(QMainWindow):
             error.exec_()
         else:
             try:
-                n = int(self.edit_n.toPlainText())
-                stock = self.edit.toPlainText().upper()
+                n = int(self.edit_n.text())
+                stock = self.edit.text().upper()
                 if read_port().count(stock) >= n:
                     while n > 0:
                         remove_from_port(stock)
@@ -841,7 +909,7 @@ class Ui_MainWindow(QMainWindow):
                     error.setText("У Вас осталось " + str(read_port().count(stock)) + " акций")
                     error.setIcon(QMessageBox.Warning)
                     error.exec_()
-            except TypeError:
+            except ValueError:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
                 error.setText("Неверный формат текста")
