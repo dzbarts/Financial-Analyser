@@ -10,7 +10,7 @@ import pandas as pd
 import yfinance as yf
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox, QMainWindow
 import qdarkstyle
 import matplotlib.pyplot as plt
@@ -65,6 +65,7 @@ def clear_all():  # ф-ция очистки портфеля
     with open('proj.txt', 'w'):
         pass
 
+
 def empty_pie(title):
     plt.style.use('dark_background')
     fig, ax1 = plt.subplots()
@@ -106,7 +107,6 @@ class Ui_MainWindow(QMainWindow):
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, main()[1], main()[0]))
         self.tabWidget.setIconSize(QtCore.QSize(50, 20))
 
-
         self.tab = QtWidgets.QWidget()
         self.label_for_pic = QtWidgets.QLabel(self.tab)
         self.label_for_pic.setGeometry(0, 0, main()[1], main()[0])
@@ -128,7 +128,6 @@ class Ui_MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab, "")
         self.loaded.emit(20)
         print('tab1 has been formed')
-
 
         self.tab_2 = QtWidgets.QWidget()
         self.view = QtWidgets.QTableView(self.tab_2)
@@ -157,11 +156,13 @@ class Ui_MainWindow(QMainWindow):
         self.t_port_sect = set_t_port_sect(self.uni_var)
         self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                    headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-        self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_3.setModel(self.model_3)
         self.label_tpc = QtWidgets.QLabel(self.tab_2)
         self.label_tpc.setGeometry(QtCore.QRect(770, 705, 300, 30))
         self.label_tpc.setText('Table 2.3 Countries and Sectors of Stocks')
+        header_3 = self.view_3.horizontalHeader()
+        header_3.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        header_3.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
 
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_2)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 650, 385)
@@ -191,7 +192,6 @@ class Ui_MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab_2, "")
         self.loaded.emit(35)
         print('tab2 has been formed')
-
 
         self.tab_3 = QtWidgets.QWidget()
         self.edit = QtWidgets.QLineEdit(self.tab_3)
@@ -228,10 +228,10 @@ class Ui_MainWindow(QMainWindow):
                                                                 'Number of Institutions Holding Shares'],
                                    headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
         self.view_5.setModel(self.model_5)
-        for i in range(int(self.assets.shape[1] / 2) + 1):  # изменения размера колонок
-            self.view_5.setColumnWidth(i, 100)
-        for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
-            self.view_5.setColumnWidth(i, 250)
+        header_5 = self.view_5.horizontalHeader()
+        header_5.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        for i in range(2, 7):
+            header_5.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
 
         self.view_6 = QtWidgets.QTableView(self.tab_3)
         self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
@@ -282,7 +282,6 @@ class Ui_MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab_3, "")
         self.loaded.emit(60)
         print('tab3 has been formed')
-
 
         self.tab_4 = QtWidgets.QWidget()
         self.comboBox_5 = QtWidgets.QComboBox(self.tab_4)
@@ -363,7 +362,6 @@ class Ui_MainWindow(QMainWindow):
         self.loaded.emit(70)
         print('tab4 has been formed')
 
-
         self.tab_5 = QtWidgets.QWidget()
         self.write_stock = QtWidgets.QLineEdit(self.tab_5)
         self.write_stock.setGeometry(QtCore.QRect(20, 40, 200, 50))
@@ -380,8 +378,9 @@ class Ui_MainWindow(QMainWindow):
         self.comboBox_6.addItem("")
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
         self.isin = QtWidgets.QTextBrowser(self.tab_5)
-        self.isin.setGeometry(QtCore.QRect(300, 120, 200, 50))
+        self.isin.setGeometry(QtCore.QRect(300, 120, 200, 30))
         self.isin.setText(get_stock_isin(get_stock(value)))
+        self.isin.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.label_isin = QtWidgets.QLabel(self.tab_5)
         self.label_isin.setGeometry(QtCore.QRect(300, 90, 400, 30))
         self.label_isin.setText(f'International Securities Identification Number of {value} stock')
@@ -421,12 +420,13 @@ class Ui_MainWindow(QMainWindow):
                                    headers_column=list(map(lambda x: str(x).replace(' 00:00:00', ''),
                                                            self.stock_qt_cashflow.columns)),
                                    headers_row=self.rows_qcash)
-        self.view_9.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_9.setModel(self.model_9)
+        header_9 = self.view_9.horizontalHeader()
+        header_9.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        header_9.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.tabWidget.addTab(self.tab_5, "")
         self.loaded.emit(85)
         print('tab5 has been formed')
-
 
         self.tab_6 = QtWidgets.QWidget()
         self.book = QtWidgets.QTextBrowser(self.tab_6)
@@ -556,6 +556,7 @@ class Ui_MainWindow(QMainWindow):
         if stock != '':
             if len(yf.Ticker(stock).info) != 2:
                 self.isin.setText(get_stock_isin(get_stock(stock)))
+                self.isin.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
                 self.label_isin.setText(f'International Securities Identification Number of {stock} stock')
                 self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
                 self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
@@ -588,7 +589,7 @@ class Ui_MainWindow(QMainWindow):
                                    range(1, self.stock_qt_cashflow.shape[0] + 1)]
                 self.model_9 = PandasModel(self.stock_qt_cashflow,
                                            headers_column=list(map(lambda x: str(x).replace(' 00:00:00', ''),
-                                                           self.stock_qt_cashflow.columns)),
+                                                                   self.stock_qt_cashflow.columns)),
                                            headers_row=self.rows_qcash)
                 self.view_9.setModel(self.model_9)
                 self.label_qt_cashflow.setText(f'Quarterly Balance Sheet of {stock} stock')
@@ -650,7 +651,8 @@ class Ui_MainWindow(QMainWindow):
             dict_types = {'Long-term strategy': 1, 'Medium strategy': 2, 'Quick strategy': 3}
             dict_strategies = {'SMA': 1, 'twoSMA': 2, 'EMA': 3, 'DEMA': 4, 'TEMA': 5, 'MACD': 6, 'CHV': 7, 'RSI': 8,
                                'bulls': 9, 'bears': 10, 'ER': 11, 'MI': 12}
-            self.fig_final = final_plot(int(self.comboBox_final_period.currentText()), self.comboBox_final_stock.currentText(),
+            self.fig_final = final_plot(int(self.comboBox_final_period.currentText()),
+                                        self.comboBox_final_stock.currentText(),
                                         dict_types[self.comboBox_final_type.currentText()],
                                         dict_strategies[self.combobox_final_strategy.currentText()])
             self.canvas_final = GraphicsCanvas(self.fig_final)
@@ -661,27 +663,15 @@ class Ui_MainWindow(QMainWindow):
     def renew_all_tables(self, old_p, stock):
         changed_port = read_port()
         if (stock == '') & (not changed_port):
-            empty_data_1 = pd.DataFrame(columns=['Stocks', 'Number', 'Countries', 'Sectors'])
-            empty_data_2 = pd.DataFrame(columns=['Stocks', 'Number', 'Open', 'High', 'Low',
-                                                 'Close', 'Volume', 'Div. (per year)',
-                                                 '% of Shares Held by All Insider',
-                                                 '% of Shares Held by Inst.',
-                                                 '% of Float Held by Inst.',
-                                                 'Number of Inst. Hold. Shares'])
-            empty_data_3 = pd.DataFrame(columns=['Stocks', 'Stock growth %', 'Stock growth, RUB'])
-            empty_data_4 = pd.DataFrame(columns=self.columns_)
-            self.model_3 = PandasModel(empty_data_1, headers_column=empty_data_1.columns,
-                                       headers_row=[str(i) for i in range(1, empty_data_1.shape[0] + 1)])
-            self.model_5 = PandasModel(empty_data_2, headers_column=empty_data_2.columns,
-                                       headers_row=[str(i) for i in range(1, empty_data_2.shape[0] + 1)])
-            self.model_6 = PandasModel(empty_data_3, headers_column=empty_data_3.columns,
-                                       headers_row=[str(i) for i in range(1, empty_data_3.shape[0] + 1)])
-            self.model_7 = PandasModel(empty_data_4, headers_column=empty_data_4.columns,
-                                       headers_row=[str(i) for i in range(1, empty_data_4.shape[0] + 1)])
-            self.view_3.setModel(self.model_3)
-            self.view_5.setModel(self.model_5)
-            self.view_6.setModel(self.model_6)
-            self.view_7.setModel(self.model_7)
+            self.t_port_sect = pd.DataFrame(columns=['Stocks', 'Number', 'Countries', 'Sectors'])
+            self.assets = pd.DataFrame(columns=['Stocks', 'Number', 'Open', 'High', 'Low',
+                                                'Close', 'Volume', 'Dividends (per year)',
+                                                '% of Shares Held by All Insider',
+                                                '% of Shares Held by Inst.',
+                                                '% of Float Held by Inst.',
+                                                'Number of Inst. Hold. Shares'])
+            self.stock_growth = pd.DataFrame(columns=['Stocks', 'Stock growth %', 'Stock growth, RUB'])
+            self.recom = pd.DataFrame(columns=self.columns_)
             self.comboBox_final_stock.clear()
         elif len(old_p) > len(changed_port):  # если в новом портфеле акций меньше, значит акция была удалена
             if stock in changed_port:  # если она все еще есть в портфеле, значит надо просто менять кол-во акций
@@ -694,25 +684,6 @@ class Ui_MainWindow(QMainWindow):
                 self.stock_growth = self.stock_growth.drop(stock)
                 self.recom = self.recom.drop(stock)
                 self.comboBox_final_stock.removeItem(list(set(old_p)).index(stock))
-            self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-                                       headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-            self.view_3.setModel(self.model_3)
-            self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
-                                                                    'Close', 'Volume', 'Div. (per year)',
-                                                                    '% of Shares Held by All Insider',
-                                                                    '% of Shares Held by Inst.',
-                                                                    '% of Float Held by Inst.',
-                                                                    'Number of Inst. Hold. Shares'],
-                                       headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
-            self.view_5.setModel(self.model_5)
-            self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
-                                                                          'Stock growth, RUB'],
-                                       headers_row=[str(i) for i in
-                                                    range(1, self.stock_growth.shape[0] + 1)])
-            self.view_6.setModel(self.model_6)
-            self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
-                                       headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-            self.view_7.setModel(self.model_7)
         elif len(old_p) < len(changed_port):  # если в новом портфеле акций больше, значит акция была добавлена
             if old_p.count(stock) >= 1:  # если акция уже была в портфеле, значит надо просто менять кол-во акций
                 self.assets.loc[stock, 'Number'] = changed_port.count(stock)
@@ -743,28 +714,25 @@ class Ui_MainWindow(QMainWindow):
                         self.view_5.setColumnWidth(i, 100)
                     for i in range(int(self.assets.shape[1] / 2) + 2, self.assets.shape[1] + 1):
                         self.view_5.setColumnWidth(i, 250)
-            self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
-                                       headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-            self.view_3.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-            self.view_3.setModel(self.model_3)
-            self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
-                                                                    'Close', 'Volume', 'Div. (per year)',
-                                                                    '% of Shares Held by All Insider',
-                                                                    '% of Shares Held by Inst.',
-                                                                    '% of Float Held by Inst.',
-                                                                    'Number of Inst. Hold. Shares'],
-                                       headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
-            self.view_5.setModel(self.model_5)
-            self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
-                                                                          'Stock growth, RUB'],
-                                       headers_row=[str(i) for i in
-                                                    range(1, self.stock_growth.shape[0] + 1)])
-            self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-            self.view_6.setModel(self.model_6)
-            self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
-                                       headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-            self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-            self.view_7.setModel(self.model_7)
+        self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
+                                   headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
+        self.view_3.setModel(self.model_3)
+        self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
+                                                                'Close', 'Volume', 'Dividends (per year)',
+                                                                '% of Shares Held by All Insider',
+                                                                '% of Shares Held by Inst.',
+                                                                '% of Float Held by Inst.',
+                                                                'Number of Inst. Hold. Shares'],
+                                   headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
+        self.view_5.setModel(self.model_5)
+        self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
+                                                                      'Stock growth, RUB'],
+                                   headers_row=[str(i) for i in
+                                                range(1, self.stock_growth.shape[0] + 1)])
+        self.view_6.setModel(self.model_6)
+        self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
+                                   headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+        self.view_7.setModel(self.model_7)
 
         cp = set_port_and_portfolio(changed_port)
         if changed_port == []:
