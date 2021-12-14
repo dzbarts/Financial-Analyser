@@ -10,4 +10,5 @@ class GraphicsCanvas(FigureCanvas):  # холст для помещения гр
         FigureCanvas.setSizePolicy(self, QSizePolicy.Maximum, QSizePolicy.Expanding)  # график будет на всю область
         FigureCanvas.updateGeometry(self)
         plt.style.use('dark_background')
+        self.fig.patch.set_visible(False)  # прозрачность холста
         plt.grid(True)

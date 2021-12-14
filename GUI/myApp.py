@@ -122,7 +122,6 @@ class Ui_MainWindow(QMainWindow):
         self.comboBox_NEWS.addItem("")
         self.comboBox_NEWS.activated['QString'].connect(self.path_to_the_page)
         self.news_NEWS = QtWidgets.QTextBrowser(self.tab)
-        self.show = True
         self.news_NEWS.setGeometry(QtCore.QRect(20, 110, 0, 0))
         self.news_NEWS.setOpenExternalLinks(True)  # опция для перенаправления при нажатии на ссылку
         self.tabWidget.addTab(self.tab, "")
@@ -152,13 +151,13 @@ class Ui_MainWindow(QMainWindow):
         self.label_tcapa.setText('Table 2.2 CAPA Index')
 
         self.view_3 = QtWidgets.QTableView(self.tab_2)
-        self.view_3.setGeometry(QtCore.QRect(770, 450, 480, 254))
+        self.view_3.setGeometry(QtCore.QRect(770, 450, 480, 439))
         self.t_port_sect = set_t_port_sect(self.uni_var)
         self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                    headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
         self.view_3.setModel(self.model_3)
         self.label_tpc = QtWidgets.QLabel(self.tab_2)
-        self.label_tpc.setGeometry(QtCore.QRect(770, 705, 300, 30))
+        self.label_tpc.setGeometry(QtCore.QRect(770, 890, 300, 30))
         self.label_tpc.setText('Table 2.3 Countries and Sectors of Stocks')
         header_3 = self.view_3.horizontalHeader()
         header_3.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
@@ -195,14 +194,14 @@ class Ui_MainWindow(QMainWindow):
 
         self.tab_3 = QtWidgets.QWidget()
         self.edit = QtWidgets.QLineEdit(self.tab_3)
-        self.edit.setGeometry(QtCore.QRect(20, 40, 200, 40))
+        self.edit.setGeometry(QtCore.QRect(30, 55, 200, 40))
         self.label_stock = QtWidgets.QLabel(self.tab_3)
-        self.label_stock.setGeometry(QtCore.QRect(20, 10, 300, 30))
+        self.label_stock.setGeometry(QtCore.QRect(30, 10, 300, 30))
         self.label_stock.setText('Enter the name of the stock')
         self.edit_n = QtWidgets.QLineEdit(self.tab_3)
-        self.edit_n.setGeometry(QtCore.QRect(20, 120, 200, 40))
+        self.edit_n.setGeometry(QtCore.QRect(30, 150, 200, 40))
         self.label_num = QtWidgets.QLabel(self.tab_3)
-        self.label_num.setGeometry(QtCore.QRect(20, 90, 300, 30))
+        self.label_num.setGeometry(QtCore.QRect(30, 100, 300, 30))
         self.label_num.setText('Enter the number of the stock')
         self.add_btn = QtWidgets.QPushButton(self.tab_3)
         self.add_btn.setGeometry(QtCore.QRect(720, 20, 230, 50))
@@ -211,7 +210,7 @@ class Ui_MainWindow(QMainWindow):
         self.remove_btn.setGeometry(QtCore.QRect(1000, 20, 300, 50))
         self.remove_btn.setText("Remove the stock from the portfolio")
         self.clear_all_btn = QtWidgets.QPushButton(self.tab_3)
-        self.clear_all_btn.setGeometry(QtCore.QRect(1500, 20, 200, 50))
+        self.clear_all_btn.setGeometry(QtCore.QRect(1677, 20, 200, 50))
         self.clear_all_btn.setText("Clear the portfolio")
 
         self.view_5 = QtWidgets.QTableView(self.tab_3)
@@ -234,9 +233,9 @@ class Ui_MainWindow(QMainWindow):
             header_5.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
 
         self.view_6 = QtWidgets.QTableView(self.tab_3)
-        self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 254))
+        self.view_6.setGeometry(QtCore.QRect(30, 500, 500, 420))
         self.label_stock_growth = QtWidgets.QLabel(self.tab_3)
-        self.label_stock_growth.setGeometry(QtCore.QRect(30, 755, 200, 30))
+        self.label_stock_growth.setGeometry(QtCore.QRect(30, 920, 200, 30))
         self.label_stock_growth.setText('Table 3.2 Dynamic of Stocks')
         self.stock_growth = set_stock_growth(self.uni_var)
         self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
@@ -252,19 +251,19 @@ class Ui_MainWindow(QMainWindow):
         self.label_g_p.setText('Plot 3.1 ')
 
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_3)
-        self.widget_for_g_c.setGeometry(1100, 490, 700, 440)
+        self.widget_for_g_c.setGeometry(1070, 470, 650, 460)
         self.label_g_c = QtWidgets.QLabel(self.tab_3)
-        self.label_g_c.setGeometry(QtCore.QRect(1102, 920, 200, 30))
+        self.label_g_c.setGeometry(QtCore.QRect(1082, 920, 200, 30))
         self.label_g_c.setText('Plot 3.2 ')
 
         self.comboBox_4 = QtWidgets.QComboBox(self.tab_3)
-        self.comboBox_4.setGeometry(QtCore.QRect(1192, 495, 100, 31))
+        self.comboBox_4.setGeometry(QtCore.QRect(1660, 540, 200, 41))
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.activated['QString'].connect(self.set_period)
         self.label_combob_4 = QtWidgets.QLabel(self.tab_3)
-        self.label_combob_4.setGeometry(QtCore.QRect(1190, 462, 200, 30))
+        self.label_combob_4.setGeometry(QtCore.QRect(1660, 510, 200, 30))
         self.label_combob_4.setText('Select period')
 
         self.fig_p = plot_p(self.uni_var)
@@ -285,17 +284,17 @@ class Ui_MainWindow(QMainWindow):
 
         self.tab_4 = QtWidgets.QWidget()
         self.comboBox_5 = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_5.setGeometry(QtCore.QRect(30, 70, 200, 50))
+        self.comboBox_5.setGeometry(QtCore.QRect(30, 70, 200, 40))
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.activated['QString'].connect(self.set_strategy)
         self.label_combob_5 = QtWidgets.QLabel(self.tab_4)
-        self.label_combob_5.setGeometry(QtCore.QRect(30, 38, 200, 30))
+        self.label_combob_5.setGeometry(QtCore.QRect(30, 28, 200, 30))
         self.label_combob_5.setText('Select strategy')
 
         self.view_7 = QtWidgets.QTableView(self.tab_4)
-        self.view_7.setGeometry(QtCore.QRect(30, 150, 1300, 254))
+        self.view_7.setGeometry(QtCore.QRect(30, 150, 1100, 254))
         self.label_recom = QtWidgets.QLabel(self.tab_4)
         self.label_recom.setGeometry(QtCore.QRect(30, 405, 300, 30))
         self.label_recom.setText('Table 4.1 Recommendations on Strategies')
@@ -308,7 +307,7 @@ class Ui_MainWindow(QMainWindow):
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.view_7.setModel(self.model_7)
         self.widget_for_final_plot = QtWidgets.QWidget(self.tab_4)
-        self.widget_for_final_plot.setGeometry(30, 500, 700, 430)
+        self.widget_for_final_plot.setGeometry(30, 450, 700, 480)
         value = read_port()[0]
         self.fig_final = final_plot(40, value, 1, 1)
         self.layout_for_final_plot = QtWidgets.QVBoxLayout(self.widget_for_final_plot)
@@ -318,58 +317,68 @@ class Ui_MainWindow(QMainWindow):
         self.layout_for_final_plot.addWidget(self.toolbar_final)
 
         self.comboBox_final_period = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_period.setGeometry(QtCore.QRect(30, 490, 200, 30))
+        self.comboBox_final_period.setGeometry(QtCore.QRect(850, 500, 200, 40))
         self.comboBox_final_period.addItem("")
         self.comboBox_final_period.addItem("")
         self.comboBox_final_period.addItem("")
         self.label_fin_per = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_per.setGeometry(QtCore.QRect(30, 455, 200, 30))
+        self.label_fin_per.setGeometry(QtCore.QRect(850, 455, 200, 30))
         self.label_fin_per.setText('Select period')
 
         self.comboBox_final_stock = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_stock.setGeometry(QtCore.QRect(280, 490, 200, 30))
+        self.comboBox_final_stock.setGeometry(QtCore.QRect(850, 585, 200, 40))
         for i in list(set(self.start_port)):
             self.comboBox_final_stock.addItem("")
         self.label_final = QtWidgets.QLabel(self.tab_4)
         self.label_final.setGeometry(QtCore.QRect(30, 930, 500, 30))
         self.label_final.setText(f'Plot 4.1 Strategy for {value}')
         self.label_fin_stck = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_stck.setGeometry(QtCore.QRect(280, 455, 300, 30))
+        self.label_fin_stck.setGeometry(QtCore.QRect(850, 540, 300, 30))
         self.label_fin_stck.setText('Select stock (from portfolio)')
 
         self.comboBox_final_type = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_type.setGeometry(QtCore.QRect(530, 490, 200, 30))
+        self.comboBox_final_type.setGeometry(QtCore.QRect(850, 675, 200, 40))
         self.comboBox_final_type.addItem("")
         self.comboBox_final_type.addItem("")
         self.comboBox_final_type.addItem("")
         self.label_fin_type = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_type.setGeometry(QtCore.QRect(530, 455, 300, 30))
+        self.label_fin_type.setGeometry(QtCore.QRect(850, 625, 300, 30))
         self.label_fin_type.setText('Select type of strategy')
 
         self.combobox_final_strategy = QtWidgets.QComboBox(self.tab_4)
-        self.combobox_final_strategy.setGeometry(QtCore.QRect(780, 490, 200, 30))
+        self.combobox_final_strategy.setGeometry(QtCore.QRect(850, 765, 200, 40))
         strategies = ['SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD', 'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI']
         for i in strategies:
             self.combobox_final_strategy.addItem("")
         self.label_fin_strat = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_strat.setGeometry(QtCore.QRect(780, 455, 200, 30))
+        self.label_fin_strat.setGeometry(QtCore.QRect(850, 715, 200, 30))
         self.label_fin_strat.setText('Select strategy')
 
         self.final_btn = QtWidgets.QPushButton(self.tab_4)
-        self.final_btn.setGeometry(QtCore.QRect(1030, 490, 200, 30))
+        self.final_btn.setGeometry(QtCore.QRect(850, 867, 200, 50))
         self.final_btn.setText('Renew final plot')
         self.tabWidget.addTab(self.tab_4, "")
+
+        self.about_strategies = QtWidgets.QTextBrowser(self.tab_4)
+        self.about_strategies.setGeometry(QtCore.QRect(1180, 150, 700, 800))
+        self.strategies = open('strategies.txt', encoding='utf-8').read()
+        self.strategies_eng = open('strategies_eng.txt', encoding='utf-8').read()
+        self.about_strategies.setText(self.strategies_eng)
+        self.change_lng_strat = QtWidgets.QPushButton(self.tab_4)
+        self.change_lng_strat.setGeometry(QtCore.QRect(1680, 80, 200, 50))
+        self.change_lng_strat.setText('Change the language')
+
         self.loaded.emit(70)
         print('tab4 has been formed')
 
         self.tab_5 = QtWidgets.QWidget()
         self.write_stock = QtWidgets.QLineEdit(self.tab_5)
-        self.write_stock.setGeometry(QtCore.QRect(20, 40, 200, 50))
+        self.write_stock.setGeometry(QtCore.QRect(20, 50, 200, 40))
         self.label_cur_stock = QtWidgets.QLabel(self.tab_5)
         self.label_cur_stock.setGeometry(QtCore.QRect(20, 10, 200, 30))
         self.label_cur_stock.setText('Enter the name of the stock')
         self.comboBox_6 = QtWidgets.QComboBox(self.tab_5)
-        self.comboBox_6.setGeometry(QtCore.QRect(20, 120, 200, 50))
+        self.comboBox_6.setGeometry(QtCore.QRect(20, 130, 200, 40))
         self.label_cur_period = QtWidgets.QLabel(self.tab_5)
         self.label_cur_period.setGeometry(QtCore.QRect(20, 90, 200, 30))
         self.label_cur_period.setText('Select period')
@@ -429,13 +438,17 @@ class Ui_MainWindow(QMainWindow):
         print('tab5 has been formed')
 
         self.tab_6 = QtWidgets.QWidget()
+        self.moviee = QtGui.QMovie('trading.gif')
+        self.label_for_movie = QtWidgets.QLabel(self.tab_6)
+        self.label_for_movie.setMovie(self.moviee)
+        self.moviee.start()
         self.book = QtWidgets.QTextBrowser(self.tab_6)
-        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 350))
+        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 800))
         self.tutorial = open('tutorial.txt', encoding='utf-8').read()
         self.tutorial_eng = open('tutorial_eng.txt', encoding='utf-8').read()
         self.book.setText(self.tutorial_eng)
         self.change_lng = QtWidgets.QPushButton(self.tab_6)
-        self.change_lng.setGeometry(QtCore.QRect(1000, 20, 300, 50))
+        self.change_lng.setGeometry(QtCore.QRect(995, 20, 300, 50))
         self.change_lng.setText("Change the language")
         self.tabWidget.addTab(self.tab_6, "")
         self.loaded.emit(95)
@@ -452,8 +465,9 @@ class Ui_MainWindow(QMainWindow):
         # при нажатии на кнопку происходит действие переданной ф-ции
         self.remove_btn.clicked.connect(self.remove_the_stock)
         self.clear_all_btn.clicked.connect(self.clear_the_portfolio)
-        self.change_lng.clicked.connect(self.change_language)
         self.final_btn.clicked.connect(self.renew_final_plot)
+        self.change_lng_strat.clicked.connect(self.change_language_strategies)
+        self.change_lng.clicked.connect(self.change_language)
 
         self.loaded.emit(100)
         self.loader.close()
@@ -493,37 +507,16 @@ class Ui_MainWindow(QMainWindow):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("MainWindow", "INFO"))
 
     def path_to_the_page(self, text):
-        if self.show:
-            self.news_NEWS.setGeometry(QtCore.QRect(20, 110, main()[1] - 500, main()[0] - 350))
-            self.show = False
+        self.news_NEWS.setGeometry(QtCore.QRect(619, 287, main()[1] - 1160, main()[0] - 503))
         if text == 'RBC':
             self.news_NEWS.setText(parsing_RBC())
-            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
-                                              self.news_NEWS.contentsMargins().top() * 2))
-            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                             self.news_NEWS.contentsMargins().left() +
-                                             self.news_NEWS.contentsMargins().right()))
         elif text == 'Invest Funds: Today News':
             self.news_NEWS.setText(parsing_invest_funds())
-            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
-                                              self.news_NEWS.contentsMargins().top() * 2))
-            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                             self.news_NEWS.contentsMargins().left() +
-                                             self.news_NEWS.contentsMargins().right()))
             if len(parsing_invest_funds()) == 0:
                 self.news_NEWS.setText("News can't be founded today. Go to sleep and wait for it!")
-                self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
-                                                  self.news_NEWS.contentsMargins().top() * 2))
-                self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                                 self.news_NEWS.contentsMargins().left() +
-                                                 self.news_NEWS.contentsMargins().right()))
+                self.news_NEWS.setAlignment(Qt.AlignCenter)
         elif text == 'MOEX':
             self.news_NEWS.setText(parsing_moex())
-            self.news_NEWS.setFixedHeight(int(self.news_NEWS.document().size().height() +
-                                              self.news_NEWS.contentsMargins().top() * 2))
-            self.news_NEWS.setFixedWidth(int(self.news_NEWS.document().idealWidth() +
-                                             self.news_NEWS.contentsMargins().left() +
-                                             self.news_NEWS.contentsMargins().right()))
 
     def set_period(self, period):
         if not read_port():
@@ -593,7 +586,6 @@ class Ui_MainWindow(QMainWindow):
                                            headers_row=self.rows_qcash)
                 self.view_9.setModel(self.model_9)
                 self.label_qt_cashflow.setText(f'Quarterly Balance Sheet of {stock} stock')
-                self.label_cur_stock.clear()
             else:
                 error = QMessageBox()
                 error.setWindowTitle("Ошибка набора")
@@ -606,6 +598,7 @@ class Ui_MainWindow(QMainWindow):
             error.setText("Пустой текст")
             error.setIcon(QMessageBox.Warning)
             error.exec_()
+        self.write_stock.clear()
 
     def set_strategy(self, strategy):
         if not read_port():
@@ -823,6 +816,12 @@ class Ui_MainWindow(QMainWindow):
             self.layout_for_mpl_2.addWidget(self.toolbar_2)
             self.layout_for_mpl_p.addWidget(self.toolbar_p)
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
+
+    def change_language_strategies(self):
+        if self.about_strategies.toPlainText() == self.strategies:
+            self.about_strategies.setText(self.strategies_eng)
+        else:
+            self.about_strategies.setText(self.strategies)
 
     def change_language(self):
         if self.book.toPlainText() == self.tutorial:
