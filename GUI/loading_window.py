@@ -1,4 +1,3 @@
-from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor, QMovie
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QProgressBar, QLabel, QSizePolicy, QApplication, QMainWindow, QDialog
 from PyQt5.QtCore import Qt
@@ -28,7 +27,7 @@ class loading_window(QWidget):
         self.label.setText("loading...")
         self.label.setStyleSheet("color: rgb(170, 170, 255);")
         self.label_for_gif = QLabel()
-        self.gif = QMovie("a_nimated-web-preloader.gif")
+        self.gif = QMovie("necessary images and gifs/a_nimated-web-preloader.gif")
         self.label_for_gif.setMovie(self.gif)
         self.gif.start()
         self.verticalLayout.addWidget(self.label)

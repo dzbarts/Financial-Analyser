@@ -1,0 +1,16 @@
+Exchange trading is available online, so almost anyone can access it. But without special knowledge and training, you can quickly spend money and be disappointed.
+Therefore, we have compiled a short excursion for the very beginners.
+
+What is exchange trading and how does it work? Exchange trading, or trading, is, in fact, a market. Only, instead of the usual goods for us, bonds, currency, company shares, and
+other securities are sold and bought there. On this basis - the sold and the purchased product - different exchanges stand out. There are stock, currency, commodity and futures.
+
+Who is a trader? Initially, everyone who buys goods cheaper and sells more expensive was called traders. The definition has now narrowed.
+A trader is a specialist who performs trading operations on an exchange. The funds that he uses to make a profit are not always his own, it is possible to manage other people's finances.
+
+How does a trader work? A trader's job is to constantly analyze data from stock exchanges and use the findings for competent asset management.
+The specialist spends most of his time on trading sessions, but you need to carefully prepare for them and collect the necessary information before starting them.
+
+How to start playing on the stock exchange? All actions on the exchange should not be chaotic and uncontrolled, but systematized. To do this, you need to decide on a practical trading strategy.
+The most popular strategies are trend trading, level trading, exchange trading using patterns, counter-trend trading, news trading and indicator trading.
+
+Our application is an assistant in trend trading and indicator trading.

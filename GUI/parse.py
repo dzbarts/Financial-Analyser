@@ -86,12 +86,17 @@ def parsing_moex():
     page = requests.get(url)
 
     soup = BeautifulSoup(page.text, 'html.parser')
-    links = soup.findAll(class_='news-list__link')
-    datas = soup.findAll(class_='col-lg-30')
+    links = soup.findAll(class_='new-moex-news-list__link')
+    times = soup.findAll(class_='new-moex-news-list__time')
+    datas = soup.findAll(class_='new-moex-news-list__date')
 
     d = []
     for data in datas:
         d.append(data.text.strip())
+
+    t = []
+    for time in times:
+        t.append(time.text.strip())
 
     for l in links:
         l['href'] = 'https://www.moex.com' + l['href']
@@ -103,9 +108,9 @@ def parsing_moex():
 
     res = res.split('\n')
 
-    r = (d[i] + ' ' + res[i] for i in range(0, len(d)))
+    r = (d[i] + ' ' + t[i] + ' ' + res[i] for i in range(0, len(d)))
 
-    list_r = list(r)
+    list_r = list(map(lambda x: x.replace('\r', ''), r))
 
     string_r = '<br />'.join(str(i) for i in list_r)
 
@@ -117,5 +122,4 @@ def parsing_moex():
 
 if __name__ == "__main__":
     print(parsing_RBC())
-    print(parsing_invest_funds())
     print(parsing_moex())
