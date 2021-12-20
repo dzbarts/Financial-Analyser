@@ -1,6 +1,9 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
+from pandasmodel import PandasModel
+from canvas import GraphicsCanvas
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 
 
 class label(QtWidgets.QLabel):
@@ -31,10 +34,11 @@ class push_button(QtWidgets.QPushButton):
         self.setGeometry(geometry)
         self.setStyleSheet("""
                 QPushButton{
+                    font-size: 15px;
                     font-weight: bold;
-                    border: 1px solid #1DA1F2;
+                    border: 1px solid #5AF2FF;
                     border-radius: 4px;
-                    color: #1DA1F2;
+                    color: #5AF2FF;
                 }
                 """)
 
@@ -58,3 +62,24 @@ class message_box(QtWidgets.QMessageBox):
         self.setText(text)
         self.setIcon(icon)
         self.exec_()
+
+
+class my_table_view(QtWidgets.QTableView):
+    def __init__(self, parent, geometry, pandas_table, h_columns):
+        super(my_table_view, self).__init__(parent)
+        self.setGeometry(geometry)
+        self.model = PandasModel(pandas_table, headers_column=h_columns,
+                                 headers_row=[str(i) for i in range(1, pandas_table.shape[0] + 1)])
+        self.setModel(self.model)
+
+
+class my_plot_widget(QtWidgets.QWidget):
+    def __init__(self, parent, geometry, fig, main_window):
+        super(my_plot_widget, self).__init__(parent)
+        self.setGeometry(geometry)
+        self.fig = fig
+        self.layout = QtWidgets.QVBoxLayout(self)
+        self.canvas = GraphicsCanvas(self.fig)
+        self.layout.addWidget(self.canvas)
+        self.toolbar = NavigationToolbar(self.canvas, main_window)
+        self.layout.addWidget(self.toolbar)

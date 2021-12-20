@@ -79,7 +79,7 @@ def plot_common(period, var):
 pop_stocks = pd.DataFrame({'Tickers':
                                ["AAPL", "MSFT", "TSLA",
                                       "NVDA", "JNJ", "WMT",
-                                      "GAZP", "SBER", "ROSN",
+                                      "GAZP", "SBER.ME", "ROSN",
                                       "LKOH", "VTBR", "MGNT",
                                       ],
                            'Companies':

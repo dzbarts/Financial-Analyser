@@ -1,100 +1,77 @@
 The rule of all strategies: the longer the period taken for a certain strategy, the lower the risk.
+1. SMA (Simple Moving Average) is a simple moving average.
+It indicates the main trends as transparently as possible, as
+well as side price changes.
+Strategy: if the price crosses the slow moving from top to bottom, then it is worth selling.
+In the opposite case, buy.
 
-1. SMA (Simple Moving Average).
-It identifies the main trends as transparently as possible,
-as well as collateral price changes.
+2. twoSMA is also a simple moving average,
+but a fast moving average is taken instead of the price.
+It also indicates the main trends and side price changes.
+For a fast moving average, a value of up to half of the slow one is taken.
+Strategy: if the price crosses the slow moving from top to bottom,
+then it is worth selling. In the opposite case, buy.
 
-Strategy: if the price crosses the slow moving line from top to bottom.
-Otherwise, buy.
+3. EMA (Exponential Moving Average) is a kind of moving average
+calculated exponentially. In comparison with the simple one, the
+exponent attaches much more importance to the current values than to the old ones.
+Strategy: if the price crosses the slow moving from top to bottom,
+then it is worth selling. In the opposite case, buy.
 
+4. DEMA (Double exponential moving average) – twice taken EMA,
+it is more advanced than traditional moving averages.
+Strategy: if the price crosses the slow moving from top to bottom,
+then it is worth selling. In the opposite case, buy.
 
-2.twoSMA is also a simple moving average,
-however, prices are taken as a fast moving average instead of an average.
-Also indicates major trends and collateral price changes.
-For a fast moving one, the value is taken up to half of the slow one.
+5. TEMA (Triple exponential moving average - the EMA taken three times
+reacts faster, which makes it more in demand among traders.
+Strategy: if the price crosses the slow moving from top to bottom,
+then it is worth selling. In the opposite case, buy.
 
-Strategy: if the price crosses the slow moving one from top to bottom,
-it's worth selling. Otherwise, buy.
-
-
-3. EMA (Exponential Moving Average) - a type of moving average,
-calculated exponentially. Compared to simple,
-exponent gives much more importance to current values than old ones.
-
-Strategy: if the price crosses the slow moving one from top to bottom,
-it's worth selling. Otherwise, buy.
-
-
-4. DEMA (Double Exponential Moving Average) - twice taken EMA,
-is more advanced than traditional moving averages.
-
-Strategy: if the price crosses the slow moving one from top to bottom,
-it's worth selling. Otherwise, buy.
-
-
-5. TEMA (Triple Exponential Moving Average) - three times taken EMA,
-responds faster, which makes it more in demand among traders.
-
-Strategy: if the price crosses the slow moving one from top to bottom,
-it's worth selling. Otherwise, buy.
-
-
-6. MACD (Moving Average Convergence / Divergence) - Moving Average Convergence / Divergence.
-
+6. MACD (Moving average convergence/divergence) – convergence/divergence of moving averages.
 Strategy: if the histogram crosses the signal line from top to bottom,
-it's worth selling. Otherwise, buy.
+then it is worth selling. In the opposite case, buy.
 
+7. The volatility indicator CHV (Chaikin Volatility) is an indicator
+used to determine the volatility of the market.
+Strategy: the beginning of the growth of the indicator may indicate
+the formation of another price maximum. In this case, volatility
+will increase until this extreme is established.
+The rapid decline of the CHV curve indicates a slowdown in the current trend.
+There is likely to be a strong correction or pullback in the price in the near future.
 
-7. CHV volatility indicator (Chaikin Volatility) - an indicator,
-with which the volatility of the market is determined.
-
-Strategy: the beginning of the indicator may indicate
-about the formation of the next high of the price. In this case, volatility
-will increase until this extremum is set.
-Rapid decline in the CHV curve.
-Probably in the near future there is a strong correction or pullback in the price.
-
-
-8. RSI (Relative Strength Index) - overbought / oversold index.
-Oscillator (a special indicator that predicts market or stock trends)
-is calculated based on the closing prices and shows
+8. RSI (Relative strength index) – overbought/oversold index.
+An oscillator (a special indicator that predicts market or stock trends) is
+calculated based on closing prices and shows
 who is currently dominating the market: bulls (buyers) or bears (sellers).
-
-Strategy: Returns values between 0 and 100,
-that values below 30 indicate an undervaluation of the market (you need to buy),
-and above 70 - about overbought (you need to sell).
-
+Strategy: the indicator returns values from 0 to 100, it
+is believed that values below 30 indicate that the market is undervalued (you need to buy)
+and above 70 - overbought (you need to sell).
 
 8. Bulls Power indicator is a simple and effective analysis tool,
 the use of which allows you to determine the mood of buyers ("bulls")
-in the indicated period of time.
-
-Strategy: if the bars of the histogram are growing,
+in a designated period of time.
+Strategy: if the histogram columns are growing,
 but the values are still less than 0, then it is worth buying;
-if the bars of the histogram are falling, but the values are still greater than 0,
+if the histogram columns are falling, but the values are still greater than 0,
 it's worth selling.
 
-
-9. Bears Power indicator is a classic oscillator,
-determining the strength of the sellers ("bears") of the market in the selected time period.
-
-Strategy: if the bars of the histogram are growing,
+9. The Bears Power indicator is a classic oscillator that
+determines the strength of sellers ("bears") of the market in the selected time period.
+Strategy: if the histogram columns are growing,
 but the values are still less than 0, then it is worth buying;
-if the bars of the histogram are falling, but the values are still greater than 0,
+if the histogram columns are falling, but the values are still greater than 0,
 it's worth selling.
 
-
-10. ER (Elder Rays) indicator is a complex indicator.
-The price is determined by a compromise between buyers and sellers.
-
-Strategy: if the bars of the histogram are growing,
+10. The ER (Elder Rays) indicator is a complex indicator.
+The price is determined as a result of a compromise between buyers and sellers.
+Strategy: if the histogram columns are growing,
 but the values are still less than 0, then it is worth buying;
-if the bars of the histogram are falling, but the values are still greater than 0,
+if the histogram columns are falling, but the values are still greater than 0,
 it's worth selling.
 
-11. Indicator MI (Mass Index) - a technical indicator,
-the use of which makes it possible to predict a trend reversal
+11. The MI indicator (Mass Index) is a technical indicator, the
+use of which makes it possible to predict a trend reversal
 by analyzing the dynamics of changes in the price range.
-
 Strategy: if the curve crosses line 27 from bottom to top,
 and then the line 26.5 from top to bottom, then you should buy.
