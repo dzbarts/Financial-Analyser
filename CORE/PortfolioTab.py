@@ -76,6 +76,20 @@ def plot_common(period, var):
     return fig_c
 
 
+pop_stocks = pd.DataFrame({'Tickers':
+                               ["AAPL", "MSFT", "TSLA",
+                                      "NVDA", "JNJ", "WMT",
+                                      "GAZP", "SBER", "ROSN",
+                                      "LKOH", "VTBR", "MGNT",
+                                      ],
+                           'Companies':
+                               ["APPLE INC", "MICROSOFT CORP", "TESLA INC",
+                                      "NVIDIA CORP", "JOHNSON&JOHNSON", "WALMART INC",
+                                         "GAZPROM", "SBER", "ROSNEFT",
+                                      "LUKOIL", "VTB Bank", "MAGNIT",
+                                         ]})
+
+
 # def add_to_plot_common(stock, period, prev_plot_common):
 #     prev_plot_common[1].plot(yf.download(stock, start=datetime.date.today() - datetime.timedelta(days=period),
 #                              end=datetime.date.today()).Close)
