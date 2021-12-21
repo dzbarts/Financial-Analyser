@@ -97,8 +97,7 @@ html_strategies = """<p><strong><u>Правило всех стратегий</u
 за cчет анализа динамики изменений диапазона цен.</p>
 
 <p><u>Стратегия</u>: если кривая пересекает линию 27 снизу вверх,<br>
-а потом линию 26,5 сверху вниз, то следует <mark style="background-color: #7a65ba">покупать</mark>.<br>
-</p>"""
+а потом линию 26,5 сверху вниз, то следует <mark style="background-color: #7a65ba">покупать</mark>.</p>"""
 
 html_strategies_eng = """<p><strong><u>The rule of all strategies</u></strong>: the longer the period taken for a certain strategy, the lower the risk. </p>
 
