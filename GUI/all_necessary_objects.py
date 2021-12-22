@@ -1,27 +1,26 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QMovie
-from PyQt5.QtWidgets import QVBoxLayout, QLabel
-from pandasmodel import PandasModel
 from canvas import GraphicsCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
+from qt_material import apply_stylesheet
 
 
 class label(QtWidgets.QLabel):
-    def __init__(self, parent, text, geometry):
+    def __init__(self, parent, geometry, text):
         super(label, self).__init__(parent)
         self.setText(text)
         self.setGeometry(geometry)
 
 
 class combobox(QtWidgets.QComboBox):
-    def __init__(self, parent, items, geometry):
+    def __init__(self, parent, geometry, num_items):
         super(combobox, self).__init__(parent)
-        self.addItems(items)
+        for i in range(num_items):
+            self.addItem("")
         self.setGeometry(geometry)
 
 
 class table_view(QtWidgets.QTableView):
-    def __init__(self, parent, model, geometry):
+    def __init__(self, parent, geometry, model):
         super(table_view, self).__init__(parent)
         self.setModel(model)
         self.setGeometry(geometry)
@@ -43,16 +42,18 @@ class push_button(QtWidgets.QPushButton):
                 """)
 
 
-class dialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(dialog, self).__init__()
-        vbox = QVBoxLayout()
-        lbl = QLabel()
-        self.moviee = QMovie('necessary images and gifs/a_giphy.gif')
-        lbl.setMovie(self.moviee)
-        self.moviee.start()
-        vbox.addWidget(lbl)
-        self.setLayout(vbox)
+class text_browser(QtWidgets.QTextBrowser):
+    def __init__(self, parent, geometry):
+        super(text_browser, self).__init__(parent)
+        self.setGeometry(geometry)
+
+
+class my_button_colorist(QtWidgets.QPushButton):
+    def __init__(self, parent, geometry, window, theme, text):
+        super(my_button_colorist, self).__init__(parent)
+        self.setGeometry(geometry)
+        self.clicked.connect(lambda: apply_stylesheet(window, theme))
+        self.setText(text)
 
 
 class message_box(QtWidgets.QMessageBox):
@@ -65,12 +66,10 @@ class message_box(QtWidgets.QMessageBox):
 
 
 class my_table_view(QtWidgets.QTableView):
-    def __init__(self, parent, geometry, pandas_table, h_columns):
+    def __init__(self, parent, geometry, model):
         super(my_table_view, self).__init__(parent)
         self.setGeometry(geometry)
-        self.model = PandasModel(pandas_table, headers_column=h_columns,
-                                 headers_row=[str(i) for i in range(1, pandas_table.shape[0] + 1)])
-        self.setModel(self.model)
+        self.setModel(model)
 
 
 class my_plot_widget(QtWidgets.QWidget):
@@ -83,3 +82,10 @@ class my_plot_widget(QtWidgets.QWidget):
         self.layout.addWidget(self.canvas)
         self.toolbar = NavigationToolbar(self.canvas, main_window)
         self.layout.addWidget(self.toolbar)
+
+
+class line_edit(QtWidgets.QLineEdit):
+    def __init__(self, parent, geometry, placeholder_text):
+        super(line_edit, self).__init__(parent)
+        self.setGeometry(geometry)
+        self.setPlaceholderText(placeholder_text)

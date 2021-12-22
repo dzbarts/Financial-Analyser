@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QDesktopWidget, QHeaderView, QMessageBox, QMainWindow
 import qdarkstyle
+from qt_material import apply_stylesheet
 import matplotlib.pyplot as plt
 from loading_window import loading_window
 from all_necessary_objects import *
@@ -115,73 +116,65 @@ class Ui_MainWindow(QMainWindow):
         self.label_for_pic = QtWidgets.QLabel(self.tab)
         self.label_for_pic.setGeometry(0, 0, main()[1], main()[0])
         self.label_for_pic.setPixmap(QtGui.QPixmap("necessary images and gifs/a_news.png"))
-        self.label_news = QtWidgets.QLabel(self.tab)
-        self.label_news.setGeometry(QtCore.QRect(20, 20, 300, 30))
-        self.label_news.setText('<h3 style="color: #000000;"> Select the financial news source <h3>')
+        self.label_news = label(self.tab, QtCore.QRect(20, 20, 300, 30),
+                                '<h3 style="color: #000000;"> Select the financial news source <h3>')
         self.label_news.setStyleSheet('QLabel{background-color: transparent;}')
-        self.comboBox_NEWS = QtWidgets.QComboBox(self.tab)
-        self.comboBox_NEWS.setGeometry(QtCore.QRect(20, 50, 200, 41))
-        self.comboBox_NEWS.addItem("")
-        self.comboBox_NEWS.addItem("")
-        self.comboBox_NEWS.addItem("")
+        self.comboBox_NEWS = combobox(self.tab, QtCore.QRect(20, 50, 200, 41), 3)
         self.comboBox_NEWS.activated['QString'].connect(self.path_to_the_page)
-        self.news_NEWS = QtWidgets.QTextBrowser(self.tab)
-        self.news_NEWS.setGeometry(QtCore.QRect(20, 110, 0, 0))
+        self.news_NEWS = text_browser(self.tab, QtCore.QRect(20, 110, 0, 0))
         self.news_NEWS.setOpenExternalLinks(True)  # опция для перенаправления при нажатии на ссылку
+        self.pushButton_default = QtWidgets.QPushButton(self.tab)
+        self.pushButton_default.setGeometry(1700, 20, 200, 50)
+        self.pushButton_default.clicked.connect(lambda: MainWindow.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5()))
+        self.pushButton_default.setText('Default Theme')
+        self.pushButton = my_button_colorist(self.tab, QtCore.QRect(1700, 90, 200, 50), MainWindow, 'dark_amber.xml',
+                                             'Amber Theme')  # FFBF00
+        self.pushButton_2 = my_button_colorist(self.tab, QtCore.QRect(1700, 160, 200, 50), MainWindow, 'dark_cyan.xml',
+                                               'Cyan Theme')  # 00FFFF
+        self.pushButton_3 = my_button_colorist(self.tab, QtCore.QRect(1700, 230, 200, 50), MainWindow, 'dark_blue.xml',
+                                               'Blue Theme')  # 0062CC
+        self.pushButton_4 = my_button_colorist(self.tab, QtCore.QRect(1700, 300, 200, 50), MainWindow, 'dark_pink.xml',
+                                               'Pink Theme')  # F85084
+        self.pushButton_5 = my_button_colorist(self.tab, QtCore.QRect(1700, 370, 200, 50), MainWindow, 'dark_teal.xml',
+                                               'Teal Theme')  # F85084
         self.tabWidget.addTab(self.tab, "")
         self.loaded.emit(20)
         print('tab1 has been formed')
 
         self.tab_2 = QtWidgets.QWidget()
-        self.view = QtWidgets.QTableView(self.tab_2)
-        self.view.setGeometry(QtCore.QRect(50, 50, 1187, 328))
         self.model = PandasModel(tsectors, headers_column=['Trough', 'Expansion', 'Peak', 'Recession'],
                                  headers_row=['1', '2', '3', '4', '5', '6', '',
                                               'Recommendations'])  # создаем модель готового класса
+        self.view = table_view(self.tab_2, QtCore.QRect(50, 50, 1187, 328), self.model)
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.view.setModel(self.model)  # добавляем модель в поле показа таблицы
-        self.label_tsect = QtWidgets.QLabel(self.tab_2)
-        self.label_tsect.setGeometry(QtCore.QRect(50, 379, 400, 30))
-        self.label_tsect.setText('Table 2.1 Share Sectors due to Cycle')
+        self.label_tsect = label(self.tab_2, QtCore.QRect(50, 379, 400, 30), 'Table 2.1 Share Sectors due to Cycle')
 
-        self.view_2 = QtWidgets.QTableView(self.tab_2)
-        self.view_2.setGeometry(QtCore.QRect(50, 450, 700, 439))
         self.model_2 = PandasModel(tcapa, headers_column=['Country', 'Calculated Using', 'Index'],
                                    headers_row=[str(i) for i in range(1, tcapa.shape[0] + 1)])
+        self.view_2 = table_view(self.tab_2, QtCore.QRect(50, 450, 700, 439), self.model_2)
         self.view_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_2.setModel(self.model_2)
-        self.label_tcapa = QtWidgets.QLabel(self.tab_2)
-        self.label_tcapa.setGeometry(QtCore.QRect(50, 890, 300, 30))
-        self.label_tcapa.setText('Table 2.2 CAPA Index')
+        self.label_tcapa = label(self.tab_2, QtCore.QRect(50, 890, 300, 30), 'Table 2.2 CAPA Index')
 
         self.plot_pic = QtGui.QPixmap('necessary images and gifs/plot_business_cycle.jpg')
         self.label_for_plot_pic = QtWidgets.QLabel(self.tab_2)
         self.label_for_plot_pic.setGeometry(QtCore.QRect(770, 450, 480, 250))
         self.label_for_plot_pic.setPixmap(self.plot_pic)
-        self.view_3 = QtWidgets.QTableView(self.tab_2)
-        self.view_3.setGeometry(QtCore.QRect(770, 722, 480, 160))
         self.t_port_sect = set_t_port_sect(self.uni_var)
         self.model_3 = PandasModel(self.t_port_sect, headers_column=['Stocks', 'Number', 'Countries', 'Sectors'],
                                    headers_row=[str(i) for i in range(1, self.t_port_sect.shape[0] + 1)])
-        self.view_3.setModel(self.model_3)
-        self.label_tpc = QtWidgets.QLabel(self.tab_2)
-        self.label_tpc.setGeometry(QtCore.QRect(770, 882, 400, 30))
-        self.label_tpc.setText('Table 2.3 Countries and Sectors of Stocks')
+        self.view_3 = table_view(self.tab_2, QtCore.QRect(770, 722, 480, 160), self.model_3)
         header_3 = self.view_3.horizontalHeader()
         header_3.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         header_3.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self.label_tpc = label(self.tab_2, QtCore.QRect(770, 882, 400, 30), 'Table 2.3 Countries and Sectors of Stocks')
 
         self.widget_for_g_1 = QtWidgets.QWidget(self.tab_2)  # создаем виджет для добавления графика
         self.widget_for_g_1.setGeometry(1250, 0, 650, 385)
-        self.label_g1 = QtWidgets.QLabel(self.tab_2)
-        self.label_g1.setGeometry(QtCore.QRect(1250, 379, 300, 30))
-        self.label_g1.setText('Plot 2.1 Share by Countries')
+        self.label_g1 = label(self.tab_2, QtCore.QRect(1250, 379, 300, 30), 'Plot 2.1 Share by Countries')
 
         self.widget_for_g_2 = QtWidgets.QWidget(self.tab_2)
         self.widget_for_g_2.setGeometry(1250, 510, 650, 385)
-        self.label_g2 = QtWidgets.QLabel(self.tab_2)
-        self.label_g2.setGeometry(QtCore.QRect(1250, 882, 300, 30))
-        self.label_g2.setText('Plot 2.2 Share by Sectors')
+        self.label_g2 = label(self.tab_2, QtCore.QRect(1250, 882, 300, 30), 'Plot 2.2 Share by Sectors')
 
         self.fig_1 = plot_c(self.uni_var)  # график
         self.fig_2 = plot_s(self.uni_var)
@@ -201,21 +194,12 @@ class Ui_MainWindow(QMainWindow):
         print('tab2 has been formed')
 
         self.tab_3 = QtWidgets.QWidget()
-        self.edit = QtWidgets.QLineEdit(self.tab_3)
-        self.edit.setGeometry(QtCore.QRect(30, 20, 200, 40))
-        self.edit.setPlaceholderText("Ticker of a stock")
-        self.edit_n = QtWidgets.QLineEdit(self.tab_3)
-        self.edit_n.setGeometry(QtCore.QRect(30, 75, 200, 40))
-        self.edit_n.setPlaceholderText("Amount of stocks")
-        self.add_btn = push_button(self.tab_3, QtCore.QRect(720, 20, 230, 50), "Add a stock into portfolio")
+        self.edit = line_edit(self.tab_3, QtCore.QRect(30, 20, 200, 40), "Ticker of a stock")
+        self.edit_n = line_edit(self.tab_3, QtCore.QRect(30, 75, 200, 40), "Amount of stocks")
+        self.add_btn = push_button(self.tab_3, QtCore.QRect(650, 20, 300, 50), "Add a stock into portfolio")
         self.remove_btn = push_button(self.tab_3, QtCore.QRect(1000, 20, 300, 50), "Remove a stock from portfolio")
         self.clear_all_btn = push_button(self.tab_3, QtCore.QRect(1677, 20, 200, 50), "Clear portfolio")
 
-        self.view_5 = QtWidgets.QTableView(self.tab_3)
-        self.view_5.setGeometry(QtCore.QRect(30, 160, 1850, 170))
-        self.label_assets = QtWidgets.QLabel(self.tab_3)
-        self.label_assets.setGeometry(QtCore.QRect(30, 333, 400, 30))
-        self.label_assets.setText('Table 3.1 Collective Information of Stocks')
         self.assets = set_assets(self.uni_var)
         self.model_5 = PandasModel(self.assets, headers_column=['Stocks', 'Number', 'Open', 'High', 'Low',
                                                                 'Close', 'Volume', 'Dividends (per year)',
@@ -224,53 +208,38 @@ class Ui_MainWindow(QMainWindow):
                                                                 '% of Float Held by Institutions',
                                                                 'Number of Institutions Holding Shares'],
                                    headers_row=[str(i) for i in range(1, self.assets.shape[0] + 1)])
-        self.view_5.setModel(self.model_5)
+        self.view_5 = table_view(self.tab_3, QtCore.QRect(30, 160, 1750, 170), self.model_5)
         self.header_5 = self.view_5.horizontalHeader()
-        self.header_5.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.header_5.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.label_assets = label(self.tab_3, QtCore.QRect(30, 333, 400, 30),
+                                  'Table 3.1 Collective Information of Stocks')
 
-        self.view_6 = QtWidgets.QTableView(self.tab_3)
-        self.view_6.setGeometry(QtCore.QRect(30, 420, 500, 170))
-        self.label_stock_growth = QtWidgets.QLabel(self.tab_3)
-        self.label_stock_growth.setGeometry(QtCore.QRect(30, 595, 300, 30))
-        self.label_stock_growth.setText('Table 3.2 Dynamic of Stocks')
         self.stock_growth = set_stock_growth(self.uni_var)
         self.model_6 = PandasModel(self.stock_growth, headers_column=['Stocks', 'Stock growth %',
                                                                       'Stock growth, RUB'],
                                    headers_row=[str(i) for i in range(1, self.stock_growth.shape[0] + 1)])
+        self.view_6 = table_view(self.tab_3, QtCore.QRect(30, 420, 530, 170), self.model_6)
         self.view_6.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_6.setModel(self.model_6)
+        self.label_stock_growth = label(self.tab_3, QtCore.QRect(30, 595, 300, 30), 'Table 3.2 Dynamic of Stocks')
 
-        self.view_pop = QtWidgets.QTableView(self.tab_3)
-        self.view_pop.setGeometry(QtCore.QRect(30, 637, 500, 260))
-        self.label_pop = QtWidgets.QLabel(self.tab_3)
-        self.label_pop.setGeometry(QtCore.QRect(30, 902, 300, 30))
-        self.label_pop.setText('Table 3.3 Companies and Tickers')
         self.model_pop = PandasModel(pop_stocks, headers_column=['Ticker of stock', 'Company'],
                                      headers_row=[str(i) for i in range(1, pop_stocks.shape[0] + 1)])
+        self.view_pop = table_view(self.tab_3, QtCore.QRect(30, 637, 530, 260), self.model_pop)
         self.view_pop.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_pop.setModel(self.model_pop)
+        self.label_pop = label(self.tab_3, QtCore.QRect(30, 902, 300, 30), 'Table 3.3 Companies and Tickers')
 
         self.widget_for_g_p = QtWidgets.QWidget(self.tab_3)
-        self.widget_for_g_p.setGeometry(550, 415, 570, 500)
-        self.label_g_p = QtWidgets.QLabel(self.tab_3)
-        self.label_g_p.setGeometry(QtCore.QRect(552, 903, 200, 30))
-        self.label_g_p.setText('Plot 3.1 Amount of Stocks')
+        self.widget_for_g_p.setGeometry(580, 415, 570, 500)
+        self.label_g_p = label(self.tab_3, QtCore.QRect(582, 903, 200, 30), 'Plot 3.1 Amount of Stocks')
 
         self.widget_for_g_c = QtWidgets.QWidget(self.tab_3)
         self.widget_for_g_c.setGeometry(1200, 415, 665, 500)
-        self.label_g_c = QtWidgets.QLabel(self.tab_3)
-        self.label_g_c.setGeometry(QtCore.QRect(1202, 903, 480, 30))
-        self.label_g_c.setText('<a>Plot 3.2 Price of Stocks in Fixed Period (By default: <strong>150 days</strong>)</a>')
+        self.label_g_c = label(self.tab_3, QtCore.QRect(1202, 903, 480, 30),
+                               '<a>Plot 3.2 Price of Stocks in Fixed Period (By default: <strong>150 days</strong>)</a>')
 
-        self.comboBox_4 = QtWidgets.QComboBox(self.tab_3)
-        self.comboBox_4.setGeometry(QtCore.QRect(1650, 415, 120, 30))
-        self.comboBox_4.addItem("")
-        self.comboBox_4.addItem("")
-        self.comboBox_4.addItem("")
+        self.comboBox_4 = combobox(self.tab_3, QtCore.QRect(1650, 415, 120, 30), 3)
         self.comboBox_4.activated['QString'].connect(self.set_period)
-        self.label_combob_4 = QtWidgets.QLabel(self.tab_3)
-        self.label_combob_4.setGeometry(QtCore.QRect(1650, 385, 200, 30))
-        self.label_combob_4.setText('Select period')
+        self.label_combob_4 = label(self.tab_3, QtCore.QRect(1650, 385, 200, 30), 'Select period')
 
         self.fig_p = plot_p(self.uni_var)
         self.fig_c = plot_common(150, read_port())
@@ -289,29 +258,20 @@ class Ui_MainWindow(QMainWindow):
         print('tab3 has been formed')
 
         self.tab_4 = QtWidgets.QWidget()
-        self.comboBox_5 = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_5.setGeometry(QtCore.QRect(30, 58, 200, 40))
-        self.comboBox_5.addItem("")
-        self.comboBox_5.addItem("")
-        self.comboBox_5.addItem("")
+        self.comboBox_5 = combobox(self.tab_4, QtCore.QRect(30, 58, 200, 40), 3)
         self.comboBox_5.activated['QString'].connect(self.set_strategy)
-        self.label_combob_5 = QtWidgets.QLabel(self.tab_4)
-        self.label_combob_5.setGeometry(QtCore.QRect(30, 28, 200, 30))
-        self.label_combob_5.setText('Select strategy')
+        self.label_combob_5 = label(self.tab_4, QtCore.QRect(30, 28, 200, 30), 'Select strategy')
 
-        self.view_7 = QtWidgets.QTableView(self.tab_4)
-        self.view_7.setGeometry(QtCore.QRect(30, 150, 1100, 170))
-        self.label_recom = QtWidgets.QLabel(self.tab_4)
-        self.label_recom.setGeometry(QtCore.QRect(30, 323, 400, 30))
-        self.label_recom.setText('Table 4.1 Recommendations on Strategies')
         self.columns_ = ['Stocks', 'SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD',
                          'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI', 'Agg']
         self.start_rec_num = 1
         self.recom = set_recom(self.start_rec_num, self.uni_var)
         self.model_7 = PandasModel(self.recom, headers_column=self.columns_,
                                    headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+        self.view_7 = table_view(self.tab_4, QtCore.QRect(30, 150, 1130, 170), self.model_7)
         self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_7.setModel(self.model_7)
+        self.label_recom = label(self.tab_4, QtCore.QRect(30, 323, 400, 30), 'Table 4.1 Recommendations on Strategies')
+
         self.widget_for_final_plot = QtWidgets.QWidget(self.tab_4)
         self.widget_for_final_plot.setGeometry(30, 347, 720, 580)
         value = read_port()[0]
@@ -321,50 +281,25 @@ class Ui_MainWindow(QMainWindow):
         self.layout_for_final_plot.addWidget(self.canvas_final)
         self.toolbar_final = NavigationToolbar(self.canvas_final, MainWindow)
         self.layout_for_final_plot.addWidget(self.toolbar_final)
-        self.label_final = QtWidgets.QLabel(self.tab_4)
-        self.label_final.setGeometry(QtCore.QRect(30, 914, 400, 30))
-        self.label_final.setText(f'Plot 4.1 Strategy for {value}')
+        self.label_final = label(self.tab_4, QtCore.QRect(30, 914, 400, 30), f'Plot 4.1 Strategy for {value}')
 
-        self.comboBox_final_period = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_period.setGeometry(QtCore.QRect(810, 436, 200, 40))
-        self.comboBox_final_period.addItem("")
-        self.comboBox_final_period.addItem("")
-        self.comboBox_final_period.addItem("")
-        self.label_fin_per = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_per.setGeometry(QtCore.QRect(810, 405, 200, 30))
-        self.label_fin_per.setText('Select period')
+        self.comboBox_final_period = combobox(self.tab_4, QtCore.QRect(810, 436, 200, 40), 3)
+        self.label_fin_per = label(self.tab_4, QtCore.QRect(810, 405, 200, 30), 'Select period')
 
-        self.comboBox_final_stock = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_stock.setGeometry(QtCore.QRect(810, 521, 200, 40))
-        for _ in list(set(self.start_port)):
-            self.comboBox_final_stock.addItem("")
-        self.label_fin_stck = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_stck.setGeometry(QtCore.QRect(810, 490, 300, 30))
-        self.label_fin_stck.setText('Select stock (from portfolio)')
+        self.comboBox_final_stock = combobox(self.tab_4, QtCore.QRect(810, 521, 200, 40), len(set(self.start_port)))
+        self.label_fin_stck = label(self.tab_4, QtCore.QRect(810, 490, 300, 30), 'Select stock (from portfolio)')
 
-        self.comboBox_final_type = QtWidgets.QComboBox(self.tab_4)
-        self.comboBox_final_type.setGeometry(QtCore.QRect(810, 607, 200, 40))
-        self.comboBox_final_type.addItem("")
-        self.comboBox_final_type.addItem("")
-        self.comboBox_final_type.addItem("")
-        self.label_fin_type = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_type.setGeometry(QtCore.QRect(810, 575, 300, 30))
-        self.label_fin_type.setText('Select type of strategy')
+        self.comboBox_final_type = combobox(self.tab_4, QtCore.QRect(810, 607, 200, 40), 3)
+        self.label_fin_type = label(self.tab_4, QtCore.QRect(810, 575, 300, 30), 'Select type of strategy')
 
-        self.combobox_final_strategy = QtWidgets.QComboBox(self.tab_4)
-        self.combobox_final_strategy.setGeometry(QtCore.QRect(810, 697, 200, 40))
         strategies = ['SMA', 'twoSMA', 'EMA', 'DEMA', 'TEMA', 'MACD', 'CHV', 'RSI', 'bulls', 'bears', 'ER', 'MI']
-        for _ in strategies:
-            self.combobox_final_strategy.addItem("")
-        self.label_fin_strat = QtWidgets.QLabel(self.tab_4)
-        self.label_fin_strat.setGeometry(QtCore.QRect(810, 665, 200, 30))
-        self.label_fin_strat.setText('Select strategy')
+        self.combobox_final_strategy = combobox(self.tab_4, QtCore.QRect(810, 697, 200, 40), len(strategies))
+        self.label_fin_strat = label(self.tab_4, QtCore.QRect(810, 665, 200, 30), 'Select strategy')
 
         self.final_btn = push_button(self.tab_4, QtCore.QRect(810, 800, 200, 50), "Renew final plot")
         self.tabWidget.addTab(self.tab_4, "")
 
-        self.about_strategies = QtWidgets.QTextBrowser(self.tab_4)
-        self.about_strategies.setGeometry(QtCore.QRect(1180, 150, 700, 790))
+        self.about_strategies = text_browser(self.tab_4, QtCore.QRect(1210, 150, 670, 790))
         self.strategies = html_strategies
         self.strategies_eng = html_strategies_eng
         self.about_strategies.setHtml(self.strategies_eng)
@@ -375,30 +310,18 @@ class Ui_MainWindow(QMainWindow):
         print('tab4 has been formed')
 
         self.tab_5 = QtWidgets.QWidget()
-        self.write_stock = QtWidgets.QLineEdit(self.tab_5)
-        self.write_stock.setGeometry(QtCore.QRect(20, 20, 200, 40))
-        self.write_stock.setPlaceholderText("Ticker of a stock")
-        self.comboBox_6 = QtWidgets.QComboBox(self.tab_5)
-        self.comboBox_6.setGeometry(QtCore.QRect(20, 101, 200, 40))
-        self.label_cur_period = QtWidgets.QLabel(self.tab_5)
-        self.label_cur_period.setGeometry(QtCore.QRect(20, 70, 200, 30))
-        self.label_cur_period.setText("Select period")
-        self.comboBox_6.addItem("")
-        self.comboBox_6.addItem("")
-        self.comboBox_6.addItem("")
+        self.write_stock = line_edit(self.tab_5, QtCore.QRect(20, 20, 200, 40), "Ticker of a stock")
+        self.comboBox_6 = combobox(self.tab_5, QtCore.QRect(20, 101, 200, 40), 3)
         self.comboBox_6.activated['QString'].connect(self.set_period_current_stock)
-        self.isin = QtWidgets.QTextBrowser(self.tab_5)
-        self.isin.setGeometry(QtCore.QRect(300, 55, 200, 40))
+        self.label_cur_period = label(self.tab_5, QtCore.QRect(20, 70, 200, 30), "Select period")
+        self.isin = text_browser(self.tab_5, QtCore.QRect(300, 55, 200, 40))
         self.isin.setText(get_stock_isin(get_stock(value)))
         self.isin.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        self.label_isin = QtWidgets.QLabel(self.tab_5)
-        self.label_isin.setGeometry(QtCore.QRect(300, 20, 500, 30))
-        self.label_isin.setText(f'International Securities Identification Number of {value} stock')
+        self.label_isin = label(self.tab_5, QtCore.QRect(300, 20, 500, 30),
+                                f'International Securities Identification Number of {value} stock')
         self.widget_for_stock_p = QtWidgets.QWidget(self.tab_5)
         self.widget_for_stock_p.setGeometry(20, 150, 700, 470)
-        self.label_stock_p = QtWidgets.QLabel(self.tab_5)
-        self.label_stock_p.setGeometry(QtCore.QRect(20, 610, 300, 30))
-        self.label_stock_p.setText(f'Plot of {value} stock')
+        self.label_stock_p = label(self.tab_5, QtCore.QRect(20, 610, 300, 30), f'Plot of {value} stock')
         self.fig = plot_stock(value, 150)
         self.layout_for_mpl_stock = QtWidgets.QVBoxLayout(self.widget_for_stock_p)
         self.canvas_stock = GraphicsCanvas(self.fig)
@@ -406,34 +329,28 @@ class Ui_MainWindow(QMainWindow):
         self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
         self.layout_for_mpl_stock.addWidget(self.toolbar_stock)
 
-        self.view_8 = QtWidgets.QTableView(self.tab_5)
-        self.view_8.setGeometry(QtCore.QRect(20, 700, 700, 185))
-        self.label_qt_earnings = QtWidgets.QLabel(self.tab_5)
-        self.label_qt_earnings.setGeometry(QtCore.QRect(20, 885, 400, 30))
-        self.label_qt_earnings.setText(f'Table 5.1 Quarterly Earnings of {value} stock')
         self.stock_qt_earnings = get_stock_quarterly_earnings(get_stock(value))
         self.rows_qearn = [str(i) for i in range(1, self.stock_qt_earnings.shape[0] + 1)]
         self.model_8 = PandasModel(self.stock_qt_earnings,
                                    headers_column=['Quarter', 'Revenue', 'Earnings'],
                                    headers_row=self.rows_qearn)
+        self.view_8 = table_view(self.tab_5, QtCore.QRect(20, 700, 700, 185), self.model_8)
         self.view_8.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.view_8.setModel(self.model_8)
+        self.label_qt_earnings = label(self.tab_5, QtCore.QRect(20, 885, 400, 30),
+                                       f'Table 5.1 Quarterly Earnings of {value} stock')
 
-        self.view_9 = QtWidgets.QTableView(self.tab_5)
-        self.view_9.setGeometry(QtCore.QRect(800, 20, 1000, 777))
-        self.label_qt_cashflow = QtWidgets.QLabel(self.tab_5)
-        self.label_qt_cashflow.setGeometry(QtCore.QRect(800, 798, 400, 30))
-        self.label_qt_cashflow.setText(f'Table 5.2 Quarterly Balance Sheet  of {value} stock')
         self.stock_qt_cashflow = get_stock_quarterly_cashflow(get_stock(value))
         self.rows_qcash = [str(i) for i in range(1, self.stock_qt_cashflow.shape[0] + 1)]
         self.model_9 = PandasModel(self.stock_qt_cashflow,
                                    headers_column=list(map(lambda x: str(x).replace(' 00:00:00', ''),
                                                            self.stock_qt_cashflow.columns)),
                                    headers_row=self.rows_qcash)
-        self.view_9.setModel(self.model_9)
+        self.view_9 = table_view(self.tab_5, QtCore.QRect(800, 20, 1000, 777), self.model_9)
         header_9 = self.view_9.horizontalHeader()
         header_9.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         header_9.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.label_qt_cashflow = label(self.tab_5, QtCore.QRect(800, 798, 400, 30),
+                                       f'Table 5.2 Quarterly Balance Sheet  of {value} stock')
         self.tabWidget.addTab(self.tab_5, "")
         self.loaded.emit(85)
         print('tab5 has been formed')
@@ -443,15 +360,13 @@ class Ui_MainWindow(QMainWindow):
         self.label_for_movie = QtWidgets.QLabel(self.tab_6)
         self.label_for_movie.setMovie(self.moviee)
         self.moviee.start()
-        self.book = QtWidgets.QTextBrowser(self.tab_6)
-        self.book.setGeometry(QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 640))
+        self.book = text_browser(self.tab_6, QtCore.QRect(20, 110, main()[1] - 650, main()[0] - 640))
         self.tutorial = open('necessary static txt files/tutorial.txt', encoding='utf-8').read()
         self.tutorial_eng = open('necessary static txt files/tutorial_eng.txt', encoding='utf-8').read()
         self.book.setText(self.tutorial_eng)
-        self.contributors = QtWidgets.QTextBrowser(self.tab_6)
+        self.contributors = text_browser(self.tab_6, QtCore.QRect(20, 920, main()[1] - 650, 35))
         self.contributors.setText("Developers: <a href=https://github.com/dzbarts>Artem Dzuybak</a> "
                                   "and <a href=https://github.com/ValeriaMatveeva1>Matveeva Valeria</a>")
-        self.contributors.setGeometry(QtCore.QRect(20, 920, main()[1] - 650, 35))
         self.contributors.setOpenExternalLinks(True)
         self.change_lng = push_button(self.tab_6, QtCore.QRect(1095, 45, 200, 50), "Change language")
         self.tabWidget.addTab(self.tab_6, "")
@@ -464,8 +379,8 @@ class Ui_MainWindow(QMainWindow):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        font = QtGui.QFont('Futura', 10)
-        MainWindow.setFont(font)
+        self.font = QtGui.QFont('Futura', 10)
+        MainWindow.setFont(self.font)
 
         self.add_btn.clicked.connect(self.add_to_the_portfolio)  # добавляем обработчик событий:
         # при нажатии на кнопку происходит действие переданной ф-ции
@@ -526,25 +441,15 @@ class Ui_MainWindow(QMainWindow):
 
     def set_period(self, period):
         if not read_port():
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка обновления")
-            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка обновления", "Нечего обновлять. Добавьте акцию(и) и повторите попытку!",
+                        QMessageBox.Warning)
         else:
             if period != '':
-                self.layout_for_mpl_c.removeWidget(self.canvas_c)
-                self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-                self.toolbar_c.deleteLater()
-                self.canvas_c.deleteLater()
-                self.canvas_c.hide()
-                self.toolbar_c.hide()
-                if period == '20':  # добавление новых данных в зависимости от текста внутри combobox
-                    self.fig_c = plot_common(20, read_port())
-                elif period == '150':
-                    self.fig_c = plot_common(150, read_port())
-                elif period == '360':
-                    self.fig_c = plot_common(360, read_port())
+                for i in [self.toolbar_c, self.canvas_c]:
+                    self.layout_for_mpl_c.removeWidget(i)
+                    i.deleteLater()
+                    i.hide()
+                self.fig_c = plot_common(int(period), read_port())
                 self.canvas_c = GraphicsCanvas(self.fig_c)
                 self.layout_for_mpl_c.addWidget(self.canvas_c)
                 self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
@@ -557,18 +462,11 @@ class Ui_MainWindow(QMainWindow):
                 self.isin.setText(get_stock_isin(get_stock(stock)))
                 self.isin.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
                 self.label_isin.setText(f'International Securities Identification Number of {stock} stock')
-                self.layout_for_mpl_stock.removeWidget(self.canvas_stock)
-                self.layout_for_mpl_stock.removeWidget(self.toolbar_stock)
-                self.toolbar_stock.deleteLater()
-                self.canvas_stock.deleteLater()
-                self.canvas_stock.hide()
-                self.toolbar_stock.hide()
-                if period == '20':
-                    self.fig = plot_stock(stock, 20)
-                elif period == '150':
-                    self.fig = plot_stock(stock, 150)
-                elif period == '360':
-                    self.fig = plot_stock(stock, 360)
+                for i in [self.canvas_stock, self.toolbar_stock]:
+                    self.layout_for_mpl_stock.removeWidget(i)
+                    i.deleteLater()
+                    i.hide()
+                self.fig = plot_stock(stock, int(period))
                 self.canvas_stock = GraphicsCanvas(self.fig)
                 self.layout_for_mpl_stock.addWidget(self.canvas_stock)
                 self.toolbar_stock = NavigationToolbar(self.canvas_stock, MainWindow)
@@ -593,60 +491,34 @@ class Ui_MainWindow(QMainWindow):
                 self.view_9.setModel(self.model_9)
                 self.label_qt_cashflow.setText(f'Quarterly Balance Sheet of {stock} stock')
             else:
-                error = QMessageBox()
-                error.setWindowTitle("Ошибка набора")
-                error.setText("Такой акции не существует")
-                error.setIcon(QMessageBox.Warning)
-                error.exec_()
+                message_box("Ошибка набора", "Такой акции не существует", QMessageBox.Warning)
         else:
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка набора")
-            error.setText("Пустой текст")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка набора", "Пустой текст", QMessageBox.Warning)
         self.write_stock.clear()
 
     def set_strategy(self, strategy):
         if not read_port():
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка обновления")
-            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка обновления", "Нечего обновлять. Добавьте акцию(и) и повторите попытку!",
+                        QMessageBox.Warning)
         else:
             self.uni_var = set_port_and_portfolio(read_port())
-            if strategy == 'Long-term strategy':
-                self.start_rec_num = 1
-                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                         headers_column=self.columns_,
-                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-            if strategy == 'Medium-term strategy':
-                self.start_rec_num = 2
-                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                         headers_column=self.columns_,
-                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
-            if strategy == 'Short-term strategy':
-                self.start_rec_num = 3
-                self.model = PandasModel(set_recom(self.start_rec_num, self.uni_var),
-                                         headers_column=self.columns_,
-                                         headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
+            dict_types = {'Long-term strategy': 1, 'Medium-term strategy': 2, 'Short-term strategy': 3}
+            self.model = PandasModel(set_recom(dict_types[strategy], self.uni_var),
+                                     headers_column=self.columns_,
+                                     headers_row=[str(i) for i in range(1, self.recom.shape[0] + 1)])
             self.view_7.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.view_7.setModel(self.model)
 
     def renew_final_plot(self):
         if self.comboBox_final_stock.currentText() == '':
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка обновления")
-            error.setText("Нечего обновлять. Добавьте акцию(и) и повторите попытку!")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка обновления", "Нечего обновлять. Добавьте акцию(и) и повторите попытку!", QMessageBox.Warning)
         else:
             value = self.comboBox_final_stock.currentText()
             self.label_final.setText(f'Plot 4.1 Strategy for {value}')
-            self.layout_for_final_plot.removeWidget(self.canvas_final)
-            self.layout_for_final_plot.removeWidget(self.toolbar_final)
-            self.canvas_final.deleteLater()
-            self.canvas_final.hide()
+            for i in [self.canvas_final, self.toolbar_final]:
+                self.layout_for_final_plot.removeWidget(i)
+                i.deleteLater()
+                i.hide()
             dict_types = {'Long-term strategy': 1, 'Medium-term strategy': 2, 'Short-term strategy': 3}
             dict_strategies = {'SMA': 1, 'twoSMA': 2, 'EMA': 3, 'DEMA': 4, 'TEMA': 5, 'MACD': 6, 'CHV': 7, 'RSI': 8,
                                'bulls': 9, 'bears': 10, 'ER': 11, 'MI': 12}
@@ -744,25 +616,12 @@ class Ui_MainWindow(QMainWindow):
         self.view_7.setModel(self.model_7)
 
         cp = set_port_and_portfolio(changed_port)
+        canvases_and_toolbars = [self.toolbar_1, self.toolbar_2, self.toolbar_p, self.toolbar_c, self.canvas_1, self.canvas_2,
+                      self.canvas_p, self.canvas_c]
         if not changed_port:
-            self.layout_for_mpl_c.removeWidget(self.canvas_c)
-            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-            self.toolbar_1.deleteLater()
-            self.toolbar_2.deleteLater()
-            self.toolbar_p.deleteLater()
-            self.toolbar_c.deleteLater()
-            self.canvas_1.deleteLater()
-            self.canvas_2.deleteLater()
-            self.canvas_p.deleteLater()
-            self.canvas_c.deleteLater()
-            self.canvas_1.hide()
-            self.canvas_2.hide()
-            self.canvas_p.hide()
-            self.canvas_c.hide()
-            self.toolbar_1.hide()
-            self.toolbar_2.hide()
-            self.toolbar_p.hide()
-            self.toolbar_c.hide()
+            for i in canvases_and_toolbars:
+                i.deleteLater()
+                i.hide()
             self.fig_1 = empty_pie('Share by Countries')
             self.fig_2 = empty_pie('Share by Sectors')
             self.fig_p = empty_pie('Amount of Stocks')
@@ -771,37 +630,22 @@ class Ui_MainWindow(QMainWindow):
             self.canvas_2 = GraphicsCanvas(self.fig_2)
             self.canvas_p = GraphicsCanvas(self.fig_p)
             self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_1.addWidget(self.canvas_1)
-            self.layout_for_mpl_2.addWidget(self.canvas_2)
-            self.layout_for_mpl_p.addWidget(self.canvas_p)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
             self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
             self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_1.addWidget(self.canvas_1)
+            self.layout_for_mpl_2.addWidget(self.canvas_2)
+            self.layout_for_mpl_p.addWidget(self.canvas_p)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.layout_for_mpl_1.addWidget(self.toolbar_1)
             self.layout_for_mpl_2.addWidget(self.toolbar_2)
             self.layout_for_mpl_p.addWidget(self.toolbar_p)
             self.layout_for_mpl_c.addWidget(self.toolbar_c)
         else:
-            self.layout_for_mpl_c.removeWidget(self.canvas_c)
-            self.layout_for_mpl_c.removeWidget(self.toolbar_c)
-            self.toolbar_1.deleteLater()
-            self.toolbar_2.deleteLater()
-            self.toolbar_p.deleteLater()
-            self.toolbar_c.deleteLater()
-            self.canvas_1.deleteLater()
-            self.canvas_2.deleteLater()
-            self.canvas_p.deleteLater()
-            self.canvas_c.deleteLater()
-            self.canvas_1.hide()
-            self.canvas_2.hide()
-            self.canvas_p.hide()
-            self.canvas_c.hide()
-            self.toolbar_1.hide()
-            self.toolbar_2.hide()
-            self.toolbar_p.hide()
-            self.toolbar_c.hide()
+            for i in canvases_and_toolbars:
+                i.deleteLater()
+                i.hide()
             self.fig_1 = plot_c(cp)
             self.fig_2 = plot_s(cp)
             self.fig_p = plot_p(cp)
@@ -810,14 +654,14 @@ class Ui_MainWindow(QMainWindow):
             self.canvas_2 = GraphicsCanvas(self.fig_2)
             self.canvas_p = GraphicsCanvas(self.fig_p)
             self.canvas_c = GraphicsCanvas(self.fig_c)
-            self.layout_for_mpl_1.addWidget(self.canvas_1)
-            self.layout_for_mpl_2.addWidget(self.canvas_2)
-            self.layout_for_mpl_p.addWidget(self.canvas_p)
-            self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.toolbar_1 = NavigationToolbar(self.canvas_1, MainWindow)
             self.toolbar_2 = NavigationToolbar(self.canvas_2, MainWindow)
             self.toolbar_p = NavigationToolbar(self.canvas_p, MainWindow)
             self.toolbar_c = NavigationToolbar(self.canvas_c, MainWindow)
+            self.layout_for_mpl_1.addWidget(self.canvas_1)
+            self.layout_for_mpl_2.addWidget(self.canvas_2)
+            self.layout_for_mpl_p.addWidget(self.canvas_p)
+            self.layout_for_mpl_c.addWidget(self.canvas_c)
             self.layout_for_mpl_1.addWidget(self.toolbar_1)
             self.layout_for_mpl_2.addWidget(self.toolbar_2)
             self.layout_for_mpl_p.addWidget(self.toolbar_p)
@@ -846,11 +690,7 @@ class Ui_MainWindow(QMainWindow):
     def add_to_the_portfolio(self):
         old_port = read_port()
         if (self.edit.text() == '') | (self.edit_n.text() == ''):
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка набора")
-            error.setText("Пустой текст")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка набора", "Пустой текст", QMessageBox.Warning)
         else:
             try:
                 n = int(self.edit_n.text())
@@ -861,28 +701,17 @@ class Ui_MainWindow(QMainWindow):
                         n = n - 1
                     self.renew_all_tables(old_port, stock)
                 else:
-                    error = QMessageBox()
-                    error.setWindowTitle("Ошибка набора")
-                    error.setText("Такой акции не существует")
-                    error.setIcon(QMessageBox.Warning)
-                    error.exec_()
+                    message_box("Ошибка набора", "Такой акции не существует", QMessageBox.Warning)
             except ValueError:
-                error = QMessageBox()
-                error.setWindowTitle("Ошибка набора")
-                error.setText("Неверный формат текста")
-                error.setIcon(QMessageBox.Warning)
-                error.exec_()
+                message_box("Ошибка набора", "Неверный формат текста", QMessageBox.Warning)
         self.edit.clear()
         self.edit_n.clear()
 
     def remove_the_stock(self):
         old_port = read_port()
         if (self.edit.text() == '') | (self.edit_n.text() == ''):
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка набора")
-            error.setText("Пустой текст")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка набора", "Пустой текст", QMessageBox.Warning)
+
         else:
             try:
                 n = int(self.edit_n.text())
@@ -893,28 +722,16 @@ class Ui_MainWindow(QMainWindow):
                         n = n - 1
                     self.renew_all_tables(old_port, stock)
                 else:
-                    error = QMessageBox()
-                    error.setWindowTitle("Ошибка набора")
-                    error.setText("У Вас осталось " + str(read_port().count(stock)) + " акций")
-                    error.setIcon(QMessageBox.Warning)
-                    error.exec_()
+                    message_box("Ошибка набора", "У Вас осталось " + str(read_port().count(stock)) + " акций", QMessageBox.Warning)
             except ValueError:
-                error = QMessageBox()
-                error.setWindowTitle("Ошибка набора")
-                error.setText("Неверный формат текста")
-                error.setIcon(QMessageBox.Warning)
-                error.exec_()
+                message_box("Ошибка набора", "Неверный формат текста", QMessageBox.Warning)
             self.edit.clear()
             self.edit_n.clear()
 
     def clear_the_portfolio(self):
         old_port = read_port()
         if not old_port:
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка")
-            error.setText("Портфель уже пуст")
-            error.setIcon(QMessageBox.Warning)
-            error.exec_()
+            message_box("Ошибка", "Портфель уже пуст", QMessageBox.Warning)
         else:
             clear_all()
             self.renew_all_tables(old_port, '')
