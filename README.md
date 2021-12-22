@@ -38,38 +38,38 @@ GUI - графический интерфейс для взаимодейств�
 
 Вкладка News
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/1.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/1.jpg)
 
 Вкладка Countries & Sectors
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/2.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/2.jpg)
 
 Вкладка Portfolio
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/3.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/3.jpg)
 
 Вкладка Strategies & Recommendations
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/4.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/4.jpg)
 
 Вкладка Stock
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/5.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/5.jpg)
 
 Вкладка INFO
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/6.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/6.jpg)
 
 Пример вкладки News с использованием другой темы
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/7.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/7.jpg)
 
 Пример вкладки Strategies & Recommendations с использованием другой темы
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/8.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/8.jpg)
 
 Всплывающее окно при возникновении ошибки
 
-![alt text](https://github.com/dzbarts/financial-analisys/examples/9.jpg)
+![alt text](https://github.com/dzbarts/financial-analisys/blob/main/examples/9.jpg)
 
 
